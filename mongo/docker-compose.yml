@@ -1,0 +1,13 @@
+version: "3"
+services:
+  mongo:
+    container_name: mongo-demo
+    image: mongo
+    restart: always
+    env_file: mongo.env
+    volumes:
+      - ./data:/data/db
+      - ./backup:/data/backup
+      - ./mongo.conf:/etc/mongo.conf
+    ports:
+      - "2717:27017"

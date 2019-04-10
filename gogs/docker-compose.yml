@@ -1,0 +1,36 @@
+# https://gitee.com/yhtmxl/ci/tree/master
+version: '3'
+services:
+  gogs:
+    image: gogs/gogs
+    container_name: gogs-git
+    restart: always
+    ports:
+      - '${GOGS_SSH_PORT}:22'
+      - '${GOGS_HOST_PORT}:3000'
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    networks:
+      - gogs
+    volumes:
+      - ./gogs-data/:/data/
+  mysql:
+    image: mysql:5.7
+    container_name: gogs-mysql
+    ports:
+      - '${MYSQL_PUBLISH_PORT}:3306'
+    restart: always
+    networks:
+      - gogs
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    env_file:
+      - .env
+
+networks:
+  gogs:
+    driver: bridge

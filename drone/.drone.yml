@@ -1,0 +1,10 @@
+build:
+  image: node:5-wheezy
+  commands:
+    - npm install --silent
+    - npm test
+
+cache:
+  mount:
+    - .git
+    - node_modules

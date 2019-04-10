@@ -1,0 +1,25 @@
+version: '3'
+services:  
+  drone-server:
+    image: drone/drone
+    container_name: drone-server
+    restart: always
+    ports:
+      - '${DRONE_PORT}:80'
+    volumes:
+      - ./drone-data/:/data/
+    env_file:
+      - .env
+  drone-agent:
+      image: drone/agent
+      container_name: drone-agent
+      command: agent
+      restart: always
+      depends_on:
+        - drone-server
+      env_file:
+        - .env
+      volumes:
+        - /var/run/drone.sock:/var/run/docker.sock
+      environment:
+        - 'DRONE_SERVER=ws://drone-server:${DRONE_PORT}/ws/broker'

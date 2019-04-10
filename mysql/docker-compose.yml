@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    container_name: mysql-demo
+    image: mysql
+    restart: always
+    env_file: .env
+    networks: 
+      - net-mysql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+      - ./grant.sh:/root/grant.sh
+networks:
+  net-mysql:
+    external: true

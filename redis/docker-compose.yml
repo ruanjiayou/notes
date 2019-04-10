@@ -1,0 +1,9 @@
+version: '3'
+services:
+  redis-master: 
+    image: redis:alpine
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data

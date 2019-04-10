@@ -1,0 +1,14 @@
+version: "3"
+services: 
+  node:
+    container_name: node-project
+    image: node:alpine
+    restart: always
+    environment:
+      - NODE_ENV=production
+    working_dir: "/src"
+    volumes:
+      - .:/src
+    ports:
+      - 7777:7777
+    command: "npm start"
