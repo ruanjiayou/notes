@@ -71,22 +71,15 @@ IdentitiesOnly yes
 - 使用ssh方式就不用管window的凭据了
 - 生成id_rsa(名字自取)
 - 配置~/.ssh/config
-- 根据config的host别名clone
+- 根据config的host别名clone: git clone git@customHost:usernamexxx/project.git
 - 配置git config user.name和user.email
 - push => ok 
-
-### Windows下每次都要ssh-add
-- 进入git的安装目录
-- `vim etc/bash.bashrc`
-  ```bash
-  eval "$(ssh-agent -s)"
-  ssh-add ~/.ssh/id_rsa
-  ```
 
 ### Windows vscode设置默认bash终端
 - 环境变量添加 C:\Program Files (x86)\Git\bin\bash.exe
 - 添加"terminal.integrated.shell.windows": "C:\Program Files (x86)\Git\bin\bash.exe"
-## 配置(global和local)
+
+### 配置(global和local)
 - git config --global user.name "xxx"
 - git config --global user.email "xxx@gmail.com"
 - git config --global --list

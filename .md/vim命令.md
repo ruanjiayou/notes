@@ -95,6 +95,8 @@ set termencoding=utf-8
 set encoding=utf-8
 # 显示行号
 set nu
+# 主题配色
+colorscheme moloki/jellybeans/Tomorrow-Night-Eighties/
 # 突出当前行
 set cul
 # 突出当前列

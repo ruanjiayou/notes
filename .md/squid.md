@@ -1,3 +1,13 @@
+## squid
+- yum install -y squid
+- vim /etc/squid/squid.conf
+- acl client src ip
+- http_access allow client
+- systemctl start squid.service 
+- systemctl enable squid.service
+- firewall-cmd --zone=public --add-port=3128/tcp --permanent
+- firewall-cmd --reload
+
 ## squid代理服务器
 ```yml
 Squid:

@@ -27,3 +27,6 @@
     > docker必须要局域网ip...
 - 2095- Authentication plugin 'caching_sha2_password' cannot be loaded
   > 进入数据库: `alter user 'root'@'%' identified with mysql_native_password by 'xxxxx'`
+- Table flags are 0 in the data dictionary but the flags in file ./ibaredata1
+  > window里可以到C:\Users\username\Documents\Kitematic\mysql-demo\var\lib\mysql 删除文件
+  > ip是192.168.99.100

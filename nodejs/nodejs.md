@@ -11,4 +11,7 @@ TODO: .env publish.sh dev.sh
 
 ## nvm
 - 安装: `$ ./nvm.sh`, 或者`wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash`
+- source ~/.bashrc
 - 重进: `$ exit`
+- nvm ls-remote
+- nvm install/use v11.14.0
