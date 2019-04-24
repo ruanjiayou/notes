@@ -15,3 +15,8 @@ TODO: .env publish.sh dev.sh
 - 重进: `$ exit`
 - nvm ls-remote
 - nvm install/use v11.14.0
+
+## node-canvas
+- `sudo yum install gcc-c++ cairo-devel libjpeg-turbo-devel pango-devel giflib-devel`
+- `npm install canvas`
+- font: `yum search arial`, `yum install liberation-sans-fonts.noarch`

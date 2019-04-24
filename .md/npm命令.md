@@ -13,7 +13,7 @@ https://docs.npmjs.com/cli-documentation/cli
 - npm -v
 - npm help
 - 查看信息: npm view [moduleName]
-- npm config
+- npm config : npm config set registry https://registry.npm.taobao.org
  - npm get key
  - npm set key value [-g|--global]
 

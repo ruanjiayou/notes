@@ -117,6 +117,7 @@
 ## 重启失败
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)
-  > selinux开启了造成的...
+  > selinux开启了造成的...: `setenforce 0`
 - window中不能挂载文件?
 - nginx默认错误日志在/var/log/nginx
+- 403: selinux开启造成的~~
