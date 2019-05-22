@@ -11,7 +11,7 @@
 - 使用cookie: `-b cookie.txt`
 - 保存cookie: `-c cookie.txt`
 - 断点续传: `-C -O`
-- post的数据: `-d kv/json`
+- post的数据: `-d "k1=v1&k2=v2或者json字符串格式"`
 - 保存header: `-D header.txt`
 - 伪造referer: `-e www.baidu.com`
 - 显示抓取错误: `-f`
