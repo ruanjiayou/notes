@@ -13,11 +13,12 @@ https://docs.npmjs.com/cli-documentation/cli
 - npm -v
 - npm help
 - 查看信息: npm view [moduleName]
-- npm config : npm config set registry https://registry.npm.taobao.org
+- npm config
  - npm get key
  - npm set key value [-g|--global]
 
 版本号
+https://blog.xcatliu.com/2015/04/14/semantic_versioning_and_npm/
 ---
 语义版本号分为X.Y.Z三位，分别代表主版本号、次版本号和补丁版本号。当代码变更时，版本号按以下原则更新。
 

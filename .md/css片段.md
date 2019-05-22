@@ -45,5 +45,6 @@
 }
 .cls-full {
   flex: 1;// flex-grown flex-shink flex-basis
+  overflow-y: auto;
 }
 ```

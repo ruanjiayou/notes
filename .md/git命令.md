@@ -75,6 +75,14 @@ IdentitiesOnly yes
 - 配置git config user.name和user.email
 - push => ok 
 
+### Windows下每次都要ssh-add
+- 进入git的安装目录
+- `vim etc/bash.bashrc`
+  ```bash
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_rsa
+  ```
+
 ### Windows vscode设置默认bash终端
 - 环境变量添加 C:\Program Files (x86)\Git\bin\bash.exe
 - 添加"terminal.integrated.shell.windows": "C:\Program Files (x86)\Git\bin\bash.exe"

@@ -1,6 +1,7 @@
 ## squid
 - yum install -y squid
 - vim /etc/squid/squid.conf
+- # 允许所有ip: 0.0.0.0/0.0.0.0 允许局域网ip: 192.168.0.1/24
 - acl client src ip
 - http_access allow client
 - systemctl start squid.service 

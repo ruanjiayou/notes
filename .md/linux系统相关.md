@@ -45,6 +45,8 @@
 - vim 
 - find 
   > find [PATH] [option] [action]
+- zip解压和压缩: unzip file / zip file
+  > yum install zip unzip
 - tar 压缩和解压
   - -c 新建打包文件
   - -t 查看打包文件的内容含有哪些文件名
