@@ -3,6 +3,21 @@
 - 启动：`docker-compose up -d`
 - 
 
+## 安装
+- mac: brew install mongo
+- centos: vim /etc/yum.repos.d/mongodb-org-4.0.repo
+  > 安装在 /var/lib/mongo
+  ```
+  [mongodb-org-4.0]
+  name=MongoDB Repository
+  baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.0/x86_64/
+  gpgcheck=1
+  enabled=1
+  gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+  ```
+  > sudo yum install -y mongodb-org
+- which mongorestore
+
 ### 备份与还原
 > 写了个shell, 加权限`chmod u+x`, 执行`cmd.sh dump db`
 - 备份整个库： `mongodump -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test -o /data/backup`
