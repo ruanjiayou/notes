@@ -117,7 +117,12 @@
 ## 重启失败
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)
-  > selinux开启了造成的...: `setenforce 0`
+  > selinux开启了造成的...
 - window中不能挂载文件?
 - nginx默认错误日志在/var/log/nginx
-- 403: selinux开启造成的~~
+- mac上安装: brew install nginx. 启动要: sudo nginx. brew services nginx start localhost会拒绝连接
+  ```
+  /usr/local/var/www
+  /usr/local/etc/nginx/nginx.conf
+  ```
+  > 重启: nginx -s reload

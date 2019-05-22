@@ -2,12 +2,18 @@
 
 <head>
   <title>demo</title>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <script src="scripts/clipboard.js"></script>
 </head>
 
 <body>
   <h1>Hello World!</h1>
+  <button id="btn">复制title</button>
 </body>
+<script>
+  document.getElementById('btn').onclick = function () {
+    copy(`Hello World! ${new Date().toLocaleString()}`);
+  }
+</script>
 
 </html>
