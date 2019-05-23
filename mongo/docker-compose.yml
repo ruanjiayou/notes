@@ -4,10 +4,26 @@ services:
     container_name: mongo-demo
     image: mongo
     restart: always
-    env_file: mongo.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
     volumes:
-      - ./data:/data/db
+      - ./db:/data/db
+      - ./log:/data/lob
       - ./backup:/data/backup
-      - ./mongo.conf:/etc/mongo.conf
+      - ./mongo.conf:/etc/mongo/mongod.conf
     ports:
-      - "2717:27017"
+      - "27017:27017"
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    links:
+      - mongo
+    environment:
+      - ME_CONFIG_BASICAUTH_USERNAME=mongoexpress
+      - ME_CONFIG_BASICAUTH_PASSWORD=mongoexpress
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
