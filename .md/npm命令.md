@@ -25,3 +25,13 @@ https://blog.xcatliu.com/2015/04/14/semantic_versioning_and_npm/
 如果只是修复bug，需要更新Z位。
 如果是新增了功能，但是向下兼容，需要更新Y位。
 如果有大变动，向下不兼容，需要更新X位。
+
+## bug
+- window中发布失败: operation not permitted.(主要是nodejs安装在了C盘)
+> 删除 ~/.npmrc或npm cache clean --force
+- npm登录失败: 使用了淘宝源...
+  ```
+  npm install -g nrm 
+  nrm use taobao
+  nrm use npm
+  ```

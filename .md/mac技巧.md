@@ -45,3 +45,7 @@ Access denied for user ''@'localhost' to database 'mysql’: 因为有匿名账�
 ```bash
 $ brew install tree
 ```
+
+## 解压rar
+- brew install unrar
+- unrar x path-to-file

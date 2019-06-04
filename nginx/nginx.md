@@ -113,7 +113,15 @@
     return 200 '{"/form/advanced-form":{"authority":["admin","user"]}}';
   }
   ```
-
+## window上
+- win10-64位 下载 1.17.0
+- http://nginx.org/en/download.html
+- 解压到项目那个盘(跨盘有问题)
+- 启动: start nginx.ext
+- 查看端口: netstat -aon | findstr :80
+- 退出: nginx.exe -s quit
+- 重新加载nginx.exe -s reload
+- 停止: nginx.exe -s stop
 ## 重启失败
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)
