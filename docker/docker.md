@@ -221,3 +221,10 @@ services:
   - 查看日志: `docker logs --tail 10 xxx`
 - 进入容器: `docker exec -ti name或id sh或bash`
 - 容器内测试http请求: `wget localhost:3000 -O -`
+- ERROR:Docker Got permission denied while trying to connect to the Docker daemon socket
+  ```
+  sudo groupadd docker
+  sudo gpasswd -a ${USER} docker? sudo usermod -aG docker ${USER}
+  reboot
+  groups
+  ```

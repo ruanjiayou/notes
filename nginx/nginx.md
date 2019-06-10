@@ -126,6 +126,7 @@
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)
   > selinux开启了造成的...
+- 13: Permission denied: semanage port -l | grep http_port_t, semanage port -a -t http_port_t  -p tcp 809
 - window中不能挂载文件?
 - nginx默认错误日志在/var/log/nginx
 - mac上安装: brew install nginx. 启动要: sudo nginx. brew services nginx start localhost会拒绝连接

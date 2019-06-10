@@ -104,6 +104,21 @@
   <summary>程序相关</summary>
 
 - 查看命令所在位置: `whick docker`
+- 查看service: systemctl list-units --type=service
+- 挂载外部存储:
+  ```
+  sudo vim /etc/fstab
+  添加: 
+  <fs spec> <fs file> <fs vfstype> <fs mntops> <fs freq> <fs passno>
+  <fs spec>: 分区定位, UUID或label
+  <fs file> 挂载点位置如, /data
+  <fs vfstype> 挂载磁盘类型,linux一般为ext4,windows一般为ntfs
+  <fs nmtopts> 挂载参数,一般为defaults
+  <fs freq> 磁盘检查,默认0
+  <fs passno> 磁盘检查,默认0
+  验证配置: sudo mount -a
+  reboot
+  ‵‵‵
 - free
 - top 
 - service
@@ -160,6 +175,25 @@ curl
 - whatis
 - man
 - 
+
+## 挂载
+- 查看硬盘信息: `sudo fdisk -l`
+- 临时挂载: `mkdir /mnt/resource`, `sudo mount /dev/sda2 /mnt/resource`
+  ```
+  <fs spec> <fs file> <fs vfstype> <fs mntops> <fs freq> <fs passno>
+  具体说明，以挂载/dev/sdb1为例：
+  <fs spec>：分区定位，可以给UUID或LABEL，例如：UUID=6E9ADAC29ADA85CD或LABEL=software
+  <fs file>：具体挂载点的位置，例如：/data
+  <fs vfstype>：挂载磁盘类型，linux分区一般为ext4，windows分区一般为ntfs
+  <fs mntops>：挂载参数，一般为defaults
+  <fs freq>：磁盘检查，默认为0
+  <fs passno>：磁盘检查，默认为0，不需要检查
+  ```
+- 查看磁盘分区的UUID: `sudo blkid`
+- 配置开机自动挂载: 
+  - `sudo vim /etc/fstab`
+  - 增加: `UUID=xxxx /mnt/resource ntfs defaults 0 1`
+  - 验证配置: `sudo mount -a`
 
 ## tree
 - -a 显示所有文件和目录。
