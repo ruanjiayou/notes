@@ -1,0 +1,5 @@
+node_modules/
+build/
+.storybook/
+converage/
+**/npm-debug.log
