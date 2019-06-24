@@ -1,13 +1,13 @@
-## mac
-- 安装: brew install nmap
+## 安装
+- mac: `brew install nmap`
+- ubantu: `sudo apt install nmap`
+
+## nmap
 - 查看本地路由与接口: nmap --iflist
 - 扫描网络在线主机: nmap 192.168.1.1/24
 - 扫描指定主机上的端口: nmap -p 443 192.168.1.11
 - 检测指定主机的操作系统版本: nmap -O 192.168.1.11
 - 扫描指定主机防火墙开启状态: nmap -sA 192.168.1.11
-- 
-
-## nmap
 - 获取ip:
   - host 网址
   - host 域名

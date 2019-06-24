@@ -135,3 +135,5 @@
   /usr/local/etc/nginx/nginx.conf
   ```
   > 重启: nginx -s reload
+- 转发出现502,  Permission denied while connecting to upstream
+  > selinux开了造成的,关掉, setenforce 0

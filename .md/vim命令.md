@@ -56,6 +56,7 @@
   - dl
   - dh
   - dd
+  - 删除全部: `ggdG`, `%d`
   - dj
   - dk
   - 10d

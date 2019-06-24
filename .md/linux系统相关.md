@@ -218,7 +218,90 @@ curl
 - -x 将范围局限在现行的文件系统中，若指定目录下的某些子目录，其存放于另一个文件系统上，则将该子目录予以排除在寻找范围外。
 
 ## zsh
-- 
+
+## systemctl
+> 是CentOS7的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体
+- 启动一个服务：`systemctl start firewalld.service`
+- 关闭一个服务：`systemctlstop firewalld.service`
+- 重启一个服务：`systemctlrestart firewalld.service`
+- 显示一个服务的状态：`systemctlstatus firewalld.service`
+- 在开机时启用一个服务：`systemctlenable firewalld.service`
+- 在开机时禁用一个服务：`systemctldisable firewalld.service`
+- 查看服务是否开机启动：`systemctlis-enabled firewalld.service`
+- 查看已启动的服务列表：`systemctllist-unit-files|grep enabled`
+- 查看启动失败的服务列表：`systemctl --failed`
+
+## semanage
+> selinux极大的增强了Linux的安全性,包括 文件系统,目录,文件,文件启动描述符,端口,消息接口和网络接口
+- 查看当前允许的httpd端口: `semanage port -l|grep xxx`,xxx代表端口类型(名称?)或端口号
+- 添加允许的httpd端口: `semanage port -a -t http_port_t  -p tcp 8090`.像squid是squid_port_t
+
+## 防火墙
+> CentOS7的防火墙换成了firewall了
+- 开启端口 : `firewall-cmd --zone=public --add-port=80/tcp --permanent`
+  - 命令含义：
+  - --zone #作用域
+  - --add-port=80/tcp #添加端口，格式为：端口/通讯协议
+  - --permanent #永久生效，没有此参数重启后失效
+- 查看防火墙状态: `systemctl status firewalld`
+- 关闭防火墙: `systemctl stop firewalld.service`,`systemctl stop firewalld`
+- 开启防火墙: `systemctl start firewalld.service`
+- 禁止开机启动启动防火墙: `systemctl disable firewalld.service`
+- 重新加载防火墙: `sudo firewall-cmd --reload`
+- 添加例外端口: `firewall-cmd --add-port=8080/tcp`
+- 永久添加: `firewall-cmd --permanent --add-port=8080/tcp`
+- 设置端口范围: `firewall-cmd --add-port=80-8080/tcp`
+- 删除例外端口: `firewall-cmd --remove-port=8080/tcp`
+- 查看例外端口: `firewall-cmd --query-port=8080/tcp`
+
+- 查看版本： `firewall-cmd --version`
+- 查看帮助： `firewall-cmd --help`
+- 显示状态： `firewall-cmd --state`
+- 查看所有打开的端口： `firewall-cmd --zone=public --list-ports`
+- 更新防火墙规则： `firewall-cmd --reload`
+- 查看区域信息:  `firewall-cmd --get-active-zones`
+- 查看指定接口所属区域： `firewall-cmd --get-zone-of-interface=eth0`
+- 拒绝所有包：`firewall-cmd --panic-on`
+- 取消拒绝状态： `firewall-cmd --panic-off`
+- 查看是否拒绝： `firewall-cmd --query-panic`
+
+## ftp
+> https://www.cnblogs.com/zhouhbing/p/5564512.html
+- yum install vsftpd
+- vim /etc/vsftpd/vsftpd.conf
+  ```
+  # 禁止匿名访问
+  anonymous_enable=NO
+
+  # 允许本地用户登录FTP
+  local_enable=YES
+
+  # ftpusers是不允许登录的,user_list默认是不许登录的,下面是打开方式?
+  userlist_enable=YES
+  userlist_deny=NO
+  ```
+- 创建用户: useradd -d /home/ftp -g ftp -s /sbin/nologin userName -p password
+- 启动服务: service vsftpd start
+- 设置开机启动: chkconfig vsftpd on
+- 配置防火墙...
+- 不支持 FTP over TLS: 文件->站点管理器 选择普通ftp
+- 530 Permission denied: 
+- 530 login incorrect 是密码错了...
+- 竟然能访问根目录...
+
+## dns服务器
+- `yum install bind-chroot bind-utils`
+- 开机启动: `systemctl enable named-chroot`
+- 修改: vim /etc/named.conf. 
+  ```
+  listen-on port 53 { any;}; # 监听任何ip对53端口的请求
+  allow-query     { any; }; # 接收任何来源查询dns记录
+  ```
+- 添加解析域
+- 检查主配置语法: `named-checkconf`
+- 检查解析域: `named-checkzone "jiayou.com" /var/named/jiayou.com.zone`
+- 重启服务: `service named restart`
+- 测试dns: `host -t A www.jiayou.com 172.18.0.1`, 端口怎么来的? `netstat -ntlp`
 
 ## 技巧
 - centos: xxx is not in the sudoers file

@@ -29,8 +29,10 @@
 - git-bash中断中,还要: 
   > eval "$(ssh-agent -s)"
   > ssh-add ~/.ssh/id_rsa_site
+  - ubantu中要ssh-add,但还是不行
 - git config user.name "xx"
 - git config user.email "xx"
+- 仓库中加ssh密钥,不是authoizations加
 
 ### centos免密码登录
 - 生成公匙(要设置passphrase)

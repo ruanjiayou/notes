@@ -162,3 +162,5 @@ db.share_relations.aggregate([
 - Schema不传collection自动加s
 - 默认50%做缓存,64G的机器就是32...
 - 连接失败: mongoUrl+?authSource=admin
+- 查询数组: { id: { $in: arr }}
+- 查询结果是个特殊对象.直接修改不起作用: 调用.toJSON(),再修改.
