@@ -32,7 +32,7 @@ function AppRoot(props) {
   }
   if (isLogin()) {
     return <LayoutNormal>
-      {props.location.pathname === '/root/demo' ? <Article/> : <Home>{props.location.pathname}</Home>}
+      {props.location.pathname === '/root/demo' ? <Article loader={store.articleLoader} /> : <Home>{props.location.pathname}</Home>}
     </LayoutNormal>
   } else {
     return <Redirect to={'/auth/login'}></Redirect>

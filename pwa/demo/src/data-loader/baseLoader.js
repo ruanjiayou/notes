@@ -71,6 +71,9 @@ function createItemsLoader(model, fn, defaultValue) {
           // 加载更多
           self.page = params.page;
           self.items.push(...items);
+        } else {
+          self.state = 'fail';
+          self.error = { code: 1, message: 'x' }
         }
         self.emit(self.type, self.error, items || [], self.items);
       } catch (err) {

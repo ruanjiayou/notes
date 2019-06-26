@@ -4,7 +4,6 @@ import LoadListView from '../../../common/ListLoad/index';
 import { useContext } from '../../../../contexts/routerContext/index';
 
 import './List.css';
-import store from '../../../../global-state';
 
 function renderItem(item, index, router) {
   return <div key={index} className={'dd-article-item'}>
@@ -12,12 +11,12 @@ function renderItem(item, index, router) {
   </div>
 }
 
-export default function ({ self }) {
+export default function ({ loader }) {
   const router = useContext();
   return <Observer>
     {() => {
       return <LoadListView
-        loader={store.articleLoader}
+        loader={loader}
         renderItem={(data, index) => renderItem(data, index, router)}
       />
     }}
