@@ -1,0 +1,13 @@
+.dd-article-item {
+  margin: 0 10px;
+  line-height: 2.5;
+}
+
+.dd-article-item>span {
+  display: block;
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 1px solid grey;
+}

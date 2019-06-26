@@ -3,7 +3,7 @@ import store from '../global-state';
 import config from '../config';
 
 const shttp = axios.create({
-  baseURL: process.env.NODE_ENV == 'production' ? config.config.production.host : config.config.dev.host,
+  baseURL: process.env.NODE_ENV === 'production' ? config.config.production.host : config.config.dev.host,
   withCredentials: false,
   timeout: 5000
 });

@@ -1,18 +1,12 @@
 import React, { useContext as useReactContext, useState } from 'react';
-import RouterModel from '../../models/router';
-/**
- * back()
- * push()
- * replace()
- */
+// 上下文context.避免react多级一直传props
 const Context = React.createContext(null);
-const routerState = RouterModel.create({});
 
 /**
  * 使用:
  * 创建上下文
- * import createProvider from this
- * const [router, routerContext]=createProvider(history,location);
+ * import useProvider from this
+ * const [router, routerContext]=useProvider(history,location);
  * <routerContext.Provider value={router}>
  *   ...
  * </routerContext.Provider>
@@ -25,7 +19,6 @@ export function useProvider(history, location) {
   let [state] = useState(() => {
     let route = {
       history,
-      routerState,
       get params() {
         return {}
       },
