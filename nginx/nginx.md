@@ -122,6 +122,9 @@
 - 退出: nginx.exe -s quit
 - 重新加载nginx.exe -s reload
 - 停止: nginx.exe -s stop
+## 本地同步配置到服务器并重启
+- 进入cmd目录
+- 执行: `sh ./sync_servers.sh`
 ## 重启失败
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)

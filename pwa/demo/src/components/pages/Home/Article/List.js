@@ -5,9 +5,9 @@ import { useContext } from '../../../../contexts/routerContext/index';
 
 import './List.css';
 
-function renderItem(item, index, router) {
+function RenderItem({ item, sectionId, router, remove }) {
   return <div key={index} className={'dd-article-item'}>
-    <span>{item.title}</span>
+    <span>{item.title}</span> <span onClick={() => remove()}>x</span>
   </div>
 }
 
@@ -17,7 +17,12 @@ export default function ({ loader }) {
     {() => {
       return <LoadListView
         loader={loader}
-        renderItem={(data, index) => renderItem(data, index, router)}
+        renderItem={(item, sectionId, index) => <RenderItem
+          item={item}
+          sectionId={sectionId}
+          router={router}
+          remove={() => loader.remove(index)}
+        />}
       />
     }}
   </Observer>

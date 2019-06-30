@@ -16,3 +16,37 @@
 - ant-mobile
 - axios+mockjs
 - react-scripts.自动webpack配置.不支持less要自己fork.
+
+## 捕获错误
+- app类适用: react16 hooks
+  ```js
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+  import App from './App';
+  class ErrorBoundary extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { hasError: false };
+    }
+    componentDidCatch(error, info) {
+      this.setState({ hasError: true });
+      // todo something
+    }
+    reload(){
+      this.setState({ hasError: false }, ()=>{
+        window.location.reload();
+      });
+    }
+    render(){
+      if(this.state.hasError) {
+        return <h1 onClick={this.reload}>something went wrong</h1>;
+      } else {
+        return this.props.children;
+      }
+    }
+  }
+  ReactDOM.render(<ErrorBoundary><App/></ErrorBoundary>, document.getElementById('root'))
+  ```
+
+## TODO:
+- base-loader.js 缺少remove()方法 filter隐藏

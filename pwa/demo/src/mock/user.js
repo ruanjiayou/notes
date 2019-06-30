@@ -2,9 +2,14 @@ import Mock from 'mockjs';
 
 export default {
   login: config => {
-    return {
-      code: 0,
-      data: { token: 'test' }
+    const data = JSON.parse(config.body);
+    if (data.username === 'test' && data.password === '123456') {
+      return {
+        code: 0,
+        data: { token: 'test' }
+      }
+    } else {
+      return {}
     }
   },
   getArticles: config => {

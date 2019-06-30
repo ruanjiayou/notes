@@ -50,17 +50,15 @@ function createItemsLoader(model, fn, defaultValue) {
     }
   }).actions(self => {
     const request = flow(function* (params = {}, type = 'refresh') {
-      if (self.isLoading || (self.isEnded && self.type === 'more')) {
+      if (self.isLoading || (self.isEnded && type === 'more')) {
         return;
       }
-      console.log(self.items, type);
       self.type = type;
       self.error = undefined;
       self.isLoading = true;
       self.state = 'success';
       try {
         let { ended, items } = yield fn(params, type);
-        console.log(items)
         // 第一页也可能是最后一页
         self.isEnded = !!ended;
         if (type === 'refresh') {
@@ -93,6 +91,9 @@ function createItemsLoader(model, fn, defaultValue) {
       clear() {
         self.page = 1;
         self.items = [];
+      },
+      remove(index) {
+        self.items = self.items.slice().filter((item, idx) => +index !== +idx)
       },
       async refresh(params) {
         await request(params, 'refresh');

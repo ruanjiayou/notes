@@ -6,7 +6,7 @@ export default {
     production: {
       host: 'http://localhost:3000/v1',
     },
-    dev: {
+    development: {
       host: 'http://pwa.jiayou.com',
     }
   },
