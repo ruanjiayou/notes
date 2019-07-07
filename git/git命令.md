@@ -6,7 +6,10 @@
 - 克隆项目: git clone url[#branch] [dirname]
 - 查看修改: git status
 - 比较分支: git diff branchA branchB
-- 切换分支或创建新分支或取消所有修改: git checkout branchName
+- 切换到本地分支: git checkout dev
+- 拉取远程分支到本地: git fetch origin dev
+- 创建本地分支切换,并拉取远程: git checkout -b dev origin/dev
+- 取消所有文件的修改: git checkout .
 - 取消文件的修改: git checkout -- filepath
 - 查看所有分支: git branch -a
 - 拉取: git pull [remoteName] [localBranchName]
@@ -36,22 +39,25 @@
 - 仓库中加ssh密钥,不是authoizations加
 
 ### centos免密码登录
-- 生成公匙(要设置passphrase)
-- 将公匙写入到目标机器 ~/.ssh/authorized_keys
-- chmod 644 ~/.ssh/authorized_keys 
-- vim /etc/selinux/config 修改disabled为enforcing,重启
-- restorecon -r -vv /root/.ssh 修复tag,重启
-- ssh hohst别名(照理能成功)
-- setenforce 0
-> .ssh/config
-```
-Host 别名
-HostName ip或域名
-Port 22
-User root
-IdentityFile ~/.ssh/id_rsa.pub
-IdentitiesOnly yes
-```
+- 生成公匙(要设置passphrase): ssh-keygen -t rsa -C xxx@gmail.com
+- 编辑配置
+  > .ssh/config
+  ```
+  Host 别名
+  HostName ip或域名
+  Port 22
+  User root
+  IdentityFile ~/.ssh/id_rsa.pub
+  IdentitiesOnly yes
+  ```
+- ssh-copy-id -i ~/.ssh/id_rsa_baidu.pub baidu
+- ssh baidu
+- 问题:
+  ```
+  vim /etc/selinux/config 修改disabled为enforcing,重启
+  restorecon -r -vv /root/.ssh 修复tag,重启
+  setenforce 0
+  ```
 
 ### 修改ssh端口
 - 添加测试端口: `vim /etc/ssh/sshd_config` => 添加 Port 22222
