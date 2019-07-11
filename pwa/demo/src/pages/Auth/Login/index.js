@@ -1,16 +1,15 @@
 import React from 'react';
 import { Observer, useLocalStore } from 'mobx-react-lite';
-import { useContext } from '../../../../contexts/routerContext';
+import { useContext } from '../../../contexts/routerContext';
 import { InputItem, List, Button, Toast } from 'antd-mobile';
 
-import services from '../../../../services';
-import storage from '../../../../utils/storage';
+import services from '../../../services';
+import storage from '../../../utils/storage';
 
 import './index.css';
-import '../../../common.css';
 
 async function login(router, store) {
-  if (store.username && store.password) {
+  if (store.account && store.password) {
     store.isLoading = true;
     let res = await services.login(store);
     store.isLoading = false;
@@ -34,7 +33,7 @@ export default function ({ self }) {
   let router = useContext();
   let store = useLocalStore(() => ({
     isLoading: false,
-    username: '',
+    account: '',
     password: ''
   }));
   return <Observer>
@@ -46,8 +45,8 @@ export default function ({ self }) {
               type="text"
               placeholder="用户名"
               style={{ border: '0 none' }}
-              defaultValue={store.username}
-              onBlur={value => store.username = value}
+              defaultValue={store.account}
+              onBlur={value => store.account = value}
             >
               用户名
             </InputItem>

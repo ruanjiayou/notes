@@ -125,6 +125,13 @@
 ## 本地同步配置到服务器并重启
 - 进入cmd目录
 - 执行: `sh ./sync_servers.sh`
+- proxy中使用变量造成： *1 no resolver defined to resolve localhost
+  ```
+  nginx.conf中http里添加
+  resolver 127.0.0.1 [::1]:5353;
+  resolver_timeout 5s;
+  ```
+
 ## 重启失败
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { useMount } from 'react-use';
+import { useEffectOnce } from 'react-use';
 import { Observer } from 'mobx-react-lite';
 import { ListView, PullToRefresh } from 'antd-mobile';
 import renderEmptyView from '../Empty/index';
@@ -9,10 +9,10 @@ const dataProvider = new ListView.DataSource({
 });
 
 function MyBody(props) {
-  return <div className="am-list-body">{props.children}</div>
+  return <div className={`am-list-body ${props.className}`}>{props.children}</div>
 }
 
-function renderList({ loader, renderItem, onScroll }) {
+function renderList({ loader, renderItem, onScroll, className }) {
   const dataSource = dataProvider.cloneWithRows(loader.items.slice());
   const EmptyView = renderEmptyView(loader);
   // 必须要这样.不能直接用 loader.isLoading判断
@@ -41,7 +41,7 @@ function renderList({ loader, renderItem, onScroll }) {
 
 export default function (props) {
   const { loader } = props;
-  useMount(() => {
+  useEffectOnce(() => {
     if (loader.isEmpty) {
       loader.refresh();
     }

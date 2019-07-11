@@ -3,14 +3,18 @@ import Mock from 'mockjs';
 export default {
   login: config => {
     const data = JSON.parse(config.body);
-    if (data.username === 'test' && data.password === '123456') {
+    if (data.account === 'test' && data.password === '123456') {
       return {
         code: 0,
-        data: { token: 'test' }
+        data: { token: 'test' },
       }
     } else {
-      return {}
+      return {
+        code: -1,
+        message: '账号或密码错误',
+      }
     }
+
   },
   getArticles: config => {
     return Mock.mock({

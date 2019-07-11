@@ -1,21 +1,4 @@
 import { flow, types } from 'mobx-state-tree';
-import EventEmitter from 'eventemitter3';
-
-// refresh/more
-function setupEvent() {
-  const events = new EventEmitter();
-  return {
-    on(...args) {
-      events.on(...args);
-    },
-    off(...args) {
-      events.off(...args);
-    },
-    emit(...args) {
-      events.emit(...args);
-    },
-  }
-}
 
 function createItemsLoader(model, fn, defaultValue) {
   const unionModel = types.model({
@@ -44,9 +27,6 @@ function createItemsLoader(model, fn, defaultValue) {
       get length() {
         return self.items.length;
       },
-      get isRefreshing() {
-        return self.isLoading && self.loadingType === 'refresh';
-      }
     }
   }).actions(self => {
     const request = flow(function* (params = {}, type = 'refresh') {
@@ -73,7 +53,6 @@ function createItemsLoader(model, fn, defaultValue) {
           self.state = 'fail';
           self.error = { code: 1, message: 'x' }
         }
-        self.emit(self.type, self.error, items || [], self.items);
       } catch (err) {
         // 加载失败
         self.state = 'fail';
@@ -82,7 +61,6 @@ function createItemsLoader(model, fn, defaultValue) {
         } else {
           self.error = { code: 'unkown', message: '未知错误' };
         }
-        self.emit(self.type, self.error);
       } finally {
         self.isLoading = false;
       }
@@ -95,6 +73,9 @@ function createItemsLoader(model, fn, defaultValue) {
       remove(index) {
         self.items = self.items.slice().filter((item, idx) => +index !== +idx)
       },
+      append(item) {
+        self.items.push(item);
+      },
       async refresh(params) {
         await request(params, 'refresh');
       },
@@ -103,7 +84,7 @@ function createItemsLoader(model, fn, defaultValue) {
         await request(params, 'more');
       }
     }
-  }).actions(setupEvent);
+  });
 
   return types.optional(unionModel, {});
 }

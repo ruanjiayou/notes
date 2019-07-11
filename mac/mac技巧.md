@@ -8,7 +8,7 @@
   ```
 - 查看环境变量: `echo $PATH`
 
-# mac技巧
+## mac技巧
 - vscode+homebrew+node.js+git+docker(mysql+redis)+item2+zsh
 - docker和docker-compose安装: brew install就可以
 - 打开终端执行：/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -22,6 +22,14 @@
 - 修改hosts: sudo vim /etc/hosts
 - ip查看: 设置-->网络
 - 剪切: 源 cmd+c 目标: cmd+alt+v
+
+## 添加系统命令别名
+```sh
+vim ~/.bash_profile
+>> alias [xxx]='[yyy]'
+source ~/.bash_profile
+alias
+```
 
 ## Mac安装mysql
 之前安装了homebrew: 

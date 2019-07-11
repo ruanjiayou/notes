@@ -9,3 +9,10 @@
 - quiet后面,空格并加nouveau.modeset=0
 - 注意: windows的区分NTFS是MBR格式,deepin会要求格式化整个磁盘,而不是单个分区!
 - window下用paragon 12 格式化为ext4格式; DiskGenius 4.3 不行
+
+## 安装node和npm
+- wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+- source ~/.bashrc
+- source ~/.bashrc
+- node -v
+- npm -v

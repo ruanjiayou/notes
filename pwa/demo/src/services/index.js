@@ -6,7 +6,7 @@ export default {
     return shttp({
       url: '/auth/user/sign-in',
       method: 'post',
-      data: _.pick(params, ['username', 'password']),
+      data: _.pick(params, ['account', 'password']),
     });
   },
   async getArticles(params) {

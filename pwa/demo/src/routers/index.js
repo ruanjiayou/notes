@@ -2,10 +2,10 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import { useProvider } from '../contexts/routerContext';
 
-import LayoutNormal from '../components/pages/Home/Layout/Normal';
-import Home from '../components/pages/Home';
-import Login from '../components/pages/Auth/Login';
-import Article from '../components/pages/Home/Article/List';
+import LayoutNormal from '../pages/Home/Layout/Normal';
+import Home from '../pages/Home';
+import Login from '../pages/Auth/Login';
+import Article from '../pages/Home/Article/List';
 
 import store from '../global-state';
 import storage from '../utils/storage';

@@ -7,7 +7,7 @@ export default {
       host: 'http://localhost:3000/v1',
     },
     development: {
-      host: 'http://pwa.jiayou.com',
+      host: 'http://password.jiayou.com',
     }
   },
   menus: [
