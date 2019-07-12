@@ -136,6 +136,14 @@ git push
 - git merge --squash bacnchname
 - git commit -m "test squash"
 
+### Permissions 0664/0777are too open
+- chmod 600 ~/.ssh/id_rsa
+
+### exec /usr/lib/ssh/ssh-askpass : No such file or directory error
+- sudo apt-get autoremove git
+- sudo apt-get install git
+- git push
+
 ### 参考文章
 - https://git-scm.com/book/zh/v2
 - http://gitref.justjavac.com/

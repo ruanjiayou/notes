@@ -185,7 +185,7 @@ curl
   <fs spec>：分区定位，可以给UUID或LABEL，例如：UUID=6E9ADAC29ADA85CD或LABEL=software
   <fs file>：具体挂载点的位置，例如：/data
   <fs vfstype>：挂载磁盘类型，linux分区一般为ext4，windows分区一般为ntfs
-  <fs mntops>：挂载参数，一般为defaults
+  <fs mntops>：挂载参数，一般为defaults 等于rw,suid,dev,exec,auto,nouser,async
   <fs freq>：磁盘检查，默认为0
   <fs passno>：磁盘检查，默认为0，不需要检查
   ```

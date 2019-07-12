@@ -35,3 +35,9 @@ https://blog.xcatliu.com/2015/04/14/semantic_versioning_and_npm/
   nrm use taobao
   nrm use npm
   ```
+- ENOSPC: System limit for number of file watchers reached
+  > deepin上: 其实是在/etc/sysctl.d/99-sysctl.conf里加了
+  ```bash
+  echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+  sudo sysctl --system
+  ```

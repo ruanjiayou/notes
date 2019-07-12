@@ -122,3 +122,6 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 ```
 
 https://segmentfault.com/a/1190000016330314
+
+## 遇到的问题
+- deepin中无法复制到系统的剪贴板: vim ~/.vimrc << set paste
