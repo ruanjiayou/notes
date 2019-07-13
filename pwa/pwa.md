@@ -17,6 +17,57 @@
 - axios+mockjs
 - react-scripts.自动webpack配置.不支持less要自己fork.
 
+## workbox(react-app-rewired+react-app-rerire-workbox)
+> 参考文章: https://medium.com/la-creativer%C3%ADa/using-workbox-with-create-react-app-without-ejecting-b02b804854b
+- 安装(npm也可以)
+  ```bash
+  yarn add workbox-webpack-plugin 
+  yarn add react-app-rewire-workbox 
+  yarn add react-app-rewired
+  ```
+- package.json里的react-scripts 都换成 react-app-rewired
+- 项目根目录添加config-overrides.js
+  ```js
+  const {rewireWorkboxInject, defaultInjectConfig} = require('react-app-rewire-workbox');
+  const path = require('path');
+
+  module.exports = function override(config, env) {
+    if (env === "production") {
+      console.log("Production build - Adding Workbox for PWAs");
+      // Extend the default injection config with required swSrc
+      const workboxConfig = {
+        ...defaultInjectConfig,
+        swSrc: path.join(__dirname, 'src', 'custom-sw.js'),
+        // 下面两行: 不加就有坑
+        swDest: 'service-worker.js',
+        importWorkboxFrom: 'local'
+      };
+      config = rewireWorkboxInject(workboxConfig)(config, env);
+    }
+
+    return config;
+  };
+  ```
+- 写自己的service-worker.js(src/custom-sw.js,原来的service-worker.js里将).workbox4.3的写法变了.原来是3.4版本的
+  > react-app的index.js入口 import * as serviceWorker from './service-work'; serviceWorker.register(); 注册服务的
+  ```js
+  // See https://developers.google.com/web/tools/workbox/guides/configure-workbox
+  workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
+
+  self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
+  self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+
+  // We need this in Webpack plugin (refer to swSrc option): https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin#full_injectmanifest_config
+  workbox.precaching.precacheAndRoute(self.__precacheManifest);
+
+  // app-shell
+  workbox.routing.registerRoute("/", new workbox.strategies.NetworkFirst());
+  // webapp补充缓存规则.注意服务器添加支持.CDN也要注意 
+  workbox.routing.registerRoute(/\/root\//, new workbox.strategies.NetworkFirst());
+  workbox.routing.registerRoute(/\.(?:png|svg|jpg|gif)(?:\?.*?)?$/, new workbox.strategies.StaleWhileRevalidate());
+  workbox.routing.registerRoute(/https?:\/\/[^/]+encode\/(.*)\.(?:png|svg|jpg|gif)/, new workbox.strategies.CacheFirst());
+  ```
+
 ## 捕获错误
 - app类适用: react16 hooks
   ```js

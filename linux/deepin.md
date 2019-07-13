@@ -93,6 +93,28 @@ set tabstop=2
   ```
 - gogs添加公匙
 
+## docker
+> https://wiki.deepin.org/wiki/Docker
+- 如果安装过旧的docker: `sudo apt-get remove docker.io docker-engine`
+- 如果依赖没有可安装候选应该是新版本不需要了: `sudo apt-get install apt-transport-https ca-certificates curl python-software-properties software-properties-common`
+- 官方源: `curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -`, 清华源: `curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -`
+- 查看秘钥是否安装成功: `sudo apt-key fingerprint 0EBFCD88`
+- 查看版本号: `cat /etc/debian_version`.deepin 15.9.2 基于 debian 9.0对应stretch
+- 在 source.list 中添加 docker-ce 软件源
+  > 官方源: `sudo add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"` \
+  > 清华源: `sudo add-apt-repository "deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable"`
+- 报错的话就(清华源): `sudo vim /etc/apt/sources.list` << `deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable`
+- 更新仓库: `sudo apt-get update`
+- 安装docker-ce: `sudo apt-get install docker-ce`
+- 启动docker: `systemctl start docker`
+- 查看安装的版本信息: `docker version`
+- 验证 docker 是否被正确安装并且能够正常使用: `sudo docker run hello-world`
+- 让普通用户也能运行起来: `sudo usermod -aG docker $USER`
+- 查看: `docker ps -a`.失败就看docker.md deepin里要重启
+- 关闭开机启动: 安装chkconfig->`sudo apt-get install chkconfig`,移除自启->`sudo chkconfig --del docker`
+
+## navicat和AndroidStudio
+
 ## 问题
 - win10快速启动造成不能挂载磁盘(系统无法启动...得另外登录Linux系统来修复)
 - 貌似解决logo卡住问题引入的.Error: Driver 'pcspkr' is already registered, aborting.
