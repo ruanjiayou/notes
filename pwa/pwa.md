@@ -1,4 +1,5 @@
 # PWA 渐进式Web应用
+service-work才是PWA的精髓
 
 ## manifest 应用清单
 
@@ -69,7 +70,7 @@
   ```
 
 ## 捕获错误
-- app类适用: react16 hooks
+- app类适用: react16 hooks.解决js报错问题
   ```js
   import React from 'react';
   import ReactDOM from 'react-dom';
@@ -99,5 +100,19 @@
   ReactDOM.render(<ErrorBoundary><App/></ErrorBoundary>, document.getElementById('root'))
   ```
 
+## 域名防封
+> 首页域名组, 接口域名组.解决刷新出现Safari不能连接到服务器.
+- window.navigator.onLine
+- isOnline = try { Promise.resolve(fetch('https://www.baidu.com',{mode:'no-cors'})).timeout(5000) }
+- canRefresh = checkHost('/')
+- getHosts()
+- return { status, host }
+
+## 离开超时自动刷新
+- document.addEventListener('visibilitychange')
+
+## 模式判断
+- iosPWA: window.navigator.stanalone
+- chromePWA: window.matchMedia('display-mode: standalone').matches
 ## TODO:
 - base-loader.js 缺少remove()方法 filter隐藏

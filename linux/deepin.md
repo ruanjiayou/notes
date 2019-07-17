@@ -36,17 +36,6 @@ set tabstop=2
     $ UUID=xxx /mnt/e ntfs defaults 0 1
     $ sudo mount -a (一定要这个先测试！)
     ```
-- (貌似没效果,换下面的)解决开机卡在logo的bug
-  ```
-  sudo vim /etc/modprobe.d/blacklist.conf
-  >> blacklist nouveau
-  >> options nouveau modeset=0
-  ```
-- 解决开机卡在logo的bug(这是解决鼠标的?logo第一个quiet后加 acpi_osi=! acpi="window 2009" 还有sudo vim /etc/default/grub !!!好像都不是!!!难道是有两个deepin造成的?)
-  ```
-  sudo vim /boot/grub/grub.cfg
-  在quiet后面加 nouveau.modeset=0
-  ```
 
 ## 安装node和npm
 - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
@@ -115,8 +104,19 @@ set tabstop=2
 
 ## navicat和AndroidStudio
 
+## logo卡住的问题
+- logo卡住解决方案一:(a start job is running for live-config xxx 的问题也可以解决)
+  > 启动项按e, quiet 后面加: `acpi_osi=! acpi="window 2009"`, F10(保存并继续启动) \
+  > sudo vim /etc/default/grub  最后面加一行: GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT"'acpi_osi=! acpi="windows 2009"' \
+  > sudo update-grub (艹,很多教程没这句)
+- logo卡住解决方案二:(之前这个也可以,现在要第一种才能解决)
+  > 启动项按e, quiet 后面加: `uveau.modeset=0`, F10(保存并继续启动)
+
 ## 问题
 - win10快速启动造成不能挂载磁盘(系统无法启动...得另外登录Linux系统来修复)
 - 貌似解决logo卡住问题引入的.Error: Driver 'pcspkr' is already registered, aborting.
   > /etc/modprobe.d/blacklist.conf << blacklist pcspkr
 - 解决pcspkr问题引入的.ACPI Error.无法启动.最后把blacklist.conf删除了就好了
+- fsck: error 2(No such file or directory) while xxx
+- ACPI Error: logo卡住方案一?
+- Driver 'pcspkr' is already registered, aborting: 蜂鸣器有关?
