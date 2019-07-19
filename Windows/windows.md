@@ -15,6 +15,23 @@
 - `bcdedit /set {bootmgr} timeout 0`: 关闭windows启动管理器(一闪而逝...)
 - `bcdedit /set {bootmgr} displaybootmenu No`: 关闭windows启动管理器
 
+## win10里删除顽固的ubantu引导
+- 选择win10的260M的EFI分区
+  - 打开cmd
+  - 打开系统工具: `diskpart`
+  - 查询磁盘信息: `list disk`
+  - 选择磁盘: `select disk 1`
+  - 选择分区: `select partition 1`
+- 分配盘符: `assign letter=p`
+- 管理员权限打开记事本
+- 记事本打开文件访问p盘
+- 直接在对话框里删除EFI文件夹里的ubantu
+- 删除盘符: `remove letter=p` 
+  ```
+  打开cmd
+  diskpart命令
+  list disk
+  ```
 ## window10开机Local Session Manager CPU 100%
 > 是superfetch服务造成的?
 在命令提示符(管理员)下键入以下命令：sfc /SCANNOW 及

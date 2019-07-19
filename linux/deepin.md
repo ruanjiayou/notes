@@ -13,17 +13,18 @@
 ## 一些配置
 - 安装vscode
 - 关闭音效; 鼠标自然模式
-- 编辑vim配置
+- 编辑vim配置: vim ~/.vimrc
+  > . ~/.vimrc
+  ```
+  set nu
+  set paste
+  set encoding=utf-8
+  set cul
+  set mouse=a
+  set tabstop=2
+  ```
 - chrome改主页和默认引擎,Google搜索设置改地区
 - 配置搜狗输入法
-```
-set nu
-set paste
-set encoding=utf-8
-set cul
-set mouse=a
-set tabstop=2
-```
 - 挂载磁盘
     ```
     # 查看磁盘和分区信息
@@ -34,7 +35,7 @@ set tabstop=2
     $ sudo vim /etc/fstab
     $ # /dev/sda2
     $ UUID=xxx /mnt/e ntfs defaults 0 1
-    $ sudo mount -a (一定要这个先测试！)
+    $ sudo mount -a (一定要这个先测试！关闭占用的：sudo umount /dev/sda1)
     ```
 
 ## 安装node和npm
@@ -49,6 +50,7 @@ set tabstop=2
 - git config --global user.name "ruanjiayou"
 - git config --global user.email "ruanjiayou123@gmail.com"
 - cd ~/.ssh (不然都在~目录了...)
+- 0777too open: chmod 600 ~/.ssh/id_rsa, chmod 600 ~/.ssh/config
 - ssh-keygen -t rsa -C ruanjiayou123@gmail.com << id_rsa_baidu和gogs
   ```
   Host baidu
@@ -86,7 +88,7 @@ set tabstop=2
 > https://wiki.deepin.org/wiki/Docker
 - 如果安装过旧的docker: `sudo apt-get remove docker.io docker-engine`
 - 如果依赖没有可安装候选应该是新版本不需要了: `sudo apt-get install apt-transport-https ca-certificates curl python-software-properties software-properties-common`
-- 官方源: `curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -`, 清华源: `curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -`
+- 建议用清华源。官方源: `curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -`, 清华源: `curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -`
 - 查看秘钥是否安装成功: `sudo apt-key fingerprint 0EBFCD88`
 - 查看版本号: `cat /etc/debian_version`.deepin 15.9.2 基于 debian 9.0对应stretch
 - 在 source.list 中添加 docker-ce 软件源
@@ -105,8 +107,9 @@ set tabstop=2
 ## navicat和AndroidStudio
 
 ## logo卡住的问题
-- logo卡住解决方案一:(a start job is running for live-config xxx 的问题也可以解决)
-  > 启动项按e, quiet 后面加: `acpi_osi=! acpi="window 2009"`, F10(保存并继续启动) \
+> 两个deepin碰到的问题：update-grub会修改所有系统的grub配置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
+- logo卡住解决方案一:(a start job is running for live-config xxx 的问题也可以解决...)
+  > 启动项按e, quiet 后面加: `acpi_osi=! acpi="windows 2009"`, F10(保存并继续启动) \
   > sudo vim /etc/default/grub  最后面加一行: GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT"'acpi_osi=! acpi="windows 2009"' \
   > sudo update-grub (艹,很多教程没这句)
 - logo卡住解决方案二:(之前这个也可以,现在要第一种才能解决)
@@ -120,3 +123,11 @@ set tabstop=2
 - fsck: error 2(No such file or directory) while xxx
 - ACPI Error: logo卡住方案一?
 - Driver 'pcspkr' is already registered, aborting: 蜂鸣器有关?
+- a start job is running for live-config: swap的问题?
+  - 查看swap分区是否正常: `swapon --show`
+  - 关闭现有的swap: `sudo swapoff -a`
+  - 创建要作为swap分区的文件2G: `sudo dd if=/dev/zero of=/root/swapfile bs=1M count=2048`
+  - 格式化为交换分区文件: `sudo mkswap /root/swapfile`
+  - 启用交换分区文件: `sudo swapon /root/swapfile`
+  - 开机时自启用: /etc/fstab中 `/root/swapfile swap swap defaults 0 0`
+  - 重启后验证: `free -m`
