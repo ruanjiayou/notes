@@ -163,3 +163,7 @@ set up your Android development environment
   > 重启...好了
 - 编译缓存: 安步骤来清缓存(加sudo),安装时不要加sudo...
 - icon不出现: `react-native link react-native-vector-icons`
+
+## deepin-android-studio
+- Command failed: ./gradlew app:installDebug -PreactNativeDevServerPort=8081
+  > 用as打开项目的android文件夹...

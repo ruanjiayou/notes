@@ -23,7 +23,6 @@
   set mouse=a
   set tabstop=2
   ```
-- chrome改主页和默认引擎,Google搜索设置改地区
 - 配置搜狗输入法
 - 挂载磁盘
     ```
@@ -104,7 +103,22 @@
 - 查看: `docker ps -a`.失败就看docker.md deepin里要重启
 - 关闭开机启动: 安装chkconfig->`sudo apt-get install chkconfig`,移除自启->`sudo chkconfig --del docker`
 
+## docker-compose 
+- `sudo curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose`
+- `sudo chmod +x /usr/local/bin/docker-compose`
+- `docker-compose --version`
 ## navicat和AndroidStudio
+
+## chrome
+- 改主页和默认引擎,Google搜索设置改地区
+- 插件: qrcode,adblock,jsonViewer,colorZilla
+- 书签栏: youtube,火萤,
+
+## 应用商店
+- 4k video download
+- AndroidStudio(不能用)
+- vscode
+- 
 
 ## logo卡住的问题
 > 两个deepin碰到的问题：update-grub会修改所有系统的grub配置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
@@ -114,6 +128,27 @@
   > sudo update-grub (艹,很多教程没这句)
 - logo卡住解决方案二:(之前这个也可以,现在要第一种才能解决)
   > 启动项按e, quiet 后面加: `uveau.modeset=0`, F10(保存并继续启动)
+
+## 休眠死机
+- deepin 15.11升级内核到5.1.20版
+  - 配置编译环境: `sudo apt-get install build-essential kernel-package libncurses5-dev fakeroot libssl-dev`
+  - 下载5.1.20内核: https://www.kernel.org/
+  - 在home目录下建立一个linux目录，并将内核文件解压其中: tar xfv linux-5.1.20.tar.xz
+  - 进入解压目录，运行以下命令: `make mrproper`
+  - 拷贝现内核配置文件到编译目录的.config: cp /boot/config-`uname -r`* .config
+  - 依据现有配置文件配置新内核，新设置用缺省值: `make olddefconfig`
+  - 根据自己的需要修改配置参数，此步骤本人省略了: `make menuconfig`
+  - 开始编译deb包: `make -j8 deb-pkg`
+  - 编译完成后，deb包会在上一级目录上，安装就可以: `sudo dpkg -i linux-*.deb`
+  - 重启完事
+  - 卸载你安装的内核包可用下面的命令: `sudo dpkg --purge linux-image-NNN`(其中NNN为你编译的内核版本号，如5.1.20)
+- planB
+  - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.1.20/
+  - 下载amd64(64位cpu,i386是32位cpu的意思).4个(就是不下有lowlatency的)
+  - 四个安装包下载并且放在同一文件夹下，然后右键在该文件夹内打开终端，准备开始安装
+  - sudo dpkg -i *.deb
+  - 安装完成后保险起见手动更新新内核的引导项（正常自动会更新，这里保险起见）: `sudo update-grub`
+  - 重新启动系统，然后选择新内核Linux 5.0.1启动即可，通常情况下都可以顺利完成
 
 ## 问题
 - win10快速启动造成不能挂载磁盘(系统无法启动...得另外登录Linux系统来修复)

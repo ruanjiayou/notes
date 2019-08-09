@@ -1,0 +1,1 @@
+// 思路: limit offset 每次查一批, bulkWrite批量写入. len小于limit说明查完了.
