@@ -72,6 +72,7 @@ service-work才是PWA的精髓
   // webapp补充缓存规则.注意服务器添加支持.CDN也要注意 
   workbox.routing.registerRoute(/\.(?:png|svg|jpg|gif)(?:\?.*?)?$/, new workbox.strategies.CacheFirst({
     cacheName: 'images',
+    fetchOptions: {mode:'no-cors'}
     plugins: [
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
