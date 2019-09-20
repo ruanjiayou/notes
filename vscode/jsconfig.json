@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "rootDir": "src",
+      "baseUrl": "src"
+    },
+    "include": [
+      "src",
+      "node_modules"
+    ]
+  }

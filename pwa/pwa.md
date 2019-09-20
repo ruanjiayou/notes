@@ -55,18 +55,34 @@ service-work才是PWA的精髓
   // See https://developers.google.com/web/tools/workbox/guides/configure-workbox
   workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
 
-  self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
-  self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+  // 默认的
+  // self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
+  // self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 
   // We need this in Webpack plugin (refer to swSrc option): https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin#full_injectmanifest_config
   workbox.precaching.precacheAndRoute(self.__precacheManifest);
 
   // app-shell
-  workbox.routing.registerRoute("/", new workbox.strategies.NetworkFirst());
+  workbox.routing.registerRoute("/root", new workbox.strategies.NetworkFirst({
+    networkTimeoutSeconds: 10,
+    ignoreSearch: {
+      ignoreSearch: true
+    }
+  }));
   // webapp补充缓存规则.注意服务器添加支持.CDN也要注意 
-  workbox.routing.registerRoute(/\/root\//, new workbox.strategies.NetworkFirst());
-  workbox.routing.registerRoute(/\.(?:png|svg|jpg|gif)(?:\?.*?)?$/, new workbox.strategies.StaleWhileRevalidate());
-  workbox.routing.registerRoute(/https?:\/\/[^/]+encode\/(.*)\.(?:png|svg|jpg|gif)/, new workbox.strategies.CacheFirst());
+  workbox.routing.registerRoute(/\.(?:png|svg|jpg|gif)(?:\?.*?)?$/, new workbox.strategies.CacheFirst({
+    cacheName: 'images',
+    plugins: [
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200]
+      }),
+      new workbox.expiration.Plugin({
+        maxEntries: 30,
+        maxAgeSeconds: 30 * 24 * 60 *60,
+        purgeOnQuotaError: false,
+      })
+    ],
+  }));
   ```
 
 ## 捕获错误
@@ -111,8 +127,16 @@ service-work才是PWA的精髓
 ## 离开超时自动刷新
 - document.addEventListener('visibilitychange')
 
+## 与主进程的通信
+- 特殊的postMessage
+
 ## 模式判断
 - iosPWA: window.navigator.stanalone
 - chromePWA: window.matchMedia('display-mode: standalone').matches
 ## TODO:
 - base-loader.js 缺少remove()方法 filter隐藏
+
+## 问题
+- 第三方输入法卡死
+- 进入先进about: blank,再进pwa白屏
+- ios版本.支持11.3,但会自动刷新.12.0不会

@@ -240,6 +240,9 @@ curl
 - 查看当前允许的httpd端口: `semanage port -l|grep xxx`,xxx代表端口类型(名称?)或端口号
 - 添加允许的httpd端口: `semanage port -a -t http_port_t  -p tcp 8090`.像squid是squid_port_t
 
+## Linux 的安全配置四个级别
+- firewall -> service -> filesystem -> selinux
+
 ## 防火墙
 > CentOS7的防火墙换成了firewall了
 - 开启端口 : `firewall-cmd --zone=public --add-port=80/tcp --permanent`

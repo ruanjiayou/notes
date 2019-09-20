@@ -84,3 +84,5 @@ STARTS 2018-08-20 14:44:54
 - Table flags are 0 in the data dictionary but the flags in file ./ibaredata1
   > window里可以到C:\Users\username\Documents\Kitematic\mysql-demo\var\lib\mysql 删除文件
   > ip是192.168.99.100
+- docker mysql mysqld: Error on realpath() on '/var/lib/mysql-files' No such file or directory
+  > 在启动容器时 需要加上 -v /home/mysql/mysql-files:/var/lib/mysql-files/

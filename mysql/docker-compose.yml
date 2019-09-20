@@ -15,6 +15,7 @@ services:
       - ./data:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf
       - ./grant.sh:/root/grant.sh
+      - ./mysql-files:/var/lib/mysql-files/
 networks:
   net-mysql:
     external: true

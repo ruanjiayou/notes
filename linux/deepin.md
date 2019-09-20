@@ -129,6 +129,17 @@
 - logo卡住解决方案二:(之前这个也可以,现在要第一种才能解决)
   > 启动项按e, quiet 后面加: `uveau.modeset=0`, F10(保存并继续启动)
 
+## 修改网卡默认名称,开热点
+- sudo vim /etc/default/grub
+- GRUB_CMDLINE_LINUX_DEFAULT 那行改成 后面添加 net.ifnames=0 biosdevname=0
+- 保存并退出
+- sudo update-grub
+- sudo apt-get install hostapd iptables dnsmasq
+- git clone https://github.com/oblique/create_ap 
+- cd create_ap
+- sudo make install
+- sudo create_ap wlan0 eth0 myhost 12345678 &  #开启热点并后台运行，可以关闭终端(重启不用再执行了)
+
 ## 休眠死机
 - deepin 15.11升级内核到5.1.20版
   - 配置编译环境: `sudo apt-get install build-essential kernel-package libncurses5-dev fakeroot libssl-dev`
@@ -166,3 +177,9 @@
   - 启用交换分区文件: `sudo swapon /root/swapfile`
   - 开机时自启用: /etc/fstab中 `/root/swapfile swap swap defaults 0 0`
   - 重启后验证: `free -m`
+- root file system requires a manual fsck
+  > 执行 fsck /dev/sda3
+- Error: ENOSPC: System limit for number of file watchers reached, watch
+  > sudo vim /etc/sysctl.conf \
+  > 修改或添加fs.inotify.max_user_watches=524288
+  > 生效 sudo sysctl -p 

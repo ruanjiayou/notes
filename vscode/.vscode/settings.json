@@ -1,0 +1,29 @@
+{
+    "workbench.colorTheme": "Visual Studio Dark",
+    //显示行号
+    "editor.lineNumbers": "on",
+    "editor.renderIndentGuides": true,
+    //js代码风格配置文件
+    "eslint.options": {
+        "configFile": ".vscode/.eslintrc.json"
+    },
+    //easyless设置less生成的目录
+    "less.compile": {
+        "out": "${workspaceRoot}\\css\\"
+    },
+    //HTML格式检查
+    "less.lint.hexColorLength": "ignore",
+    "workbench.iconTheme": "vscode-icons",
+    "window.zoomLevel": 0,
+    "typescript.check.npmIsInstalled": false,
+    "vsicons.dontShowNewVersionMessage": true,
+    "todohighlight.isEnable": true,
+    "explorer.confirmDelete": false,
+    "editor.minimap.enabled": true,
+    "vetur.validation.template": false,
+    "extensions.ignoreRecommendations": false,
+    "explorer.confirmDragAndDrop": false,
+    "git.autofetch": true,
+    "editor.tabSize": 2,
+    "scm.diffDecorationsGutterWidth": 2
+}
