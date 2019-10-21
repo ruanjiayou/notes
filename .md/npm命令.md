@@ -4,6 +4,7 @@ https://docs.npmjs.com/cli-documentation/cli
 - npm init
 - 搜索: npm search
 - npm i / npm install [-g/-S/--save/-dev]
+- npm i package --force 更新包版本
 - npm uninstall 
 - 链接本地文件夹为包(适合测试开发包): npm link
 - npm list [-g]

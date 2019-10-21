@@ -118,6 +118,7 @@ git pull/push master // 后续
 ```bash
 git merge --abort
 git reset --merge
+git reset <commit> (--hard)
 // 双方修改一样,两个都需要保留,解决冲突后再改
 git pull
 git push

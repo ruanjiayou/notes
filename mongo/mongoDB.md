@@ -17,6 +17,11 @@
   ```
   > sudo yum install -y mongodb-org
 - which mongorestore
+- window10 https://www.mongodb.com/what-is-mongodb 下载
+- C:\Program Files\MongoDB\Server\4.2\bin 
+  - mongo.exe启动
+  - mongod.exe命令行 mongod --version
+  - 连接: 127.0.0.1:27017(默认无账号密码)
 
 ### 备份与还原
 > 写了个shell, 加权限`chmod u+x`, 执行`cmd.sh dump db`

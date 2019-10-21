@@ -54,6 +54,7 @@ service-work才是PWA的精髓
   ```js
   // See https://developers.google.com/web/tools/workbox/guides/configure-workbox
   workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
+  workbox.setConfig({ debug: false })
 
   // 默认的
   // self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
@@ -72,7 +73,7 @@ service-work才是PWA的精髓
   // webapp补充缓存规则.注意服务器添加支持.CDN也要注意 
   workbox.routing.registerRoute(/\.(?:png|svg|jpg|gif)(?:\?.*?)?$/, new workbox.strategies.CacheFirst({
     cacheName: 'images',
-    fetchOptions: {mode:'no-cors'}
+    fetchOptions: {mode:'no-cors'},
     plugins: [
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
@@ -141,3 +142,4 @@ service-work才是PWA的精髓
 - 第三方输入法卡死
 - 进入先进about: blank,再进pwa白屏
 - ios版本.支持11.3,但会自动刷新.12.0不会
+- ios的50M限制?缓存数量时间可以控制
