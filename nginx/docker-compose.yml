@@ -7,13 +7,15 @@ services:
     depends_on:
       - node
     ports:
-      - 7000:7000
+      #- 7000:7000
       # http默认80
       - 8080:80
       # https默认443
       - 8443:443
       # file默认8090
-      - 8090:8090
+      #- 8090:8090
+      - 8011:8011
+      - 8012:8012
     volumes:
       - ./html/:/usr/share/nginx/html/
       - ./conf/:/etc/nginx/conf.d/

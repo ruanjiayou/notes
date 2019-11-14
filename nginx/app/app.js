@@ -11,13 +11,10 @@ const app = http.createServer(function (request, response) {
    *   .headers
    */
   const url1 = url.parse(request.url);
-  if (url1.pathname.startsWith('/api')) {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write('{"state": "success", "code": 0, "message": "", "data": null}');
-  } else {
-    response.writeHead(400);
-  }
-  response.end('');
+  console.log(url1)
+  response.writeHead(200, { 'Content-Type': 'application/json' });
+  response.write('{"state": "success", "code": 0, "message": "", "data": "'+url1.pathname+'"}');
+  response.end()
 });
 
 app.listen(process.env.PORT, function () {
