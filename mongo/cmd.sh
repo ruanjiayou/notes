@@ -1,12 +1,14 @@
 #! /bin/sh
+t=$(date "+%Y-%m-%d")
 dump() {
   echo "备份数据库: $1"
-
+  mongodump -d $1 -o backup/$t
 }
 store() {
   echo "还原数据库: $1"
+  mongorestore -d test-$1 backup/$t/$1
 }
-export() {
+exports() {
   echo "备份数据库.表: $1"
 }
 import() {
@@ -24,7 +26,7 @@ case $operation in
     store $name
   ;;
   "export"|"e")
-    export $name
+    exports $name
   ;;
   "import"|"i")
     import $name

@@ -6,7 +6,7 @@ services:
     restart: always
     env_file: .env
     networks: 
-      - net-mysql
+      - allinone
     ports:
       - 3306:3306
     expose:
@@ -17,5 +17,5 @@ services:
       - ./grant.sh:/root/grant.sh
       - ./mysql-files:/var/lib/mysql-files/
 networks:
-  net-mysql:
+  allinone:
     external: true

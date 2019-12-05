@@ -4,12 +4,14 @@ services:
     container_name: mongo-demo
     image: mongo
     restart: always
+    networks:
+      - allinone
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=123456
     volumes:
-      - ./db:/data/db
-      - ./log:/data/lob
+      - ./db:/data/db/
+      - ./log:/data/log/
       - ./backup:/data/backup
       - ./mongo.conf:/etc/mongo/mongod.conf
     ports:
@@ -18,6 +20,8 @@ services:
     image: mongo-express
     container_name: mongo-express
     restart: always
+    networks:
+      - allinone
     ports:
       - 8081:8081
     links:
@@ -27,3 +31,7 @@ services:
       - ME_CONFIG_BASICAUTH_PASSWORD=mongoexpress
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
+      
+networks:
+  allinone:
+    external: true

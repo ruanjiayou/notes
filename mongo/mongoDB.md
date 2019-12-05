@@ -24,6 +24,7 @@
   - 连接: 127.0.0.1:27017(默认无账号密码)
 
 ### 备份与还原
+- docker exec -ti mongo-demo bash
 > 写了个shell, 加权限`chmod u+x`, 执行`cmd.sh dump db`
 - 备份整个库： `mongodump -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test -o /data/backup`
 - 备份单个表：`mongoexport -u root -p 123456 -h 127.0.0.1 -d test --authenticationDatabase admin --collection test -o /data/backup/test/test.json`
@@ -36,7 +37,8 @@
 ## 问题
 - server returned error on SASL authentication step: Authentication failed.
   > 加 `--authenticationDatabase admin`
-
+- WiredTiger "handle-open: open: File exists" error when using NFS persistent storage
+  > 挂载目录问题.注释db目录启动.去掉注释重新启动
 ## 参考
 - 官方文档：https://docs.mongodb.com/manual/reference/configuration-options/
 - 配置参考： https://www.jianshu.com/p/f179ce608391
