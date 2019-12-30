@@ -109,6 +109,10 @@
 - `docker-compose --version`
 ## navicat和AndroidStudio
 
+## 安装Python和pip
+> sudo apt install -y python-pip python3-pip 然后用pip命令调用python2的pip
+pip3命令调用python3的
+
 ## chrome
 - 改主页和默认引擎,Google搜索设置改地区
 - 插件: qrcode,adblock,jsonViewer,colorZilla

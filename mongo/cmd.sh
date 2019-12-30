@@ -2,7 +2,7 @@
 t=$(date "+%Y-%m-%d")
 dump() {
   echo "备份数据库: $1"
-  mongodump -d $1 -o backup/$t
+  mongodump -u root -p 123456 -d $1 -o backup/$t
 }
 store() {
   echo "还原数据库: $1"
@@ -14,6 +14,8 @@ exports() {
 import() {
   echo "还原数据库.表: $1"
 }
+
+# sh cmd.sh dump novel
 
 #read -p "请输入命令和path: " operation name
 operation=$1
