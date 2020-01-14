@@ -238,7 +238,8 @@ curl
 ## semanage
 > selinux极大的增强了Linux的安全性,包括 文件系统,目录,文件,文件启动描述符,端口,消息接口和网络接口
 - 查看当前允许的httpd端口: `semanage port -l|grep xxx`,xxx代表端口类型(名称?)或端口号
-- 添加允许的httpd端口: `semanage port -a -t http_port_t  -p tcp 8090`.像squid是squid_port_t
+- 添加允许的httpd端口: `semanage port -a -t http_port_t -p tcp 8090`.像squid是squid_port_t
+- 删除允许的httpd端口: `semanage port -d -t http_port_t -p tcp 8097`
 
 ## Linux 的安全配置四个级别
 - firewall -> service -> filesystem -> selinux
