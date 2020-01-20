@@ -149,3 +149,4 @@
   > selinux开了造成的,关掉, setenforce 0
 - 访问不了 看是不是端口没打开或防火墙屏蔽了...fuck
 - cors options和后续的请求header里要保持一致 比如 access-control-allow-origin,不然corb
+- 405 method not allowed?fuck
