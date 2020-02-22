@@ -3,5 +3,4 @@
 - [中国电影数据信息网](https://www.zgdypw.cn/#/film.html)
 - [上海黄金交易所](https://www.sge.com.cn/)
 - [上海证券交易所](http://www.sse.com.cn/)
-- [av](https://read01.com/zh-sg/nLAA67.html#.XJiwRRMzbUI)
 - [流行梗](https://jikipedia.com/definition/7695)
