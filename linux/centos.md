@@ -97,3 +97,14 @@ disk-cloud
 - 限制登陆次数: `whereis pam_tally2` => `vim /etc/pam.d/login` => add `auth required pam_tally2.so deny=3 unlock_time=3600 even_deny_root root_unlock_time=3600`
 - 软件改默认端口，使用复杂密码，应用升级最新版本
 - 
+
+## 安装python3和pip3
+### 安装EPEL和IUS软件源
+ ```sh
+  yum install epel-release
+  yum install https://centos7.iuscommunity.org/ius-release.rpm
+ ```
+### 安装Python3.6
+> yum install python36u
+### 安装pip3
+> yum install python3-pip

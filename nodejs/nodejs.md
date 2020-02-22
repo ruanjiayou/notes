@@ -33,3 +33,5 @@ TODO: .env publish.sh dev.sh
 
 - 表单提交,request的formData的files字段长度为一的数组,到服务器就变字符串了
 - Error: ENOSPC: System limit for number of file watchers reached, watch 看deepin
+- referenceerror primordials is not defined
+  > unzip2 引起的之前gulp出现过.换个unzip包就可以了

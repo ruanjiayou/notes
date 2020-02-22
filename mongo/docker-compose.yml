@@ -14,6 +14,7 @@ services:
       - ./log:/data/log/
       - ./backup:/data/backup
       - ./mongo.conf:/etc/mongo/mongod.conf
+      - ./cmd.sh:/home/cmd.sh
     ports:
       - "27017:27017"
   mongo-express:

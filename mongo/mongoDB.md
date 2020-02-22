@@ -42,3 +42,14 @@
 ## 参考
 - 官方文档：https://docs.mongodb.com/manual/reference/configuration-options/
 - 配置参考： https://www.jianshu.com/p/f179ce608391
+
+数据库备份
+docker exec -ti mongo-demo bash
+cd /data/backup
+mongodump -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d novel -o /data/backup/2019-12-29
+rsync -vzrtopg --progress /mnt/codes/projects/notes-gogs/mongo/backup/2019-12-29/ root@baidu:/home/notes/mongo/backup/2019-12-29
+数据库还原
+docker exec -ti mongo-demo bash
+mongorestore -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d novel /data/backup/2019-12-29/novel
+pwa构建
+rsync -vzrtopg --progress --exclude='build/workbox-v4.3.1' ./build/ root@baidu:/home/web-novel/build/ 
