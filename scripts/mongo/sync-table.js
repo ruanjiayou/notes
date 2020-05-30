@@ -5,10 +5,10 @@ const condition = {  };
 const primaryKey = 'id';
 
 const db1 = mongoose.createConnection('mongodb://root:123456@localhost:27017/novel?authSource=admin=readPreference=primaryPreferred');
-const db2 = mongoose.createConnection('mongodb://root:123456@ip:27017/novel?authSource=admin=readPreference=primaryPreferred');
+const db2 = mongoose.createConnection('mongodb://root:123456@localhost:37017/novel?authSource=admin=readPreference=primaryPreferred');
 console.log('start');
-const sourceTable = db1.model('groups', new mongoose.Schema({}, { strict: false }));
-const targetTable = db2.model('groups', new mongoose.Schema({}, { strict: false }));
+const sourceTable = db1.model('rules', new mongoose.Schema({}, { strict: false }));
+const targetTable = db2.model('rules', new mongoose.Schema({}, { strict: false }));
 (async () => {
   let len = 0,
     limit = 100,
@@ -18,11 +18,11 @@ const targetTable = db2.model('groups', new mongoose.Schema({}, { strict: false 
     len = results.length;
     offset += len;
     const arr = [];
-	console.log(results.map(item=>item.id))
+	console.log(results.map(item=>item[primaryKey]))
     results.forEach(result => {
       arr.push({
         updateOne: {
-          filter: { id: result.id },
+          filter: { [primaryKey]: result[primaryKey] },
           update: result,
           upsert: true
         }
