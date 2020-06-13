@@ -10,11 +10,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=123456
     volumes:
-      - ./db:/data/db/
+    #  - ./db:/data/db/
       - ./log:/data/log/
       - ./backup:/data/backup
       - ./mongo.conf:/etc/mongo/mongod.conf
-      - ./cmd.sh:/home/cmd.sh
+    #  - ./cmd.sh:/home/cmd.sh
     ports:
       - "27017:27017"
   mongo-express:
@@ -28,8 +28,8 @@ services:
     links:
       - mongo
     environment:
-      - ME_CONFIG_BASICAUTH_USERNAME=mongoexpress
-      - ME_CONFIG_BASICAUTH_PASSWORD=mongoexpress
+      - ME_CONFIG_BASICAUTH_USERNAME=2048
+      - ME_CONFIG_BASICAUTH_PASSWORD=123456
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
       

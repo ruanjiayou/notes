@@ -24,17 +24,25 @@
   set tabstop=2
   ```
 - 配置搜狗输入法
-- 挂载磁盘
+# 挂载磁盘
     ```
     # 查看磁盘和分区信息
     sudo fdisk -l
     # 查看UUID
     sudo blkid
+    # 创建目录用于挂载
+    sudo mkdir /mnt/projects
+    # 测试临时挂载
+    sudo mount /dev/sda1 /mnt/projects
+    # 取消挂载
+    sudo umount /dev/sda1
     # 设置开机挂载
     $ sudo vim /etc/fstab
     $ # /dev/sda2
     $ UUID=xxx /mnt/e ntfs defaults 0 1
-    $ sudo mount -a (一定要这个先测试！关闭占用的：sudo umount /dev/sda1)
+    # 测试(不然可能开机直接GG)
+    $ sudo mount -a 
+    # 重启
     ```
 
 ## 安装node和npm
@@ -45,7 +53,7 @@
 - npm -v
 
 ## 安装git
-- sudo apt-get install git
+- sudo apt-get install git(sudo apt-get update 可能需要这个)
 - git config --global user.name "ruanjiayou"
 - git config --global user.email "ruanjiayou123@gmail.com"
 - cd ~/.ssh (不然都在~目录了...)
@@ -83,6 +91,9 @@
   ```
 - gogs添加公匙
 
+## curl
+- `sudo apt-get install curl`
+
 ## docker
 > https://wiki.deepin.org/wiki/Docker
 - 如果安装过旧的docker: `sudo apt-get remove docker.io docker-engine`
@@ -118,11 +129,16 @@ pip3命令调用python3的
 - 插件: qrcode,adblock,jsonViewer,colorZilla
 - 书签栏: youtube,火萤,
 
+## 安装 wireshark
+- sudo apt-get install libcap2-bin wireshark
+- sudo chgrp myusername /usr/bin/dumpcap
+- sudo chmod 750 /usr/bin/dumpcap
+- sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap
 ## 应用商店
 - 4k video download
 - AndroidStudio(不能用)
 - vscode
-- 
+- charles
 
 ## logo卡住的问题
 > 两个deepin碰到的问题：update-grub会修改所有系统的grub配置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
@@ -187,3 +203,4 @@ pip3命令调用python3的
   > sudo vim /etc/sysctl.conf \
   > 修改或添加fs.inotify.max_user_watches=524288
   > 生效 sudo sysctl -p 
+- 无法拉取镜像: sudo vim /etc/resolv.conf 改为8.8.8.8
