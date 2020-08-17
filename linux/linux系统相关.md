@@ -122,7 +122,7 @@
 - du
   ```
   查看挂载的磁盘情况: du -h
-  查看文件夹大小: du -h --max-depth=1
+  查看文件夹大小: du -h --max-depth=1, du -sh images
   ```
   - -a 显示目录中个别文件的大小
   - -b 显示目录或文件大小时，以byte为单位
@@ -168,7 +168,7 @@
 <details>
   <summary>程序相关</summary>
 
-- 查看命令所在位置: `whick docker`
+- 查看命令所在位置: `which docker`
 - 查看service: systemctl list-units --type=service
 - 挂载外部存储:
   ```

@@ -7,7 +7,7 @@ const msModels = require('./models/index');
 (async () => {
   let len = 0, limit = 10, offset = 0, count = 0;
   do {
-    console.log(`开始 ${len}-${len + limit}`);
+    console.log(`开始 ${len + offset}-${offset + len + limit}`);
     const buff = [];
     const result = await msModels['Article'].findAll({ limit, offset });
     len = result.length;
