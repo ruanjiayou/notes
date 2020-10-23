@@ -5,11 +5,14 @@
 - 制作完启动盘后重启.
 - 飞行堡垒按F2进入BIOS
 - 将boot中的U盘设为第一优先,F10保存重启
-- 在选择启动项时按E(不然N卡的显卡电脑会卡在logo)
-- quiet后面,空格并加nouveau.modeset=0
+- 选择EFI并格式化。选择ext4格式化，并选择挂载 /
+- ～～～在选择启动项时按E(不然N卡的显卡电脑会卡在logo)～～～
+- ～～～quiet后面,空格并加nouveau.modeset=0～～～
 - 注意: windows的区分NTFS是MBR格式,deepin会要求格式化整个磁盘,而不是单个分区!
 - window下用paragon 12 格式化为ext4格式; DiskGenius 4.3 不行
 
+# 开机启动
+- geoclue 删除
 ## 一些配置
 - 安装vscode
 - 关闭音效; 鼠标自然模式
@@ -53,7 +56,8 @@
 - npm -v
 
 ## 安装git
-- sudo apt-get install git(sudo apt-get update 可能需要这个)
+- sudo apt-get update
+- sudo apt-get install git
 - git config --global user.name "ruanjiayou"
 - git config --global user.email "ruanjiayou123@gmail.com"
 - cd ~/.ssh (不然都在~目录了...)
@@ -97,14 +101,13 @@
 ## docker
 > https://wiki.deepin.org/wiki/Docker
 - 如果安装过旧的docker: `sudo apt-get remove docker.io docker-engine`
-- 如果依赖没有可安装候选应该是新版本不需要了: `sudo apt-get install apt-transport-https ca-certificates curl python-software-properties software-properties-common`
-- 建议用清华源。官方源: `curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -`, 清华源: `curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -`
+- 如果依赖没有可安装候选应该是新版本不需要了: `sudo apt-get install apt-transport-https ca-certificates curl software-properties-common`
+- 清华源: `curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -`
 - 查看秘钥是否安装成功: `sudo apt-key fingerprint 0EBFCD88`
 - 查看版本号: `cat /etc/debian_version`.deepin 15.9.2 基于 debian 9.0对应stretch
 - 在 source.list 中添加 docker-ce 软件源
-  > 官方源: `sudo add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"` \
   > 清华源: `sudo add-apt-repository "deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable"`
-- 报错的话就(清华源): `sudo vim /etc/apt/sources.list` << `deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable`
+- 报错的话就(清华源 不用重复add-apt-repository了): `sudo vim /etc/apt/sources.list` << `deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable`
 - 更新仓库: `sudo apt-get update`
 - 安装docker-ce: `sudo apt-get install docker-ce`
 - 启动docker: `systemctl start docker`
@@ -128,6 +131,15 @@ pip3命令调用python3的
 - 改主页和默认引擎,Google搜索设置改地区
 - 插件: qrcode,adblock,jsonViewer,colorZilla
 - 书签栏: youtube,火萤,
+
+## 安装wine
+- sudo dpkg --add-architecture i386
+- deb https://dl.winehq.org/wine-builds/debian/ stretch main
+- wget -nc https://dl.winehq.org/wine-builds/winehq.key
+- sudo apt-key add winehq.key
+- sudo apt update
+- sudo apt install --install-recommends winehq-stable
+- wine --version
 
 ## 安装 wireshark
 - sudo apt-get install libcap2-bin wireshark
@@ -200,7 +212,9 @@ pip3命令调用python3的
 - root file system requires a manual fsck
   > 执行 fsck /dev/sda3
 - Error: ENOSPC: System limit for number of file watchers reached, watch
-  > sudo vim /etc/sysctl.conf \
+      > sudo vim /etc/sysctl.conf \
   > 修改或添加fs.inotify.max_user_watches=524288
   > 生效 sudo sysctl -p 
 - 无法拉取镜像: sudo vim /etc/resolv.conf 改为8.8.8.8
+- unexpected inconsistency;run fsck manually
+  > 启动时选择高级里的恢复模式，fsck -y /dev/sdax (系统所在分区) 然后重启或输入return
