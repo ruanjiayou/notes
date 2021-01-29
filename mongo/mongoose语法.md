@@ -87,7 +87,7 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
   console.log('处理完成!');
 ```
 
-## 分组
+## 分组 (参考)[https://blog.csdn.net/leshami/article/details/55192965]
 > $match: 过滤条件 \
   > $group: 按照给定表达式组合结果 \
   ```
@@ -102,6 +102,10 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
   $push 重复的不会合并
   $addToSet 重复的会合并
   拆分为多条: $unwind
+  $pull
+  $pullAll
+  $pop
+
   ```
   > $project：包含、排除、重命名和显示字段 \
   ```js

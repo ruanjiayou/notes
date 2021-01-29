@@ -105,9 +105,7 @@
 - 清华源: `curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -`
 - 查看秘钥是否安装成功: `sudo apt-key fingerprint 0EBFCD88`
 - 查看版本号: `cat /etc/debian_version`.deepin 15.9.2 基于 debian 9.0对应stretch
-- 在 source.list 中添加 docker-ce 软件源
-  > 清华源: `sudo add-apt-repository "deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable"`
-- 报错的话就(清华源 不用重复add-apt-repository了): `sudo vim /etc/apt/sources.list` << `deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable`
+- 在 source.list 中添加 docker-ce 软件源: `sudo vim /etc/apt/sources.list` << `deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian stretch stable`
 - 更新仓库: `sudo apt-get update`
 - 安装docker-ce: `sudo apt-get install docker-ce`
 - 启动docker: `systemctl start docker`
@@ -153,7 +151,7 @@ pip3命令调用python3的
 - charles
 
 ## logo卡住的问题
-> 两个deepin碰到的问题：update-grub会修改所有系统的grub配置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
+> 两个deepin碰到的问题：update-grub会修改所有系统的grub�����置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
 - logo卡住解决方案一:(a start job is running for live-config xxx 的问题也可以解决...)
   > 启动项按e, quiet 后面加: `acpi_osi=! acpi="windows 2009"`, F10(保存并继续启动) \
   > sudo vim /etc/default/grub  最后面加一行: GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT"'acpi_osi=! acpi="windows 2009"' \
@@ -192,6 +190,12 @@ pip3命令调用python3的
   - sudo dpkg -i *.deb
   - 安装完成后保险起见手动更新新内核的引导项（正常自动会更新，这里保险起见）: `sudo update-grub`
   - 重新启动系统，然后选择新内核Linux 5.0.1启动即可，通常情况下都可以顺利完成
+
+## 没有声音
+- sudo vim /etc/default/grub
+- GRUB_CMDLINE_LINUX_DEFAULT 参数追加`snd_hda_intel.dmic_detect=0` 和前面的保持一个空格
+- sudo update-grub
+- reboot
 
 ## 问题
 - win10快速启动造成不能挂载磁盘(系统无法启动...得另外登录Linux系统来修复)

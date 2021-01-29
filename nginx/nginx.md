@@ -132,6 +132,15 @@
   resolver_timeout 5s;
   ```
 
+## https
+```
+#比较两个hash是否相同(.crt/.cer)
+openssl x509 -noout -modulus -in test.crt | openssl md5
+openssl rsa -noout -modulus -in test.key | openssl md5
+```
+## 查看日志
+- service nginx status
+
 ## 重启失败
 - 先检查拼写...
 - bind() to 0.0.0.0:2017 failed (13: Permission denied)

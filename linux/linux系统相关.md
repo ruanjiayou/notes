@@ -282,7 +282,10 @@ curl
 - -u 列出文件或目录的拥有者名称，没有对应的名称时，则显示用户识别码。
 - -x 将范围局限在现行的文件系统中，若指定目录下的某些子目录，其存放于另一个文件系统上，则将该子目录予以排除在寻找范围外。
 
-## zsh
+## alias
+- `sudo vim ~/.bashrc`
+- `alias cmd='cd ~/projects && npm run dev'`
+- `source ~/.bashrc`
 
 ## systemctl
 > 是CentOS7的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体
