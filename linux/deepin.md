@@ -55,14 +55,21 @@
 - node -v
 - npm -v
 
+## alias
+- vim ~/.bashrc, source ~/.bashrc
+```
+alias novel='cd /mnt/d/projects/node-mongo-novel && npm run dev'
+alias ssh-baidu='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa_baidu'
+alias ssh-gogs='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa_gogs'
+```
 ## 安装git
 - sudo apt-get update
 - sudo apt-get install git
-- git config --global user.name "ruanjiayou"
-- git config --global user.email "ruanjiayou123@gmail.com"
+- git config --global user.name "xxx"
+- git config --global user.email "xxx@gmail.com"
 - cd ~/.ssh (不然都在~目录了...)
-- 0777too open: chmod 600 ~/.ssh/id_rsa, chmod 600 ~/.ssh/config
-- ssh-keygen -t rsa -C ruanjiayou123@gmail.com << id_rsa_baidu和gogs
+- 0777too open: chmod 600 ~/.ssh/id_rsa, chmod 400 ~/.ssh/config
+- ssh-keygen -t rsa -C xxx@gmail.com << id_rsa_baidu和gogs
   ```
   Host baidu
     HostName xx.xx.xx.ip
@@ -151,7 +158,7 @@ pip3命令调用python3的
 - charles
 
 ## logo卡住的问题
-> 两个deepin碰到的问题：update-grub会修改所有系统的grub�����置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
+> 两个deepin碰到的问题：update-grub会修改所有系统的grub�������置（每个系统的grub.cfg有所有引导项），但只该了其他系统的配置。到其他系统再改一次就好了。也是因为我的当前系统不是主系统
 - logo卡住解决方案一:(a start job is running for live-config xxx 的问题也可以解决...)
   > 启动项按e, quiet 后面加: `acpi_osi=! acpi="windows 2009"`, F10(保存并继续启动) \
   > sudo vim /etc/default/grub  最后面加一行: GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT"'acpi_osi=! acpi="windows 2009"' \
