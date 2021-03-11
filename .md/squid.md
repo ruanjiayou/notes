@@ -20,6 +20,22 @@ Squid:
   restart: always
 ```
 
+## 添加帐号
+- yum install httpd-tools -y
+- mkdir /etc/squid3/
+- htpasswd -cd /etc/squid3/passwords [account]
+- # 输入密码(最长8位)
+- 测试帐号比如 admin 12345678
+- /usr/lib64/squid/basic_ncsa_auth /etc/squid3/passwords
+- 修改squid配置文件
+  `auth_param basic program /usr/lib64/squid/basic_ncsa_auth /etc/squid3/passwords `
+  `http_access allow authenticated`
+  `http_port 0.0.0.0:3128`
+- 初始化服务并重新启动
+  ```
+  squid -z
+  systemctl restart squid.service
+  ```
 ## nginx
 ```conf
 # HTTP 1.1 support
