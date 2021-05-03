@@ -138,6 +138,19 @@
 openssl x509 -noout -modulus -in test.crt | openssl md5
 openssl rsa -noout -modulus -in test.key | openssl md5
 ```
+
+## freessl
+- 下载keymanage软件
+- 先生成测试证书
+- 输入域名和邮箱
+- 选择文件验证
+- 上传到服务器验证路径
+- 检测文件是否可以访问
+- 下载证书
+- 导入解压后的文件
+- 重新部署
+- myssl查看结果
+
 ## 查看日志
 - service nginx status
 

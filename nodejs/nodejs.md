@@ -35,3 +35,8 @@ TODO: .env publish.sh dev.sh
 - Error: ENOSPC: System limit for number of file watchers reached, watch 看deepin
 - referenceerror primordials is not defined
   > unzip2 引起的之前gulp出现过.换个unzip包就可以了
+- `npm version` 能执行 `sudo npm` 报错没找到
+  - 进入`/usr/bin`
+  - `which npm`
+  - `sudo ln -s pathtonpm`
+  - node同上
