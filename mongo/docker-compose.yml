@@ -16,7 +16,7 @@ services:
       - ./mongo.conf:/etc/mongo/mongod.conf
     #  - ./cmd.sh:/home/cmd.sh
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
   mongo-express:
     image: mongo-express
     container_name: mongo-express

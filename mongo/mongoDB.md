@@ -23,7 +23,7 @@
   - mongod.exe命令行 mongod --version
   - 连接: 127.0.0.1:27017(默认无账号密码)
 
-### 备份与还原
+## 备份与还原
 - docker exec -ti mongo-demo bash
 > 写了个shell, 加权限`chmod u+x`, 执行`cmd.sh dump db`
 - 备份整个库： `mongodump -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test -o /data/backup`
@@ -31,8 +31,43 @@
 - 还原整个库：`mongorestore -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test /data/backup/test`
 - 还原单个表：`mongoimport -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test --collection test --file /data/backup/test/test.json`
 
-### 复制数据库
+## 复制数据库
 - 
+
+## 用户管理
+- 创建用户
+  ```js
+  mongo
+  use admin
+  db.createUser({user:"root",pwd:"123456",roles:[{role:"readWrite",db:"test"}]})
+  db.auth("root","123456")
+  ```
+- 创建管理员, `roles: [ { role: "userAdminAnyDatabase", db: "admin"} ]` 对所有数据库进行管理
+- 角色类型
+  ```
+  数据库用户角色
+      read: 只读数据权限
+      readWrite:学些数据权限
+  数据库管理角色
+      dbAdmin: 在当前db中执行管理操作的权限
+      dbOwner: 在当前db中执行任意操作
+      userADmin: 在当前db中管理user的权限
+  备份和还原角色
+      backup
+      restore
+  夸库角色
+      readAnyDatabase: 在所有数据库上都有读取数据的权限
+      readWriteAnyDatabase: 在所有数据库上都有读写数据的权限
+      userAdminAnyDatabase: 在所有数据库上都有管理user的权限
+      dbAdminAnyDatabase: 管理所有数据库的权限
+  集群管理
+      clusterAdmin: 管理机器的最高权限
+      clusterManager: 管理和监控集群的权限
+      clusterMonitor: 监控集群的权限
+      hostManager: 管理Server
+  超级权限
+      root: 超级用户
+  ```
 
 ## 问题
 - server returned error on SASL authentication step: Authentication failed.

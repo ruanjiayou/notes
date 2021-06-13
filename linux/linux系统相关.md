@@ -90,7 +90,7 @@
   - --password-file=FILE 从FILE中得到密码
   - --bwlimit=KBPS         限制I/O带宽，KBytes per second
   - -h, --help                    显示帮助信息
-- scp -r folder1 user@ip:/path-to-folder
+- scp -r folder1 user@ip:/path-to-folder 竟然是将folder1复制到folder下面
 - mv 用于移动文件、目录或更名
   - -f force强制 如果目标文件已经存在，不会询问而直接覆盖
   - -i 若目标文件已经存在，就会询问是否覆盖
