@@ -47,3 +47,15 @@
 - 设置
 - 管理员 user pass email
 - 设置hosts ip:port git.site.com
+
+## docker启动
+- docker-compose up -d
+- 设置.数据库有 pg 的...
+- 注册第一个账号
+- 
+## 备份
+- 查看版本: `/app/gogs/gogs -v`
+- 进入容器: `docker exec -ti gogs-git bash`
+- 切换用户: `su - git`
+- 备份: `/app/gogs/gogs backup --config /data/gogs/conf/app.ini --target /app/gogs/backups`
+- 恢复: `/app/gogs/gogs restore --config /data/gogs/conf/app.ini --from /data/backups/gogs-backup.zip /tempdir=/data`.FATAL了还是恢复成功

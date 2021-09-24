@@ -387,3 +387,17 @@ curl
 - 查看Linux版本: `cat /proc/version`
 - 查看Linux64位还是32位: `getconf LONG_BIT`
 - 安装tree: `yum -y install tree`
+
+## ssh登陆
+```sh
+ssh -p 22 root@baidu
+```
+  > .ssh/config
+  ```
+  Host 别名
+  HostName ip或域名
+  Port 22
+  User root
+  IdentityFile ~/.ssh/id_rsa.pub
+  IdentitiesOnly yes
+  ```

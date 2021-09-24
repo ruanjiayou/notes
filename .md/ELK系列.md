@@ -20,30 +20,30 @@
  4. 查看结果: java -version
 
 ## elasticsearch安装
-1. 进入安装目录
-2. 下载tar.gz包解压
+1. 下载tar.gz包解压
+2. 进入安装目录
 3. 写启动脚本:
-    ```bash
-    #!/bin/bash
-    ./bin/elasticsearch -d
-    echo '已启动ElasticSearch进程'
-    ```
+```bash
+#!/bin/bash
+./bin/elasticsearch -d
+echo '已启动ElasticSearch进程'
+```
     给启动脚本加执行权限
     ```bash
     chmod +x es-start.sh
     ```
 4. 写停止脚本: `vim es-stop.sh`
-   ```bash
-    #!/bin/bash
-    es_ps=`jps|grep Elasticsearch`
-    OLD_IFS="$IFS"
-    IFS=" "
-    arr=($es_ps)
-    IFS="$OLD_IFS"
-    echo '正在停止ElasticSearch进程:' ${arr[0]}...
-    kill -9 ${arr[0]}
-    echo '已停止'
-   ```
+```bash
+#!/bin/bash
+es_ps=`jps|grep Elasticsearch`
+OLD_IFS="$IFS"
+IFS=" "
+arr=($es_ps)
+IFS="$OLD_IFS"
+echo '正在停止ElasticSearch进程:' ${arr[0]}...
+kill -9 ${arr[0]}
+echo '已停止'
+```
    给脚本启动权限和es用户权限
 5. 写重启脚本: `vim es-restart.sh`
    ```bash
@@ -157,7 +157,8 @@
 
 ## IK分词器
 1. 找对应版本zip下载到本地: https://github.com/medcl/elasticsearch-analysis-ik/releases
-2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`
+2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`.
+  > 是 zip 文件,而且不能在 plugins 文件夾裡.Mac 里把 .DS_Store 文件要删掉.
 3. 测试:
    > 原生: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json;' -d '{"analyzer": "default","text": "今天天气真好"}'` \
    > IK: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json' -d'{"analyzer": "ik_smart","text": "今天天气真好"}'`

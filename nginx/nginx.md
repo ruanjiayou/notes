@@ -1,7 +1,8 @@
 # nginx
 ## 参考文章
 > https://www.cnblogs.com/wang-yc/p/8118347.html \
-> https://juejin.im/post/5bff57246fb9a049be5d3297
+> https://juejin.im/post/5bff57246fb9a049be5d3297 \
+> https://mp.weixin.qq.com/s/LmtHTOVOvdcnMBuxv7a9_A
 
 ## centos 安装
 - yum install -y nginx

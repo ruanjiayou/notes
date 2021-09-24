@@ -30,7 +30,12 @@
 - 备份单个表：`mongoexport -u root -p 123456 -h 127.0.0.1 -d test --authenticationDatabase admin --collection test -o /data/backup/test/test.json`
 - 还原整个库：`mongorestore -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test /data/backup/test`
 - 还原单个表：`mongoimport -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test --collection test --file /data/backup/test/test.json`
-
+mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection tv -o /data/backup/media/tv.json
+mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection cartoon -o /data/backup/media/cartoon.json
+mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection children -o /data/backup/media/children.json
+mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection movie -o /data/backup/media/movie.json
+mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection variety -o /data/backup/media/variety.json
+mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection documentary -o /data/backup/media/documentary.json
 ## 复制数据库
 - 
 
@@ -38,11 +43,12 @@
 - 创建用户
   ```js
   mongo
-  use admin
+  use admin  // (如果是在当前数据库,这链接无需 authSource 选项)
   db.createUser({user:"root",pwd:"123456",roles:[{role:"readWrite",db:"test"}]})
   db.auth("root","123456")
   ```
 - 创建管理员, `roles: [ { role: "userAdminAnyDatabase", db: "admin"} ]` 对所有数据库进行管理
+- 删除用户, `db.dropUser("test")`
 - 角色类型
   ```
   数据库用户角色

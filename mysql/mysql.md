@@ -86,3 +86,5 @@ STARTS 2018-08-20 14:44:54
   > ip是192.168.99.100
 - docker mysql mysqld: Error on realpath() on '/var/lib/mysql-files' No such file or directory
   > 在启动容器时 需要加上 -v /home/mysql/mysql-files:/var/lib/mysql-files/
+- Client does not support authentication protocol requested by server; consider upgrading MySQL client
+  > 

@@ -33,6 +33,17 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
 - replaceOne(condition,data,option) 覆盖一条数据
 - updateMany 相当update中multi为true,也必须是原子操作$
 
+
+## 创建索引
+```js
+db.getCollection('point_info').createIndexes([
+  { 
+    "subscription._id ": 1,
+    "created_time ": 1,
+    "type": 1
+  }
+], {background:true, name: "subscriptionId_createTime_type"})
+```
 ## 批量修改
 - bulkWrite中修改: updateOne{ {filter}, {$set: data}, {option}}
 - skip比cursor方便.

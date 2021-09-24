@@ -89,35 +89,36 @@
 
 - vim /usr/share/vim/.vimrc
 - vim ~/.vimrc
-```sh
-# 设置编码
+```conf
+" 设置编码 "
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
-# 显示行号
+" 显示行号 "
 set nu
-# 主题配色
+" 主题配色 "
 colorscheme moloki/jellybeans/Tomorrow-Night-Eighties/
-# 突出当前行
+syntax on
+" 突出当前行 "
 set cul
-# 突出当前列
+" 突出当前列 "
 set cuc
-# 启用鼠标
+" 启用鼠标 "
 set mouse=a
 set selection=exclusive
 set selectmode=mouse,key
-# 显示括号匹配
+" 显示括号匹配 "
 set showmatch
-# 设置缩进
+" 设置缩进 "
 set tabstop=2
 set shiftwidth=2
 set autoindent
-# 设置粘贴
+" 设置粘贴 "
 set paste
-# 显示状态栏和光标当前位置
+" 显示状态栏和光标当前位置 "
 set laststatus=2
 set ruler
-# vim配置变更立即生效
+# vim配置变更立即生效 
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 ```
 

@@ -76,7 +76,8 @@ service-work才是PWA的精髓
     fetchOptions: {mode:'no-cors'},
     plugins: [
       new workbox.cacheableResponse.Plugin({
-        statuses: [0, 200]
+        statuses: [200],
+        headers: {'X-cacheable': 'true'},
       }),
       new workbox.expiration.Plugin({
         maxEntries: 30,
