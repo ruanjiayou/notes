@@ -17,10 +17,13 @@ services:
     #  - ./cmd.sh:/home/cmd.sh
     ports:
       - "127.0.0.1:27017:27017"
+      - "0.0.0.0:27016:27017"
   mongo-express:
     image: mongo-express
     container_name: mongo-express
     restart: always
+    depends_on: 
+      - mongo
     networks:
       - allinone
     ports:
@@ -28,11 +31,14 @@ services:
     links:
       - mongo
     environment:
-      - ME_CONFIG_BASICAUTH_USERNAME=2048
+      # mongo-express 验证
+      - ME_CONFIG_BASICAUTH_USERNAME=root
       - ME_CONFIG_BASICAUTH_PASSWORD=123456
+      # 数据库管理员
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
-      
+      - ME_CONFIG_MONGODB_SERVER=mongo-demo
+# docker network create allinone
 networks:
   allinone:
     external: true
