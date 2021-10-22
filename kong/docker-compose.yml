@@ -3,47 +3,75 @@ version: "3"
 services:
   kong-database:
     image: postgres:9.6
+    container_name: kong-database
     environment:
-      - POSTGRES_USER=kong
-      - POSTGRES_DB=kong
+      - 'POSTGRES_DB=kong'
+      - 'POSTGRES_USER=${PG_USER}'
+      - 'POSTGRES_PASSWORD=${PG_PWD}'
     ports:
-      - "5432:5432"
+      - "${PG_PORT}:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
       - "kong-net"
 
   kong: 
-    image: kong:0.13.0
+    image: kong
+    container_name: kong-demo
     environment: 
       - KONG_DATABASE=postgres
       - KONG_PG_HOST=kong-database
+      - 'KONG_PG_PASSWORD=${PG_PWD}'
       - KONG_CASSANDRA_CONTACT_POINTS=kong-database
       - KONG_PROXY_ACCESS_LOG=/dev/stdout
       - KONG_ADMIN_ACCESS_LOG=/dev/stdout
       - KONG_PROXY_ERROR_LOG=/dev/stderr
       - KONG_ADMIN_ERROR_LOG=/dev/stderr
       - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+    # command: "kong migrations bootstrap"
     ports:
-      - 8000:8000
-      - 8443:8443
-      - 8001:8001
-      - 8444:8444
-    links: 
+      - '9000:8000'
+      - '9443:8443'
+      - '9001:8001'
+      - '9444:8444'
+    depends_on:
       - kong-database
     networks:
       - "kong-net"
 
-  kong-dashboard:
-    image: pgbi/kong-dashboard:v3
+  # kong-dashboard:
+  #   container_name: kong-dashboard
+  #   image: pgbi/kong-dashboard:v3
+  #   ports:
+  #     - "8082:8082"
+  #   command: "start --kong-url http://kong-demo:9001"
+  #   links:
+  #     - kong
+  #   networks:
+  #     - "kong-net"
+  
+  konga:
+    image: pantsel/konga
+    container_name: konga
+    # command: "-c prepare -a postgres -u postgresql://${PG_USER}:${PG_PWD}@kong-database:5432/konga"
+    environment: 
+      - DB_ADAPTER=postgres
+      - DB_HOST=kong-database
+      - DB_DATABASE=konga
+      - 'DB_USER=${PG_USER}'
+      - 'DB_PASSWORD=${PG_PWD}'
+      - KONGA_HOOK_TIMEOUT=120000
+      - NODE_ENV=production
     ports:
-      - "8080:8080"
-    command: "start --kong-url http://kong:8001"
+      - '1337:1337'
     links:
+      - kong
+    depends_on:
       - kong
     networks:
       - "kong-net"
 
+# docker network create kong-net
 networks: 
   kong-net: 
     driver: bridge

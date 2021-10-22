@@ -107,6 +107,7 @@
 git init // 初始化版本库
 git add . // 添加文件到缓存区
 git commit -m "init" // 提交
+//取消没push的commit git reset --soft HEAD^
 
 git remote add origin 仓库地址 // 把本地与远程库关联 http://host/user/repo-name
 git pull/push -u origin master // 第一次拉取/推送

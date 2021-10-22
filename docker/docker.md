@@ -219,7 +219,7 @@ services:
 - ERROR: Failed to Setup IP tables: Unable to enable SKIP DNAT rule:  (iptables failed: iptables --wait -t nat -I DOCKER -i br-a32657d7990a -j RETURN: iptables: No chain/target/match by that name.
   > 原因是关闭防火墙之后docker需要重启，执行以下命令重启docker即可：service docker restart
   - 查看日志: `docker logs --tail 10 xxx`
-- 进入容器: `docker exec -ti name或id sh或bash`
+- 进入容器: `docker exec -ti name或id sh或bash` [--user=root 管理员身份进入]
 - 容器内测试http请求: `wget localhost:3000 -O -`
 - ERROR:Docker Got permission denied while trying to connect to the Docker daemon socket
   ```
