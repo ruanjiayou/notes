@@ -146,6 +146,8 @@
 - id
 - 添加用户组: `groupadd elk`
 - 添加用户: `useradd elk`; `adduser git`,会自动在HOME下创建用户文件夹
+- 删除用户: `userdel elk`.
+  - 重新创建用户失败: 删除 `home` 的用户文件夹, 删除 `/var/spool/mail/` 下面的用户文件夹
 - 查看用户所在组: `groups elk`
 - 查看所有组: `cat /etc/group`
 - 用户组改名: `groupmod -n new old`

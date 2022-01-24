@@ -4,6 +4,7 @@ services:
   kong-database:
     image: postgres:9.6
     container_name: kong-database
+    restart: always
     environment:
       - 'POSTGRES_DB=kong'
       - 'POSTGRES_USER=${PG_USER}'
@@ -18,6 +19,7 @@ services:
   kong: 
     image: kong
     container_name: kong-demo
+    restart: always
     environment: 
       - KONG_DATABASE=postgres
       - KONG_PG_HOST=kong-database
@@ -53,6 +55,7 @@ services:
   konga:
     image: pantsel/konga
     container_name: konga
+    restart: always
     # command: "-c prepare -a postgres -u postgresql://${PG_USER}:${PG_PWD}@kong-database:5432/konga"
     environment: 
       - DB_ADAPTER=postgres

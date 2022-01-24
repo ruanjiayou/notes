@@ -24,6 +24,8 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
 - 模糊查询,正则: {title: {$regex: new RegExp(""或者/1$/)}}
 - 范围: $gt,$lt,$gte,$lte,$in,$nin,$ne
 - and,or,nor
+  - or查询: `{$or: [{a:1,b:1}]}`
+  - 两个or查询: `{$and: [{$or: [{a:1,b:1}]},{$or:{c:1,b:1}}]}`
 
 ## 修改数据
 > 参数: upsert,multi,setDefaultOnInsert(upsert=true),strict=false,overwrite=false/
@@ -133,7 +135,7 @@ db.getCollection('point_info').createIndexes([
 const Schema = require('mongoose').Schema;
 const blogSchema = new Schema({
   title: String
-}, {collections: 'blog'});
+}, {collection: 'blog'});
 const Blog = mongoose.model('Blog', blogSchema);
 ```
 

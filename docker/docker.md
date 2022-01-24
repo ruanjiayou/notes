@@ -113,7 +113,22 @@ https://www.jianshu.com/p/2217cfed29d7
 - network_mode
 - work_dir 相当 cd
 - volumes
+  ```
+  长语法
+  type(挂载类型): volume(文件夹), bind(文件), tmpfs, npipe \
+  source(挂载来源): 
+  target(挂载目标路径): 
+  read_only(只读):
+  bind:  配置额外 bind 选项.propagation/create_host_path
+  volume: 配置额外 volume 选项.nocopy
+  tmpfs: 配置额外 tmpfs 选项.size
+  consistency: 
+  ```
 - volumes_from
+  - service_name
+  - service_name:ro
+  - container:container_name
+  - container:container_name:rw
 - security_opt
 - tmpfs 挂载临时目录到容器内部
 - cap_add, cap_drop 添加或删除容器的内核功能

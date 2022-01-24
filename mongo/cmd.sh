@@ -2,11 +2,11 @@
 t=$(date "+%Y-%m-%d")
 dump() {
   echo "备份数据库: $1"
-  mongodump -u root -p 123456 -d $1 -o backup/$t
+  mongodump -u root -p 123456 --authenticationDatabase admin -d $1 -o backup/$t
 }
 store() {
   echo "还原数据库: $1"
-  mongorestore -d test-$1 backup/$t/$1
+  mongorestore --authenticationDatabase admin -d test-$1 backup/$t/$1
 }
 exports() {
   echo "备份数据库.表: $1"

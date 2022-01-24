@@ -179,3 +179,221 @@ echo '已停止'
 - IK 分词器: https://segmentfault.com/a/1190000017215854
 - elasticsearch 内部机制: http://mednoter.com/all-about-analyzer-part-one.html
 - elk实践入门: https://www.cnblogs.com/52fhy/p/10053076.html
+
+## mapping
+- 字段类型: text 全文索引, keyword 精确查询.(term时 ['ab', 'abc'] 查'ab'只有一个)
+  - [区别](https://www.cnblogs.com/sanduzxcvbnm/p/12177377.html)
+
+## kibana
+- 修改文档(5.5.3)
+```js
+   PUT /fengshows/fengshows/45dc671d-4de7-407a-bd9a-2a04ad7648b3
+   {
+      "title": "美衛星2次“威脅”中國空間站，在地上搞不過開始在天上搞事了？",
+      "available": 1,
+      "created_time": "2021-12-29T02:33:03.000Z",
+      "modified_time": "2021-12-29T02:33:40.000Z",
+      "resource_type": "article",
+      "resource_id": "45dc671d-4de7-407a-bd9a-2a04ad7648b3",
+      "display_type": 1,
+      "cover": "http://q1.fengshows.cn/mp/s/2021/12/29/d7b7a1c0-6849-11ec-b19a-d38d9bda8190.jpg",
+      "source": "媒體號",
+      "labels": [],
+      "__last_actived_time": "2021-12-29T07:10:04.982Z",
+      "marks": [
+         2
+      ],
+      "subscription_id": "aba6eda0-4a34-11ea-92e7-81e6b74d5b40",
+      "cover_list": [
+         "http://q1.fengshows.cn/mp/s/2021/12/29/d7b7a1c0-6849-11ec-b19a-d38d9bda8190.jpg"
+      ],
+      "comment_enabled": 1,
+      "flags": [],
+      "authorized_countries": [],
+      "platforms": [
+         "hkv-ios",
+         "hkv-android",
+         "hkv-web",
+         "hkv-wap"
+      ],
+      "p": """
+   <!doctype html><html><head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>訂閲號文章</title>
+   <link rel="stylesheet" type="text/css" href="https://q1.fengshows.cn/app/common/css/fs.article-1.0.5.min.css" />
+   <script src="https://q1.fengshows.cn/app/common/js/fs.article-1.0.5.min.js"></script>
+   </head><body><div class="fs-image"><img src="http://q1.fengshows.cn/mp/s/2021/12/29/c73c1e70-6849-11ec-b19a-d38d9bda8190.jpg" alt="" /></div>  <div class="fs-video" data-attach-title="吳學蘭衞星.mp4"><video src="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_360.mp4" poster="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_cap.jpg" controls="controls"></video></div></body></html> 美衞星2次“威脅”中國空間站，在地上搞不過開始在天上搞事了？ 媒體號 
+   """,
+      "content": """
+   <!doctype html><html><head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>订阅号文章</title>
+   <link rel="stylesheet" type="text/css" href="https://q1.fengshows.cn/app/common/css/fs.article-1.0.5.min.css" />
+   <script src="https://q1.fengshows.cn/app/common/js/fs.article-1.0.5.min.js"></script>
+   </head><body><div class="fs-image"><img src="http://q1.fengshows.cn/mp/s/2021/12/29/c73c1e70-6849-11ec-b19a-d38d9bda8190.jpg" alt="" /></div>  <div class="fs-video" data-attach-title="吴学兰卫星.mp4"><video src="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_360.mp4" poster="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_cap.jpg" controls="controls"></video></div></body></html>
+   """
+   }
+```
+- 查询平台
+```
+GET /fengshows/_search
+{
+  "size": 15,
+  "from": 0,
+  "_source": [
+    "_id",
+    "title",
+    "available",
+    "created_time",
+    "modified_time",
+    "resource_type",
+    "resource_id",
+    "article_type",
+    "display_type",
+    "cover",
+    "source",
+    "url",
+    "width",
+    "height",
+    "category_id",
+    "display_type",
+    "type",
+    "program_id",
+    "program_name",
+    "episode",
+    "material_id",
+    "icon",
+    "labels",
+    "duration",
+    "program_icon",
+    "category_key",
+    "marks",
+    "subscription_id",
+    "subscription_name",
+    "subscription_icon",
+    "cover_list",
+    "subscription_type",
+    "live_type",
+    "app_url",
+    "medals",
+    "certification_type",
+    "flags",
+    "width",
+    "height",
+    "duanmu_enabled",
+    "comment_enabled",
+    "brief",
+    "category",
+    "certificate",
+    "discard",
+    "media_type",
+    "images",
+    "videos",
+    "topic",
+    "related_topic",
+    "ref_resource",
+    "location",
+    "creator",
+    "scheduled_time",
+    "current_language",
+    "translation_languages",
+    "translations",
+    "authorized_countries",
+    "target_platforms",
+    "platforms",
+    "content",
+    "icon",
+    "tags",
+    "p",
+    "nickname",
+    "memo",
+    "nickname",
+    "memo"
+  ],
+  "sort": [
+    "_score",
+    {
+      "modified_time": "desc"
+    }
+  ],
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "bool": {
+            "should": [
+              {
+                "match": {
+                  "title": {
+                    "query": "天上搞事",
+                    "boost": 5
+                  }
+                }
+              },
+              {
+                "match": {
+                  "p": {
+                    "query": "天上搞事"
+                  }
+                }
+              }
+            ],
+            "filter": [
+              {
+                "term": {
+                  "available": 1
+                }
+              },
+              {
+                "terms": {
+                  "resource_type": [
+                    "article",
+                    "video"
+                  ]
+                }
+              },
+              {
+                "range": {
+                  "modified_time": {
+                    "gte": 0,
+                    "lte": 1640768453152,
+                    "format": "epoch_millis"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "must": [
+        {
+          "term": {
+            "platforms": "hkv-ios"
+          }
+        }
+      ]
+    }
+  },
+  "highlight": {
+    "pre_tags": [
+      "<span style=\"color: #E3B56F\">"
+    ],
+    "post_tags": [
+      "</span>"
+    ],
+    "fields": {
+      "title": {
+        "number_of_fragments": 0
+      },
+      "p": {
+        "number_of_fragments": 2,
+        "fragment_size": 25
+      }
+    }
+  }
+}
+```
