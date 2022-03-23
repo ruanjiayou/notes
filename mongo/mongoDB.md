@@ -75,6 +75,28 @@ mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase ad
       root: 超级用户
   ```
 
+## 索引
+> [参考](https://mongoing.com/eshu_explain1)
+- explain三种模式
+  - queryPlanner模式下并不会去真正进行query语句查询，而是针对query语句进行执行计划分析并选出winning plan
+  - executionStats
+  - allPlansExecution
+- stage(如explain.queryPlanner.winningPlan.stage和explain.queryPlanner.winningPlan.inputStage等)
+  - 全表扫描: COLLSCAN
+  - 索引扫描: IXSCAN
+  - 根据索引查找文档: FETCH
+  - SHARD_MERGE
+  - SORT
+  - LIMIT
+  - SKIP
+  - IDHACK
+  - SHARDING_FILTER
+  - COUNT
+  - COUNTSCAN
+  - COUNT_SCAN
+  - SUBPLA
+  - PROJECTION
+
 ## 问题
 - server returned error on SASL authentication step: Authentication failed.
   > 加 `--authenticationDatabase admin`

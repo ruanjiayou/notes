@@ -38,7 +38,7 @@ redis集群
 - --link的理解 env与etc/host的方式 https://www.jianshu.com/p/21d66ca6115e
 - 关于redis-cluster中使用pipeline和multi(): All keys in the pipeline should belong to the same slot
   > test:key:{butOnlyThis}redis
-- 
+- 密码不对,连上redis后执行命令会没有返回也没有报错
 
 ## redis命令
 - 键(key)

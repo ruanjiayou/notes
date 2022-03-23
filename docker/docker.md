@@ -244,3 +244,4 @@ services:
   groups
   ```
 - No route to host: 重启docker`service docker restart`
+- [1号进程处理SIG*消息](https://github.com/Yelp/dumb-init)

@@ -172,6 +172,34 @@ db.share_relations.aggregate([
 });
 ```
 
+## 数据库优化
+- 索引列5个最佳
+- find().explain(),hint()强制使用索引
+- 开启慢日志:db.setProfilingLevel(2)
+- 写多读少的表，可以将 leaf_page_max 设置到 1MB，并开启压缩算法
+- 读多写少的表在创建时我们可以尽量将 page size 设置的比较小 ，比如 16KB
+- 索引名称长度不要超过 128 字符
+- 组合索引最左原则
+- 优先使用覆盖索引
+- TTL 索引的使用
+- 限定返回记录条数，每次查询结果不超过 2000 条
+- 索引中的-1和1，一个是逆序，一个是正序
+- 查询中的某些操作符可能会导致性能低下，如ne，not，exists，nin，or，尽量在业务中不要使用；
+
+exist：因为松散的文档结构导致查询必须遍历每一个文档
+ne：如果当取反的值为大多数，则会扫描整个索引
+not：可能会导致查询优化器不知道应当使用哪个索引，所以会经常退化为全表扫描
+nin：全表扫描
+or：有多少个条件就会查询多少次，最后合并结果集，所以尽可能的使用in
+- locks.timeAcquiringMicros除以locks.acquireWaitCount能计算出特定锁模式的平均等待时间。
+- locks.deadlockCount获取死锁次数
+- 对于“读”较频繁的应用，您需要增加  复制集  的大小并将读操作路由到  secondary  节点
+- 对于“写”较频繁的应用，部署  分片  并添加多个  分片  到  分片集  分散  mongod  实例之间的负载
+- db.serverStatus().connections
+- db.currentOp()
+- db.killOp
+- 
+
 ## 问题
 - MongoError: no primary found in replicaset or invalid replica set name 连不上数据库集群 ===> 停电挂了...
 - db.getCollection('crawler_url').updateMany({finished:true},{$set:{finished:false}})
@@ -181,3 +209,6 @@ db.share_relations.aggregate([
 - 连接失败: mongoUrl+?authSource=admin
 - 查询数组: { id: { $in: arr }}
 - 查询结果是个特殊对象.直接修改不起作用: 调用.toJSON(),再修改.
+
+## 参考
+- [索引](https://juejin.cn/post/6844904039981776910)

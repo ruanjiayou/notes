@@ -26,7 +26,7 @@
 ## 添加系统命令别名
 ```sh
 vim ~/.bash_profile
->> alias [xxx]='[yyy]'
+>> alias [xxx]='[yyy]' (如: `dev="cd ~/projects/notes/proxy && node app.js"`)
 source ~/.bash_profile
 alias
 ```
