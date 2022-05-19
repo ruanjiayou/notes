@@ -25,7 +25,8 @@
 - git config 
 - 打标签(不用记hash了): git tag tag_name
 - 查看连接仓库情况: git remote -v
-
+- 取消本地所有提交:git reset --hard origin/
+- 
 ### 生成公匙和私匙
 - cd ~/.ssh
 - ssh-keygen -t rsa -C xxx.gmail.com

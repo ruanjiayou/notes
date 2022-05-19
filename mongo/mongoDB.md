@@ -96,6 +96,9 @@ mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase ad
   - COUNT_SCAN
   - SUBPLA
   - PROJECTION
+- _id
+  - 默认ObjectId: 
+  - uuid: 字符串更长,数据量大时插入效率降低
 
 ## 问题
 - server returned error on SASL authentication step: Authentication failed.

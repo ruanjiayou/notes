@@ -2,66 +2,185 @@ const { Client } = require('@elastic/elasticsearch')
 const client = new Client({ node: 'http://localhost:9200' })
 
 const mapping = {
-  settings: {
-    number_of_shards: 1,
-    number_of_replicas: 0,
+  "settings": {
+    "index": {
+      "analysis.analyzer.default.type": "ik_max_word"
+    }
   },
-  mappings: {
-    fengshows: {
-      properties: {
-        title: {
-          type: 'text',
-          analyzer: 'ik_max_word',
-          search_analyzer: 'ik_max_word',
+  "mappings": {
+    "fengshows": {
+      "properties": {
+        "__last_actived_time": {
+          "type": "date",
+          "index": false
         },
-        available: {
-          type: 'integer',
+        "announcement": {
+          "type": "text"
         },
-        created_time: {
-          type: 'date',
+        "area": {
+          "type": "keyword"
         },
-        modified_time: {
-          type: 'date',
+        "author": {
+          "type": "keyword"
         },
-        resource_type: {
-          type: 'keyword',
+        "available": {
+          "type": "byte"
         },
-        resource_id: {
-          type: 'keyword',
+        "brief": {
+          "type": "text"
         },
-        display_type: {
-          type: 'integer',
+        "category_name ": {
+          "type": "keyword"
         },
-        cover: {
-          type: 'text',
+        "content": {
+          "type": "text"
         },
-        source: {
-          type: 'text',
+        "cover": {
+          "type": "text",
+          "index": false
         },
-      },
-    },
-  },
+        "created_time ": {
+          "type": "date"
+        },
+        "display_type": {
+          "type": "byte"
+        },
+        "duration": {
+          "type": "long"
+        },
+        "host": {
+          "type": "keyword"
+        },
+        "keywords": {
+          "type": "text"
+        },
+        "labels": {
+          "type": "text"
+        },
+        "modified_time": {
+          "type": "date"
+        },
+        "naming": {
+          "type": "text"
+        },
+        "p": {
+          "type": "text"
+        },
+        "program_name": {
+          "type": "keyword"
+        },
+        "resource_id": {
+          "type": "keyword",
+          "index": false
+        },
+        "resource_type": {
+          "type": "keyword"
+        },
+        "source": {
+          "type": "keyword"
+        },
+        "tags": {
+          "properties": {
+            "_id": {
+              "type": "text",
+              "index": false
+            },
+            "title": {
+              "type": "text"
+            }
+          }
+        },
+        "title": {
+          "type": "text"
+        },
+        "category_id": {
+          "type": "keyword"
+        },
+        "program_id": {
+          "type": "keyword",
+          "index": false
+        },
+        "program_icon": {
+          "type": "text",
+          "index": false
+        },
+        "type": {
+          "type": "byte",
+          "index": false
+        },
+        "url": {
+          "type": "text",
+          "index": false
+        },
+        "width": {
+          "type": "integer",
+          "index": false
+        },
+        "height": {
+          "type": "integer",
+          "index": false
+        },
+        "icon": {
+          "type": "text",
+          "index": false
+        },
+        "live_type": {
+          "type": "keyword"
+        },
+        "live_status": {
+          "type": "byte"
+        },
+        "start_time": {
+          "type": "date"
+        },
+        "marks": {
+          "type": "text"
+        },
+        "subscription_id": {
+          "type": "keyword"
+        },
+        "author_name": {
+          "type": "keyword"
+        },
+        "cover_list": {
+          "type": "text"
+        },
+        "target_platforms": {
+          "type": "text"
+        },
+        "platforms": {
+          "type": "keyword"
+        },
+      }
+    }
+  }
 }
 // client.on('request', (err, meta) => {
 //   console.log(err || meta)
 // });
 
 // 创建索引
-// client.indices.create({ index: 'global_es', include_type_name: true, body: mapping })
+
+
+// 删除索引
+client.indices.delete({ index: 'fengshows' }).then(()=>{
+  client.indices.create({ index: 'fengshows', include_type_name: true, body: mapping })
+});
+
 // 查看插件
 // client.cat.plugins().then(result => {
 //   console.log(result.body);
 // })
 
 // 查看索引
-// client.cat.indices({ index: 'test-index' }).then(result => {
+// client.cat.indices({ index: 'fengshows' }).then(result => {
 //   console.log(result.meta.request.params)
-//   console.log(result.body)
+//   console.log(result)
 // })
 
 // 同步一条数据
 // client.index({
-//   index: 'test-index', body: {
+//   index: 'fengshows', body: {
 //     "__last_actived_time": new Date("2021-03-31T10:49:05.401Z"),
 //     "__v": 0,
 //     "allow_comment": 1,
@@ -103,9 +222,9 @@ const mapping = {
 
 // 搜索
 // client.search({
-//   index: 'test-index', body: {
+//   index: 'fengshows', body: {
 //     query: {
-//       match: { title: '基地' }
+//       match: { title: '之' }
 //     }
 //   }
 // }).then(result => {
@@ -113,4 +232,260 @@ const mapping = {
 //   console.log(result.body.hits.hits)
 // })
 
-// 根据 id 查询记录.http://localhost:9200/test-index/fengshows/UmYnn3oBEVGA63Euqvt0?pretty
+// 根据 id 查询记录.http://localhost:9200/fengshows/fengshows/UmYnn3oBEVGA63Euqvt0?pretty
+
+/**
+ GET /fengshows/fengshows/_search?explain=true
+{
+      "size": 8,
+      "from": 0,
+      "_source": [
+        "_id",
+        "title",
+        "available",
+        "created_time",
+        "modified_time",
+        "resource_type",
+        "resource_id",
+        "article_type",
+        "display_type",
+        "cover",
+        "source",
+        "url",
+        "width",
+        "height",
+        "category_id",
+        "display_type",
+        "type",
+        "program_id",
+        "program_name",
+        "episode",
+        "material_id",
+        "icon",
+        "labels",
+        "duration",
+        "program_icon",
+        "category_key",
+        "marks",
+        "subscription_id",
+        "subscription_name",
+        "subscription_icon",
+        "cover_list",
+        "subscription_type",
+        "live_type",
+        "app_url",
+        "medals",
+        "certification_type",
+        "flags",
+        "width",
+        "height",
+        "duanmu_enabled",
+        "comment_enabled",
+        "brief",
+        "category",
+        "certificate",
+        "discard",
+        "media_type",
+        "images",
+        "videos",
+        "topic",
+        "related_topic",
+        "ref_resource",
+        "location",
+        "creator",
+        "scheduled_time",
+        "current_language",
+        "translation_languages",
+        "translations",
+        "target_countries_and_regions",
+        "target_platforms",
+        "content",
+        "icon",
+        "tags",
+        "p",
+        "platforms",
+        "authorized_countries"
+      ],
+      "sort": [
+        "_score",
+        {
+          "modified_time": "desc"
+        }
+      ],
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "bool": {
+                "should": [
+                  {
+                    "match": {
+                      "title": {
+                        "query": "美國人",
+                        "boost": 5
+                      }
+                    }
+                  },
+                  {
+                    "match": {
+                      "p": {
+                        "query": "美國人"
+                      }
+                    }
+                  }
+                ],
+                "filter": [
+                  {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "available": 1
+                          }
+                        },
+                        {
+                          "terms": {
+                            "resource_type": [
+                              "live"
+                            ]
+                          }
+                        },
+                        {
+                          "range": {
+                            "modified_time": {
+                              "gte": 0,
+                              "lte": 1652861122099,
+                              "format": "epoch_millis"
+                            }
+                          }
+                        },
+                        {
+                          "bool": {
+                            "should": [
+                              {
+                                "term": {
+                                  "platforms": "fs-mobile"
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "must_not": {
+                                    "exists": {
+                                      "field": "platforms"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "term": {
+                      "live_type": "business"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "bool": {
+                "should": [
+                  {
+                    "match": {
+                      "title": {
+                        "query": "美國人",
+                        "boost": 5
+                      }
+                    }
+                  },
+                  {
+                    "match": {
+                      "p": {
+                        "query": "美國人"
+                      }
+                    }
+                  }
+                ],
+                "filter": [
+                  {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "available": 1
+                          }
+                        },
+                        {
+                          "terms": {
+                            "resource_type": [
+                              "ticker",
+                              "article",
+                              "video",
+                              "program",
+                              "awhile",
+                              "special",
+                              "subscription"
+                            ]
+                          }
+                        },
+                        {
+                          "range": {
+                            "modified_time": {
+                              "gte": 0,
+                              "lte": 1652861122100,
+                              "format": "epoch_millis"
+                            }
+                          }
+                        },
+                        {
+                          "bool": {
+                            "should": [
+                              {
+                                "term": {
+                                  "platforms": "fs-mobile"
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "must_not": {
+                                    "exists": {
+                                      "field": "platforms"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "highlight": {
+        "pre_tags": [
+          "<span style=\"color: #E3B56F\">"
+        ],
+        "post_tags": [
+          "</span>"
+        ],
+        "fields": {
+          "title": {
+            "number_of_fragments": 0
+          },
+          "p": {
+            "number_of_fragments": 2,
+            "fragment_size": 25
+          }
+        }
+      }
+    }
+ */
+// client.search({ "index": "fengshows", "body": { "size": 30, "from": 60, "_source": ["_id", "title", "available", "created_time", "modified_time", "resource_type", "resource_id", "article_type", "display_type", "cover", "source", "url", "width", "height", "category_id", "display_type", "type", "program_id", "program_name", "episode", "material_id", "icon", "labels", "duration", "program_icon", "category_key", "marks", "subscription_id", "subscription_name", "subscription_icon", "cover_list", "subscription_type", "live_type", "app_url", "medals", "certification_type", "flags", "width", "height", "duanmu_enabled", "comment_enabled", "brief", "category", "certificate", "discard", "media_type", "images", "videos", "topic", "related_topic", "ref_resource", "location", "creator", "scheduled_time", "current_language", "translation_languages", "translations", "authorized_countries", "content", "icon", "tags", "p", "nickname", "memo"], "sort": ["_score", { "modified_time": "desc" }], "query": { "bool": { "should": [{ "bool": { "should": [{ "match": { "p": { "query": "中国" } } }, { "match": { "title": { "query": "中国", "boost": 5 } } }], "filter": [{ "term": { "available": 1 } }, { "terms": { "resource_type": ["dynamic"] } }] } }, { "bool": { "should": [{ "match": { "p": { "query": "中国" } } }, { "match": { "title": { "query": "中国", "boost": 5 } } }], "filter": [{ "term": { "available": 1 } }, { "terms": { "resource_type": ["user", "subscription", "label"] } }] } }] } }, "highlight": { "pre_tags": ["<span style=\"color: #E3B56F\">"], "post_tags": ["</span>"], "fields": { "title": { "number_of_fragments": 0 }, "p": { "number_of_fragments": 2, "fragment_size": 25 } } } } })

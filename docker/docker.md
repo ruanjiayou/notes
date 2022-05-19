@@ -245,3 +245,11 @@ services:
   ```
 - No route to host: 重启docker`service docker restart`
 - [1号进程处理SIG*消息](https://github.com/Yelp/dumb-init)
+- Cannot restart container manage: iptables failed
+  ```
+  pkill docker 
+  iptables -t nat -F 
+  ifconfig docker0 down
+  ifconfig docker0 up
+  systemctl restart docker
+  ```

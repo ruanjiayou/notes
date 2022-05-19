@@ -28,10 +28,11 @@ services:
     # 第一次启动使用
     # command: "yapi server"
     # 之后使用下面的命令
-    command: "node /my-yapi/vendors/server/app.js"
+    command: "sh /home/run.sh"
     volumes: 
+        - ./run.sh:/home/run.sh
         - ./my-yapi:/my-yapi
-        - ./server.js:/usr/local/lib/node_modules/yapi-cli/src/commands/server.js
+        # - ./server.js:/usr/local/lib/node_modules/yapi-cli/src/commands/server.js
     ports: 
       - '${SERVER_PORT}:9090'
       - '${WEB_PORT}:3000'
