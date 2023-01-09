@@ -9,7 +9,8 @@
 ## socket.io | client
 - 第一个参数: "ws://example.com/my-namespace"
   - 简短模式(option只有auth参数有效): "/my-namespace"
-
+- connect_error  server error at Socket.onPacket
+  > 版本不一致
 ## socket.io | server
 - .to(room).emit(),对room里的其他用户发消息,不包括自己
   - 因为.to(socket.id)不起作用,用socket.emit代替

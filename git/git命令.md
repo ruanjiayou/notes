@@ -153,3 +153,7 @@ git push
 - https://git-scm.com/book/zh/v2
 - http://gitref.justjavac.com/
 - https://blog.csdn.net/ithomer/article/details/7529022
+
+### 自定义域名
+- 需要github page上设置要解析的域名。不然dns设置的不生效
+- 关于test子域名，TXT类型和CNAME的冲突。改为CNAME的简单可靠。

@@ -27,7 +27,7 @@
 - docker exec -ti mongo-demo bash
 > 写了个shell, 加权限`chmod u+x`, 执行`cmd.sh dump db`
 - 备份整个库： `mongodump -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test -o /data/backup`
-- 备份单个表：`mongoexport -u root -p 123456 -h 127.0.0.1 -d test --authenticationDatabase admin --collection test -o /data/backup/test/test.json`
+- 备份单个表：`mongoexport -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test --collection test -o /data/backup/test/test.json`
 - 还原整个库：`mongorestore -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test /data/backup/test`
 - 还原单个表：`mongoimport -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test --collection test --file /data/backup/test/test.json`
 mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection tv -o /data/backup/media/tv.json

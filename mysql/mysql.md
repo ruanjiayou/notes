@@ -62,6 +62,33 @@ EVERY 1 seconds
 STARTS 2018-08-20 14:44:54
 ```
 
+## 常用语法
+- 导入sql文件: `mysql -uname -ppass -D db < filetosql`(-u -p 后面不留空格,要先创建表)
+```SQL
+CREATE TABLE `profile_infos` (
+  `id` varchar(36) NOT NULL,
+  `account_id` varchar(50) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `res_type` varchar(50) NOT NULL,
+  `res_id` varchar(50) NOT NULL,
+  `res_info` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `res_state` int(10) DEFAULT NULL,
+  `act_time` date DEFAULT NULL,
+  `act_ip` varchar(50) DEFAULT NULL,
+  `act_plat` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `account_id` (`account_id`) USING BTREE,
+  KEY `type` (`type`),
+  KEY `res_type` (`res_type`),
+  KEY `res_id` (`res_id`),
+  KEY `act_time` (`act_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户记录表';
+```
+- 批量修改字段:
+  ```sql
+  update profile_infos set tag_name=REPLACE(tag_name,"-","")
+  update profile_infos set tag_name=CONCAT("dyh_", tag_name)
+  ```
 ## 常见问题
 - 1045 access denied for user 'root'@'localhost' using password yes
   - 修改my.ini 

@@ -26,6 +26,7 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
 - and,or,nor
   - or查询: `{$or: [{a:1,b:1}]}`
   - 两个or查询: `{$and: [{$or: [{a:1,b:1}]},{$or:{c:1,b:1}}]}`
+- 数组: $elemMatch
 
 ## 修改数据
 > 参数: upsert,multi,setDefaultOnInsert(upsert=true),strict=false,overwrite=false/

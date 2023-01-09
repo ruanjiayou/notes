@@ -1,11 +1,18 @@
 version: '3'
 services:
   rabbit:
+    container_name: mq-demo
     image: rabbitmq-custom
     restart: always
+    networks:
+      - allinone
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "0.0.0.0:5672:5672"
+      - "0.0.0.0:15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=root
-      - RABBITMQ_DEFAULT_PASS=123123
+      - RABBITMQ_DEFAULT_USER=dev
+      - RABBITMQ_DEFAULT_PASS=0nPq!RG3x#mcp@Rt0
+
+networks:
+  allinone:
+    external: true

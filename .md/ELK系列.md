@@ -22,7 +22,7 @@
 ## elasticsearch安装
 1. 下载tar.gz包解压
 2. 进入安装目录
-3. 写启动脚本:
+3. 写启动脚本: 还是alias比较方便。。。
 ```bash
 #!/bin/bash
 ./bin/elasticsearch -d
@@ -175,6 +175,9 @@ echo '已停止'
 - 
 - 
 
+## plugins
+- 安装繁简插件: `./bin/elasticsearch-plugin -install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
+- 
 ## 参考
 - IK 分词器: https://segmentfault.com/a/1190000017215854
 - elasticsearch 内部机制: http://mednoter.com/all-about-analyzer-part-one.html
@@ -216,26 +219,6 @@ echo '已停止'
          "hkv-web",
          "hkv-wap"
       ],
-      "p": """
-   <!doctype html><html><head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-   <title>訂閲號文章</title>
-   <link rel="stylesheet" type="text/css" href="https://q1.fengshows.cn/app/common/css/fs.article-1.0.5.min.css" />
-   <script src="https://q1.fengshows.cn/app/common/js/fs.article-1.0.5.min.js"></script>
-   </head><body><div class="fs-image"><img src="http://q1.fengshows.cn/mp/s/2021/12/29/c73c1e70-6849-11ec-b19a-d38d9bda8190.jpg" alt="" /></div>  <div class="fs-video" data-attach-title="吳學蘭衞星.mp4"><video src="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_360.mp4" poster="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_cap.jpg" controls="controls"></video></div></body></html> 美衞星2次“威脅”中國空間站，在地上搞不過開始在天上搞事了？ 媒體號 
-   """,
-      "content": """
-   <!doctype html><html><head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-   <title>订阅号文章</title>
-   <link rel="stylesheet" type="text/css" href="https://q1.fengshows.cn/app/common/css/fs.article-1.0.5.min.css" />
-   <script src="https://q1.fengshows.cn/app/common/js/fs.article-1.0.5.min.js"></script>
-   </head><body><div class="fs-image"><img src="http://q1.fengshows.cn/mp/s/2021/12/29/c73c1e70-6849-11ec-b19a-d38d9bda8190.jpg" alt="" /></div>  <div class="fs-video" data-attach-title="吴学兰卫星.mp4"><video src="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_360.mp4" poster="http://q1.fengshows.cn/mp/v/2021/12/29/cd798fc0-6849-11ec-b19a-d38d9bda8190_cap.jpg" controls="controls"></video></div></body></html>
-   """
    }
 ```
 - 查询平台

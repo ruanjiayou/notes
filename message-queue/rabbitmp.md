@@ -13,6 +13,11 @@
 ## 延迟队列插件
 - rabbitmq-delayed-message-exchange
   - 延迟极限: 2^32 - 1
+  - 创建exchange
+    - type: x-delayed-message
+    - arguments: x-delayed-type: direct
+  - 发布延迟消息
+    - headers: x-delay: 5000
 
 ## 参数
 1. contentType ： 消息内容的类型
@@ -36,6 +41,11 @@
 19. CC routing keys 会覆盖headers里的key,大小写敏感
 20. BCC 不会覆盖headers里的
 
+## 注意事项
+- exchange需要手动添加,queue可以自动创建
+- 消息投递到不存在的exchange,会报错,需要捕获(channel.on("error")),channel会被销毁
+- topic类型匹配的. 默认将.作为分割符 #和*的匹配不包括.
+- message都不建议直接调用sendToQueue,要通过exchange
 ## 参考
 - [自定义带插件的mq镜像](https://codehunter.cc/a/docker/how-to-add-plugin-to-rabbitmq-docker-image)
 - [rabbitmq快速入门](https://developer.aliyun.com/article/990034?spm=a2c6h.12873639.article-detail.28.13ac48f7Qliawb&scm=20140722.ID_community@@article@@990034._.ID_community@@article@@990034-OR_rec-V_1)
