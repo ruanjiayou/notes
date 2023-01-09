@@ -1,0 +1,15 @@
+version: '3.2'
+
+services:
+  ffmpeg:
+    container_name: ffmpeg
+    image: jrottenberg/ffmpeg:4.1-alpine
+    restart: always
+    networks:
+      - allinone
+    volumes:
+      - ./videos:/data/videos
+
+networks:
+  allinone:
+    external: true

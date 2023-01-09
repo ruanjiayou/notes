@@ -1,5 +1,7 @@
 # ubantu系统使用
 
+## linux环境
+- 安装node
 ## win10双系统安装
 - 准备U盘,ubantu iso镜像文件, 启动U盘制作软件rufus, EasyBCD, DiskGenius
 - 制作好后 重启
@@ -7,14 +9,14 @@
 - 卡住或黑屏: 在ubantu启动选项按E 加 nomodeset(临时解决显卡问题)
 - 以后每次选 ubantu选项
 
-## 将ubantu默认的中文文件夹名改为英文,资源管理器显示中文
+### 将ubantu默认的中文文件夹名改为英文,资源管理器显示中文
 1. vim /~/config/usesr-dirs.dirs
 2. 终端中: `export LANG=en_US`, `xdg-user-dirs-gtk-update`
 3. 打开文件,重命名.
 
-## 设置快捷键
+### 设置快捷键
 - 打开指定目录: `nautilus /home/username/Desktop`
-## 软件安装
+### 软件安装
 - mpv视频播放
 - 搜狗输入法
   ```
@@ -24,7 +26,7 @@
   区域和语言,管理已安装的语言,选择fcitx,应用到整个系统
   reboot
   ```
-## 问题
+### 问题
 - 查看隐藏文件: ctrl+h
 - 改hosts文件不生效: `sudo /etc/init.d/dns-clean start`
 - 创建快捷方式: `ln -s 绝对路径 ~/桌面/名称`
