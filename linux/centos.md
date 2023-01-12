@@ -126,3 +126,10 @@ disk-cloud
 > yum install python36u
 ### 安装pip3
 > yum install python3-pip
+>
+
+### 安装netstat
+> yum install net-tools
+
+### 安装docker
+- https://docs.docker.com/engine/install/centos/
