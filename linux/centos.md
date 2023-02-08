@@ -5,8 +5,8 @@
 - `cd /etc/yum.repos.d/`
 - `sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*`
 - `sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*`
+- `yum -y install wget`
 - `wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-vault-8.5.2111.repo`
-- 如果wget命令找不到 `yum -y install wget`
 ## windows上用docker不如搞个虚拟机安装centos.不然问题贼多!
 - 管理员身份运行 Hyper-v.cmd (家庭版window10开启Hyper-v)
   ```sh

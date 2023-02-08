@@ -56,6 +56,12 @@
     ```
     最重要的CommonName填域名或127.0.0.1
     将生成的文件放到 conf/certs中
+    ```
+    openssl req -x509 -out registry.crt -keyout registry.key \
+    -newkey rsa:2048 -nodes -sha256 \
+    -subj '/CN=192.168.0.124' -extensions EXT -config <( \
+    printf "[dn]\nCN=192.168.0.124\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:192.168.0.124\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+    ```
 6.  配置HTTPS
     ```
     server {

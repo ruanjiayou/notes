@@ -44,3 +44,5 @@ DISM /Online /Cleanup-image /RestoreHealth
 完成后重启，再键入以下命令：sfc /SCANNOW，
 检查系统文件是否被修复。
 同时检查更新您计算机所有的设备驱动程序
+
+## 安装docker

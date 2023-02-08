@@ -1,5 +1,8 @@
 # ubantu系统使用
 
+## first
+- apt update
+- 
 ## linux环境
 - 安装node
 ## win10双系统安装

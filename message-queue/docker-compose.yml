@@ -1,8 +1,9 @@
 version: '3'
 services:
   rabbit:
-    container_name: mq-demo
-    image: rabbitmq-custom
+    # 本地自定义的镜像
+    container_name: rabbitmq-custom
+    image: rabbitmq:3.10-management
     restart: always
     networks:
       - allinone

@@ -16,3 +16,4 @@
 -ss 5.0 -t 2 -r 16 -i /data/videos/-.mp4 -f gif /data/videos/screenshots/test.gif
 
 docker run -v "/Users/jiayou/projects/notes/docker/ffmpeg/videos:/data/videos" jrottenberg/ffmpeg:4.1-alpine -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i /data/videos/m3u8/test.m3u8  -codec copy -movflags faststart /data/videos/mp4/test.mp4
+docker run -v "$PWD:/videos" jrottenberg/ffmpeg:4.1-alpine -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i /videos/m3u8/test.m3u8  -codec copy -movflags faststart /videos/mp4/test.mp4

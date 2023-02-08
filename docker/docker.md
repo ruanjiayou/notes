@@ -11,8 +11,10 @@ docker --version
 docker login
 // 上传前给j镜像打tag
 docker tag project:0.1 username/project:0.1 && docker push username/project:.01
-// 压缩镜像
+// 将镜像保存为文件
 docker save username/project:0.1 > project.tar
+// 从文件中加载镜像
+docker load path/to/file
 // 列出进程(容器)
 docker ps
 // 列出本地主机上的镜像 --filter -f -q --format 

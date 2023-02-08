@@ -6,6 +6,7 @@
 - 克隆项目: git clone url[#branch] [dirname]
 - 查看修改: git status
 - 比较分支: git diff branchA branchB
+  - 忽略文件权限: git config core.fileMode false
 - 切换到本地分支: git checkout dev
 - 拉取远程分支到本地: git fetch origin dev
 - 创建本地分支切换,并拉取远程: git checkout -b dev origin/dev
@@ -142,7 +143,7 @@ git push
 - git commit -m "test squash"
 
 ### Permissions 0664/0777are too open
-- chmod 600 ~/.ssh/id_rsa
+- chmod 600 ~/.ssh/id_rsa (默认700？)
 
 ### exec /usr/lib/ssh/ssh-askpass : No such file or directory error
 - sudo apt-get autoremove git
