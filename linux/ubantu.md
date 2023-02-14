@@ -29,6 +29,16 @@
   区域和语言,管理已安装的语言,选择fcitx,应用到整个系统
   reboot
   ```
+
+### 安装cron
+> ubuntu 任务不运行是有错误或不支持的语法,没日志难搞..
+- `apt-get update`
+- `apt-get install -y vim`
+- `apt-get install cron`
+- `cron -e` 添加执行任务(默认在/var/spool/cron/下的用户文件夹)
+- `crontab -u root -l`
+- `servcie cron restart`
+- `service cron status`
 ### 问题
 - 查看隐藏文件: ctrl+h
 - 改hosts文件不生效: `sudo /etc/init.d/dns-clean start`
