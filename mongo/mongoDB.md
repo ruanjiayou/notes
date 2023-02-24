@@ -24,18 +24,46 @@
   - 连接: 127.0.0.1:27017(默认无账号密码)
 
 ## 备份与还原
+- mongodump参数
+  - 显示日志详情: -v, -vvvv, --verbose=<level>
+  - 不显示日志: --quiet
+  - 地址: -h --host=<hostname>
+  - --ssl
+  - --sslCAFile=<filename>
+  - --sslPEMKeyFile=<filename>
+  - --sslPEMKeyPassword=<password>
+  - --sslCRLFile=<filename>
+  - tlsInsecure
+  - 指定验证库: --authenticationDatabase=<database-name>
+  - 指定验证机制: --authenticationMechanism=<mechanism>
+  - -d --db 指定库名
+  - -c --collection=<collection-name> 指定集合
+  - -q --query='{"nth":{"$gt":1}}'
+  - --queryFile=
+  - -o --out=<directory>
+  - --gzip 压缩备份文件
+  - --oplog 备份oplog完成一致性快照备份
+  - --archive=<file-path> 不能和-o同时使用
+  - --dumpDbUsersAndRole
+  - --excludeCollection=<collection> 可以多个
+- mongorestore参数
+  - --drop 
+  - --stopOnError
+  - --noIndexRestore
+  - --objcheck 插入前检查记录有效性
+  - --oplogReplay 恢复数据后重放oplog
+  - --oplogFile=<filepath>
+  - --archive=<filepath>
+  - --restoreDbUsersAndRoles
+  - --dir
+  - --gzip
 - docker exec -ti mongo-demo bash
 > 写了个shell, 加权限`chmod u+x`, 执行`cmd.sh dump db`
 - 备份整个库： `mongodump -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test -o /data/backup`
 - 备份单个表：`mongoexport -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test --collection test -o /data/backup/test/test.json`
 - 还原整个库：`mongorestore -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test /data/backup/test`
 - 还原单个表：`mongoimport -u root -p 123456 -h 127.0.0.1 --authenticationDatabase admin -d test --collection test --file /data/backup/test/test.json`
-mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection tv -o /data/backup/media/tv.json
-mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection cartoon -o /data/backup/media/cartoon.json
-mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection children -o /data/backup/media/children.json
-mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection movie -o /data/backup/media/movie.json
-mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection variety -o /data/backup/media/variety.json
-mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase admin --collection documentary -o /data/backup/media/documentary.json
+
 ## 复制数据库
 - 
 
@@ -44,8 +72,8 @@ mongoexport -u root -p 123456 -h 127.0.0.1 -d media2 --authenticationDatabase ad
   ```js
   mongo
   use admin  // (如果是在当前数据库,这链接无需 authSource 选项)
-  db.createUser({user:"root",pwd:"123456",roles:[{role:"readWrite",db:"test"}]})
   db.auth("root","123456")
+  db.createUser({user:"test",pwd:"123456",roles:[{role:"readWrite",db:"test"}]})
   ```
 - 创建管理员, `roles: [ { role: "userAdminAnyDatabase", db: "admin"} ]` 对所有数据库进行管理
 - 删除用户, `db.dropUser("test")`
