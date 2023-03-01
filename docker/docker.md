@@ -202,6 +202,12 @@ services:
   - `pip install --upgrade pip`
   - `pip install docker-compose`
 
+## windows 10 安装
+> * checking if isocache exists: CreateFile
+- wsl --update
+- wsl --set-default-version 2
+- netsh winsock reset
+- wsl --shutdown
 ## 问题
 - Delta RPMs disabled because /usr/bin/applydeltarpm
   > 先看`docker -v` \
