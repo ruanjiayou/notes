@@ -41,7 +41,8 @@
 - 仓库中加ssh密钥,不是authoizations加
 
 ### centos免密码登录
-- 生成公匙(要设置passphrase): ssh-keygen -t rsa -C xxx@gmail.com
+- ~~生成公匙(要设置passphrase): ssh-keygen -t rsa -C xxx@gmail.com~~
+- ssh-keygen -t ecdsa -b 521 -C "your_email@example.com"
 - 编辑配置
   > .ssh/config
   ```
@@ -150,10 +151,15 @@ git push
 - sudo apt-get install git
 - git push
 
+### SHA-1, which is no longer allowed
+- 
 ### 参考文章
 - https://git-scm.com/book/zh/v2
 - http://gitref.justjavac.com/
 - https://blog.csdn.net/ithomer/article/details/7529022
+
+### fatal: detected dubious ownership in repository at
+- git config --global --add safe.directory dirtoproject
 
 ### 自定义域名
 - 需要github page上设置要解析的域名。不然dns设置的不生效

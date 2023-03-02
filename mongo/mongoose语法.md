@@ -119,7 +119,7 @@ db.getCollection('point_info').createIndexes([
   $pull
   $pullAll
   $pop
-
+  $ne
   ```
   > $project：包含、排除、重命名和显示字段 \
   ```js

@@ -92,3 +92,19 @@ redis集群
   - blpop
   - brpop
   - brpoplpush
+  
+## 发布订阅
+- subscribe [channel ...] 订阅频道
+- publish channel "msg" 发布消息
+- psubscribe news.* 订阅符合模式的频道
+- unsubscribe punsubscribe 取消订阅
+- 没有应答机制,没有提供持久化功能有丢失风险,广播机制消费能力取决下游本身
+- Redis的订阅只是基本需求,需要高可靠性用RabbitMQ,高吞吐量用kafka(elk日志) 
+
+## window版设置
+- 进入redis目录: `cd C:\Program Files\Redis`
+- 先卸载服务: `redis-server.ext --service-uninstall`
+- 修改 redis.windows.conf 和 redis.windows-service.conf 的 requirepass
+- 注册服务 `redis-server.exe --service-install redis.windows-service.conf`
+- 启动服务 `redis-server.exe --service-start`
+- 测试连接

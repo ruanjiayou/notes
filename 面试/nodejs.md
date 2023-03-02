@@ -1,5 +1,14 @@
 # nodejs
-
+> 事件驱动的无阻塞IO模型(libuv库提供异步IO能力),单线程(启动到事件循环再到结束都是由主线程处理),适合做并发请求接口开发
+- 2009年诞生,npm出现
+- 2010年,express和socket.io诞生
+- 2011年,npm 1.0发布,大公司开始采用nodejs,hapi出现
+- 2012年迅速普及
+- 2013年koa诞生
+- 2014年io.js大分支
+- 2015年nodejs基金会成立,io.js合并,nodejs 正式发布(版本4)
+- 2016年leftpad事件,yarn诞生,nodejs 6
+- 2017年支持http2.0,V8支持nodejs
 
 ## 模块机制与加载机制
 - 每个文件都是一个模块,有id,exports,parent,filename,loaded,children属性
@@ -24,21 +33,47 @@
 - 浅拷贝只会将对象的各个属性进行依次复制，并不会进行递归复制
 - 深拷贝,递归复制值,没有浅拷贝地址引用的烦恼.遍历属性,如果是object就判断是数组还是对象进行递归.
 
-## 优势
-- 非阻塞IO模型,事件驱动,适合做接口开发
-- 
+## nodejs启动过程
+1. 调用platformInit()初始化nodejs运行环境
+2. 调用performance_node_start()进行性能统计
+3. openssl设置的判断
+4. 调用v8_platform.Initialize初始化libuv线程池
+5. 调用V8::Initialize初始化V8环境
+6. 创建一个nodejs实例
+7. 启动实例
+8. 执行js文件,同步代码执行完后进入事件循环
+9. 没有任何可监听事件时销毁nodejs实例,程序执行完毕.
 
-## 事件循环的流程
-- 宏任务:setInterval/setTimeout/setImmediate队列,微任务: Promise.then catch finally队列,process.nextTick队列 
+## 事件循环的6个阶段(phase)
+1. timers: fo循环处理setTimeout/setInterval的回调(保存在最小堆中,像升序队列).直到遇到不符合条件或为空或执行回调超过指定数量就跳出.
+2. pending I/O callbacks: 执行文件I/O或网络的回调
+3. idle/prepare handlers:
+4. I/O poll: 等待异步请求和数据(超时预设值是)
+5. check handlers: 执行setImmediate(当初设计就是这样的)
+6. close handlers: 执行on("close")的回调
+> 事件循环原理
+- 宏任务:setInterval/setTimeout队列,setImmediate队列,微任务: Promise.then catch finally队列,process.nextTick队列 
 - 是否有事件 -> 取出事件 -> 有回调就执行回调(微任务) -> 进行下一次事件循环.
-- 从script(整体代码)开始第一次循环。之后全局上下文进入函数调用栈。直到调用栈清空(只剩全局)，然后执行所有的micro-task。当所有可执行的micro-task执行完毕之后。循环再次从macro-task开始，找到其中一个任务队列执行完毕，然后再执行所有的micro-task
+- 从script(整体代码)开始第一次循环。之后全局上下文进入函数调用栈。直到调用栈清空(只剩全局)，执行nextTick,然后执行所有的微任务。当所有可执行的micro-task执行完毕之后进入事件循环。循环从定时器开始，找到其中一个任务队列执行完毕，然后再执行所有的micro-task
 - 嵌套的任务
 - 一个线程中调用栈只有一个，但任务队列可以有多个
 
+## 异步事件分类
+- 非I/O
+  - 定时器
+  - 微任务
+  - process.nextTick
+  - setImmediate
+  - DNS.lookup
+- I/O
+  - 网络I/O
+  - 文件I/O
+  - 一些DNS操作
 - process.memoryUsage()
 
 ## webSocket
 - 只需一个TCP连接,可以推送,协议头更轻
+- 多实例中,通过redis订阅解决问题
 
 ## url到页面显示经历了什么
 - 加载文件,生成DOM树和样式树,一起构成渲染树 重绘和回流
