@@ -29,3 +29,6 @@
 # 合并两个视频(第一个的视频第二个的音频)
 ## map M:N M是第几个输入文件，N的该文件的第几个流
 -i input1.mp4 -i input2.mp4 -movflags faststart -c copy -map 0:0 -map 1:0 output.mp4 -y
+
+# 将图片写入视频或音频的封面
+-i input_video.mp4 -i input_image.png -map 0 -map 1 -c copy -c:v:1 png -disposition:v:1 attached_pic output_video.mp4
