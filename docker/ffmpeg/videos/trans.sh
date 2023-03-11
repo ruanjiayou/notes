@@ -4,13 +4,13 @@
 - linux
   > `alias ff="docker run -v $PWD:/data -w /data jrottenberg/ffmpeg:4.1-alpine -hide_banner $@"`
 - powershell
-  > `function ff() { docker run -v /c/Users/Administrator/Downloads:/data -w /c/Users/Administrator/Downloads --name temp jrottenberg/ffmpeg:4.1-alpine -hide_banner $args; docker rm temp }`
+  > `function ff() { docker run -v /c/Users/Administrator/Downloads:/data -w /data --name temp jrottenberg/ffmpeg:4.1-alpine -hide_banner $args; docker rm temp }`
 
 # mp4转m3u8
 -i /data/videos/-.mp4  -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list /data/videos/m3u8/test.m3u8 -segment_time 5 /data/videos/m3u8/p_%03d.ts
 
 # m3u8转mp4
--allowed_extensions ALL -movflags faststart -protocol_whitelist "file,http,crypto,tcp" -i /data/videos/m3u8/test.m3u8  -codec copy /data/videos/mp4/test.mp4
+-i /data/videos/m3u8/test.m3u8 -allowed_extensions ALL -movflags faststart -protocol_whitelist "file,http,crypto,tcp" -codec copy /data/videos/mp4/test.mp4
 # 元信息放文件开头 -movflags faststart
 
 # 截图
@@ -32,3 +32,5 @@
 
 # 将图片写入视频或音频的封面
 -i input_video.mp4 -i input_image.png -map 0 -map 1 -c copy -c:v:1 png -disposition:v:1 attached_pic output_video.mp4
+
+# stream
