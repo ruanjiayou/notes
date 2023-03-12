@@ -1,0 +1,23 @@
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+
+#----------------------- BEGIN SECURITY AUTO CONFIGURATION -----------------------
+#
+# The following settings, TLS certificates, and keys have been automatically      
+# generated to configure Elasticsearch security features on 12-03-2023 06:01:23
+#
+# --------------------------------------------------------------------------------
+
+# Enable security features
+xpack.security.enabled: true
+
+xpack.security.enrollment.enabled: true
+
+# Enable encryption for HTTP API client connections, such as Kibana, Logstash, and Agents
+xpack.security.http.ssl:
+  enabled: false
+
+# Enable encryption and mutual authentication between cluster nodes
+xpack.security.transport.ssl:
+  enabled: false
+#----------------------- END SECURITY AUTO CONFIGURATION -------------------------

@@ -1,5 +1,10 @@
 # elasticsearch
 
+## 8.6.0版本docker
+- 挂载`elasticseawrch.yml`(关闭ssl,去掉证书文件)
+- 环境变量: `discovery.type=single-node`
+- 设置密码: `./bin/elasticsearch-setup-passwords`
+
 ## 查询
 ```
 GET /:doc/:type/_search
