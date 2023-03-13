@@ -157,12 +157,12 @@ echo '已停止'
 
 ## IK分词器
 1. 找对应版本zip下载到本地: https://github.com/medcl/elasticsearch-analysis-ik/releases
-2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`.
+2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`(file:开头)
   > 是 zip 文件,而且不能在 plugins 文件夾裡.Mac 里把 .DS_Store 文件要删掉.
 3. 测试:
    > 原生: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json;' -d '{"analyzer": "default","text": "今天天气真好"}'` \
    > IK: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json' -d'{"analyzer": "ik_smart","text": "今天天气真好"}'`
-4. es目录config/analysis-ik增加文件 test.dic
+4. es目录config/analysis-ik增加文件test.dic
    > 原生: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json;' -d '{"analyzer": "default","text": "去朝阳公园"}'` \
    > 朝阳公园
    > IK: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json' -d'{"analyzer": "ik_smart","text": "去朝阳公园"}'`
@@ -176,7 +176,7 @@ echo '已停止'
 - 
 
 ## plugins
-- 安装繁简插件: `./bin/elasticsearch-plugin -install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
+- 安装繁简插件: `./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
 - 
 ## 参考
 - IK 分词器: https://segmentfault.com/a/1190000017215854
