@@ -157,7 +157,7 @@ echo '已停止'
 
 ## IK分词器
 1. 找对应版本zip下载到本地: https://github.com/medcl/elasticsearch-analysis-ik/releases
-2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`(file:开头)
+2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`.
   > 是 zip 文件,而且不能在 plugins 文件夾裡.Mac 里把 .DS_Store 文件要删掉.
 3. 测试:
    > 原生: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json;' -d '{"analyzer": "default","text": "今天天气真好"}'` \
@@ -176,16 +176,12 @@ echo '已停止'
 - 
 
 ## plugins
-- 安装繁简插件: `./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
+- 安装繁简插件: `./bin/elasticsearch-plugin -install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
 - 
 ## 参考
 - IK 分词器: https://segmentfault.com/a/1190000017215854
 - elasticsearch 内部机制: http://mednoter.com/all-about-analyzer-part-one.html
 - elk实践入门: https://www.cnblogs.com/52fhy/p/10053076.html
-
-## mapping
-- 字段类型: text 全文索引, keyword 精确查询.(term时 ['ab', 'abc'] 查'ab'只有一个)
-  - [区别](https://www.cnblogs.com/sanduzxcvbnm/p/12177377.html)
 
 ## kibana
 - 修改文档(5.5.3)
