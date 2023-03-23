@@ -128,6 +128,8 @@ git pull
 git push
 ```
 
+### 取消本地commit但未push的
+- `git reset --soft HEAD~1`
 ### 删除本地 commit 但未 push的
 - `git reset --hard HEAD~1`
 ### 删除历史commit(密码等敏感记录)
