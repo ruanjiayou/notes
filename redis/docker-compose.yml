@@ -1,4 +1,5 @@
 version: '3'
+# docker run -d --name redis-test -p 6380:6379 redis:alpine --requirepass "phoenixtv2017"
 services:
   redis-master: 
     image: redis:alpine

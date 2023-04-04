@@ -1,0 +1,7 @@
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName=@SubjectAlternativeName
+
+[ SubjectAlternativeName ]
+IP.1=127.0.0.1
+IP.2=192.168.0.124	# 内网访问的IP地址

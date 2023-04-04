@@ -22,6 +22,9 @@ TODO: .env publish.sh dev.sh
 - 重进: `$ exit`
 - nvm ls-remote
 - nvm install/use v11.14.0
+- 切换版本
+  - `nvm use` 临时
+  - `nvm alias default` 永久
 
 ## node-canvas
 

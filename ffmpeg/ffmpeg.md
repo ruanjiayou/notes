@@ -7,10 +7,10 @@
 - 指定宽高输出: `ffmpeg -y -i Titanic.mkv -s 640*480 out.h264`
 - 截取素材
   - 截取gif,从25秒开始,截取10秒,帧率16: `ffmpeg -ss 25 -t 10 -r 16 -i path-to-vedio -f gif test.gif` 
-  - 截图: `ffmpeg -ss 16.1 -i path-to-video -s 320x240 -vframes 1 -f image2 xxx.jpeg`
+  - 截图: `ffmpeg -ss 16.1 -i path-to-video -s 320x240 -vframes 1 -f image2 xxx.jpeg`
   - 
 - 合成
-  - 多张图片合并为gif: `ffmpeg -f image2 -framerate 5 -i dir/IMG_%d.jpg test2.gif`
+  - 多张图片合并为gif: `ffmpeg -f image2 -framerate 5 -i dir/IMG_%d.jpg test2.gif`
   - 添加水印 视频宽度为100,水印宽度为20,位置10,10?比例1?: `ffmpeg -i input.mp4 -i image.png -filter_complex 'overlay=x=10:y=10' output.mp4`
   - 跑马灯: `-filter_complex "overlay='if(gte(t,1), -w+(t-1)*200, NAN)':(main_h-overlay_h)/2"`
   - 添加srt/ass字幕: `ffmpeg -i video.avi -vf subtitles=subtitle.srt(或ass) out.avi`
