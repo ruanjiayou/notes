@@ -261,3 +261,5 @@ services:
   ifconfig docker0 up
   systemctl restart docker
   ```
+- registry不能pull镜像: server gave HTTP response to HTTPS client
+  > 修改 /etc/docker/daemon.json 加入 {"insecure-registries":["ip:5000"]}
