@@ -34,3 +34,6 @@
 -i input_video.mp4 -i input_image.png -map 0 -map 1 -c copy -c:v:1 png -disposition:v:1 attached_pic output_video.mp4
 
 # stream
+
+# 合并字幕
+-i input.mp4 -i sub.srt -c:s mov_text -c:v copy -c:a copy output.mp4
