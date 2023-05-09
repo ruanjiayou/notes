@@ -23,7 +23,7 @@
   ```sql
   # (输入密码)
   create user 'gogs'@'localhost' identified by '密码';
-  grant all privileges on gogs.* to 'gogs'@'localhost';
+  grant all privileges on *.* to 'gogs'@'%';
   flush privileges;
   exit;
   ```
@@ -47,6 +47,36 @@
 - 设置
 - 管理员 user pass email
 - 设置hosts ip:port git.site.com
+
+## 多仓库push
+- git remote add gogs http://192.168.0.124:9999/username/repostry.git
+- git push (git push gogs)
+
+## git hook
+> pre-receive,update,post-receive分别对应接收前,接收时,接收后三种状态，希望push代码后实现更新部署则会用到post-receive
+- 修改自定义hook文件夹的用户: `chown -R git:git custom_hooks`
+- 修改编译文件夹的权限: `chown -R git: git /home/deploy-registry && chmod -R 755 /home/deploy-registry`
+```sh
+#!/bin/sh
+# 比较提交md5,看是否变化
+while read oldrev newrev refname
+do
+    branch=$(git rev-parse --symbolic --abbrev-ref $refname)
+    if [ "master" = "$branch" ]; then
+        # Do something
+        if [ ! -d "/home/deploy-registry/web-admin" ]; then # 项目不存在，则clone
+          git clone http://192.168.0.124:999/ruanjiayou/web-admin.git /home/deploy-registry
+          echo "cloned"
+        else 
+          cd "/home/deploy-registry/web-admin"
+          git fetch
+          git pull
+          echo "pulled"
+        fi
+        echo "test git hook deploy"
+    fi
+done
+```
 
 ## docker启动
 - docker-compose up -d

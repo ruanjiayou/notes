@@ -12,3 +12,4 @@
     }
   }
   ```
+- 执行`java JavaTest`

@@ -62,3 +62,6 @@
 - 挂载磁盘上的项目 不能运行docker: ERROR: .IOError: [Errno 13] Permission denied: './docker-compose.yml'
   > 把项目复制到home里再执行
 - 状态栏显示秒: sudo apt install gnome-tweak-tool => win+a => 优化 => 外观
+- sudo: command not found
+  - 先查看是否有sudo: `find /etc/sudoers.d`
+  - 没有就安装: `apt-get install sudo`
