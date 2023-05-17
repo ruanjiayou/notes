@@ -182,8 +182,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock 
 ```
 
-
-## centos安装docker ==> centos上装 docker-ce http://www.runoob.com/docker/centos-docker-install.html
+## 安装
+### centos
+- docker-ce http://www.runoob.com/docker/centos-docker-install.html
 - 更新软件包: `sudo yum update`
 - yum provides '*/applydeltarpm'
 - yum install deltarpm -y
@@ -202,12 +203,15 @@ services:
   - `pip install --upgrade pip`
   - `pip install docker-compose`
 
-## windows 10 安装
-> * checking if isocache exists: CreateFile
+### windows 10
+> 启动docker desktop要切换到wsl2
 - wsl --update
 - wsl --set-default-version 2
 - netsh winsock reset
 - wsl --shutdown
+
+### ubantu
+
 ## 问题
 - Delta RPMs disabled because /usr/bin/applydeltarpm
   > 先看`docker -v` \
@@ -261,5 +265,10 @@ services:
   ifconfig docker0 up
   systemctl restart docker
   ```
-- registry不能pull镜像: server gave HTTP response to HTTPS client
-  > 修改 /etc/docker/daemon.json 加入 {"insecure-registries":["ip:5000"]}
+
+- fail to start
+  > checking if isocache exists: CreateFile \\wsl$\docker-desktop-data\isocache\: The network name canno \
+  - wsl --update
+  - wsl --shutdown
+  - netsh winsock reset 
+  - 清空docker的数据和配置,重启APP几次..

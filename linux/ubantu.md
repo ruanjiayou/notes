@@ -40,11 +40,6 @@
 - `servcie cron restart`
 - `service cron status`
 
-### ssh登录
-> 没有/etc/init.d/ssh就是安装失败
-- `apt install openssh-client -y`
-- `/etc/init.d/ssh start`
-
 ### 问题
 - 查看隐藏文件: ctrl+h
 - 改hosts文件不生效: `sudo /etc/init.d/dns-clean start`

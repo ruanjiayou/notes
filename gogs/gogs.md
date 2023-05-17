@@ -63,7 +63,7 @@ while read oldrev newrev refname
 do
     branch=$(git rev-parse --symbolic --abbrev-ref $refname)
     if [ "master" = "$branch" ]; then
-        # Do something
+        # Do something 或者 curl请求Jenkins
         if [ ! -d "/home/deploy-registry/web-admin" ]; then # 项目不存在，则clone
           git clone http://192.168.0.124:999/ruanjiayou/web-admin.git /home/deploy-registry
           echo "cloned"
