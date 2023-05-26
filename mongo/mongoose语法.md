@@ -201,6 +201,19 @@ or：有多少个条件就会查询多少次，最后合并结果集，所以尽
 - db.killOp
 - 
 
+## 文件恢复
+- `tar (child): cannot run bzip2: No such file or directory`
+  > apt-get install bzip2
+- `E: Package 'mongodb' has no installation candidate`
+- 卸载mongo: apt-get purge mongo*
+- mongod -f /etc/mongod.conf &(启动后才能连接..)
+- wget http://source.wiredtiger.com/releases/wiredtiger-3.0.0.tar.bz2
+- apt-get install bzip2
+- tar -xvf wiredtiger-3.0.0.tar.bz2 && cd wiredtiger-3.0.0
+- ./configure --enable-snappy
+- make
+- 
+
 ## 问题
 - MongoError: no primary found in replicaset or invalid replica set name 连不上数据库集群 ===> 停电挂了...
 - db.getCollection('crawler_url').updateMany({finished:true},{$set:{finished:false}})
