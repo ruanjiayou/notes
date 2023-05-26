@@ -4,7 +4,17 @@
 - 挂载`elasticseawrch.yml`(关闭ssl,去掉证书文件)
 - 环境变量: `discovery.type=single-node`
 - 设置密码: `./bin/elasticsearch-setup-passwords interactive`(kibana_system的密码不能纯数字)
-
+  ```
+  elastic 123456
+  apm_system apm123456
+  kibana/kibana_system k123456
+  logstash_system ls123456
+  beats_system b123456
+  remote_monitoring_user rm123456
+  ```
+- 安装plugins
+  - ./bin/elasticsearch-plugin install file:/home/files/xxxx.zip
+  - 查看安装的插件列表: http://192.168.0.124:9200/_cat/plugins
 ## setting
 
 ## mapping

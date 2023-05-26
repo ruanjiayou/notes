@@ -44,6 +44,7 @@
 ## 注意事项
 - exchange需要手动添加,queue可以自动创建
 - 消息投递到不存在的exchange,会报错,需要捕获(channel.on("error")),channel会被销毁
+- mq心跳包超时会抛出异常,需要捕获: mq.on('error').error后会自动调用close
 - topic类型匹配的. 默认将.作为分割符 #和*的匹配不包括.
 - message都不建议直接调用sendToQueue,要通过exchange
 ## 参考

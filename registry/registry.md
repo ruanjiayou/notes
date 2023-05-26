@@ -14,6 +14,16 @@
   - REGISTRY_HTTP_TLS_KEY=/certs/server.key
   - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
 
+## registry-ui(jc21/registry-ui)
+```SH
+REGISTRY_DOMAIN=192.168.0.124:5000 # UI界面拼接地址用的
+REGISTRY_PASS=123456
+REGISTRY_USER=registry
+REGISTRY_HOST=192.168.0.124:5000 # 请求api用的
+# 开启了https的话
+REGISTRY_STORAGE_DELETE_ENABLED=true
+REGISTRY_SSL=true
+```
 ## docker插件使用
 - window docker desktop 设置开放调试端口2375
 - 

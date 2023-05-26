@@ -157,7 +157,7 @@ echo '已停止'
 
 ## IK分词器
 1. 找对应版本zip下载到本地: https://github.com/medcl/elasticsearch-analysis-ik/releases
-2. 到es目录安装: `./bin/elasticsearch-plugin install file://path-to-zip`.
+2. 到es目录安装: `./bin/elasticsearch-plugin install file:/home/files/xxx.zip`.
   > 是 zip 文件,而且不能在 plugins 文件夾裡.Mac 里把 .DS_Store 文件要删掉.
 3. 测试:
    > 原生: `curl -XGET "http://localhost:9200/_analyze" -H 'Content-Type: application/json;' -d '{"analyzer": "default","text": "今天天气真好"}'` \
