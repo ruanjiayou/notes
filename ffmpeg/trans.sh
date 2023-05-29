@@ -37,3 +37,9 @@
 
 # 合并字幕
 -i input.mp4 -i sub.srt -c:s mov_text -c:v copy -c:a copy output.mp4
+
+# 设置请求头
+-headers "origin: http://www.baidu.com\r\nreferer: http://www.baidu.com"
+
+# 设置代理
+-http_proxy "http://localhost:55173"
