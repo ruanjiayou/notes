@@ -26,6 +26,8 @@ TODO: .env publish.sh dev.sh
   - `nvm use` 临时
   - `nvm alias default` 永久
 
+## npm
+- 查看可以升级的包: npm outdated [packageName](不指定包名则查看全局的)
 ## node-canvas
 
 - `sudo yum install gcc-c++ cairo-devel libjpeg-turbo-devel pango-devel giflib-devel`
