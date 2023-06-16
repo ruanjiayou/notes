@@ -25,3 +25,14 @@
 [参考](https://juejin.cn/post/7067790095767568397)
 
 ## node项目打包镜像
+- cloud配置: Docker Cloud detail => Docker Host URI => tcp://192.168.3.238:2376
+- 自由风格项目
+  - 源码管理: https://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@github.com/ruanjiayou/node-mongo-api.git
+  - 构建环境: provide Node
+  - build steps: build/publish docker image
+    - $WORKSPACE
+    - cloud: novel-api
+    - image: ruanjiayou/node-novel-api
+    - push image: 
+    - clean local images: true
+    - pull base image: true
