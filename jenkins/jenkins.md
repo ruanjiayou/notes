@@ -25,6 +25,16 @@
 [参考](https://juejin.cn/post/7067790095767568397)
 
 ## node项目打包镜像
+- 在有docker环境的系统expose端口
+  1. 修改daemon.json 添加hosts:["tcp://0.0.0.0:2375"],`netsh advfirewall firewall add rule name="docker_name" dir=in action=allow protocol=TCP localport=2375`
+  2. ```
+  $ docker pull alpine/socat
+  $ docker run -d --restart=always \
+      -p 0.0.0.0:2376:2375 \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      alpine/socat \
+      tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+  ```
 - cloud配置: Docker Cloud detail => Docker Host URI => tcp://192.168.3.238:2376
 - 自由风格项目
   - 源码管理: https://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@github.com/ruanjiayou/node-mongo-api.git

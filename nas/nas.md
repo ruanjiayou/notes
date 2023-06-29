@@ -6,6 +6,9 @@
 - ssh里重启docker: service dockerd restart
 花生壳
 
+### lantern
+> 首先右键桌面上的Lantern图标，选择“打开文件位置”，即可进入lantern的安装目录。在其中寻找一个setting.yaml的文件
+
 ## nas登录步骤
 - curl "https://down.oray.com/hsk/linux/phddns_5.2.0_amd64.deb" -o phddns_5.2.0_amd64.deb
 - dpkg -i phddns_5.2.0_amd64.deb
@@ -14,3 +17,4 @@
 ## docker拉取失败
 > 进到ssh可以拉取..
 - 换镜像源: https://registry.cn-hangzhou.aliyuncs.com
+- 修改远程访问: 0.0.0.0:9375
