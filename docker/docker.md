@@ -181,7 +181,52 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
 ```
-
+
+## REST API
+- 执行shell备份mongo数据库:
+  ```sh
+  POST /containers/:id/exec
+  {
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "DetachKeys": "ctrl-p,ctrl-q",
+    "Tty": false,
+    "Cmd": [
+    "mongodump",
+    "-u",
+    "root",
+    "-p",
+    "123456",
+    "--authenticationDatabase",
+    "admin",
+    "-d",
+    "novel",
+    "-o",
+    "/data/backup/test-api"
+  ],
+      "Env": [
+          "FOO=bar",
+          "BAZ=quux"
+      ]
+  }
+  ```
+  然后 
+  ```sh
+  POST /exec/:id/start
+  {
+    "Detach": false,
+    "Tty": true,
+    "ConsoleSize": [
+        80,
+        64
+    ]
+  }
+  ```
+- 拉取镜像
+  ```sh
+  curl --location --request POST '192.168.0.124:9573/images/create?fromImage=192.168.0.124:5000/ruanjiayou/novel-api&tag=0.1.44&message=test' --header 'X-Registry-Auth: eyJzZXJ2ZXJhZGRyZXNzIjoiMTkyLjE2OC4wLjEyNDo1MDAwIiwidXNlcm5hbWUiOiJyZWdpc3RyeSIsInBhc3N3b3JkIjoiMTIzNDU2In0='
+  ```
 ## 安装
 ### centos
 - docker-ce http://www.runoob.com/docker/centos-docker-install.html
