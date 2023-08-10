@@ -108,7 +108,7 @@
   > find [PATH] [option] [action]
 - zip解压和压缩: unzip file / zip file
   > yum install zip unzip
-- tar 压缩和解压
+- tar 压缩和解压: `tar -zcvf dist.tar.gz ./dist`, `tar -xzvf dist.tar.gz`
   - -c 新建打包文件
   - -t 查看打包文件的内容含有哪些文件名
   - -x 解打包或解压缩的功能，可以搭配-C（大写）指定解压的目录，注意-c,-t,-x不能同时出现在同一条命令中
