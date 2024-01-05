@@ -39,6 +39,7 @@
     "probe-image-size": "^7.2.1",
     "progress": "git+https://github.com/ruanjiayou/progress.git",
     "puppeteer": "^10.1.0",
+    "puppeteer-core": "^20.9.0",
     "qs": "^6.10.1",
     "randomstring": "^1.2.1",
     "request-promise": "^4.2.6",
