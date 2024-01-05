@@ -8,6 +8,8 @@
   ```
 - 查看环境变量: `echo $PATH`
 
+## 清除dns缓存
+- `sudo killall -HUP mDNSResponder`
 ## mac技巧
 - vscode+homebrew+node.js+git+docker(mysql+redis)+item2+zsh
 - docker和docker-compose安装: brew install就可以

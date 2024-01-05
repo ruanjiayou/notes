@@ -378,6 +378,7 @@ GET /_search
 > gt,gte,lt,lte
 
 ### exists查询
+> text类型不能查询exists,keyword可以
 
 ### indices查询
 多个索引间查询

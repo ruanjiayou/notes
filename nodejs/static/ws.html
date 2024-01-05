@@ -1,0 +1,48 @@
+<html>
+
+<head>
+  <title>demo</title>
+</head>
+
+<body>
+  命令:<input id="cmd" /><br />
+  文本:<input id="text" /><br />
+  &nbsp;&nbsp;<button id="btn">发送</button>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+    integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz"
+    crossorigin="anonymous"></script>
+  <script>
+    function send() {
+      var cmd = document.getElementById('cmd').value;
+      var text = document.getElementById('text').value;
+      socket.send(cmd, text);
+    }
+    document.getElementById('btn').addEventListener('click', send);
+    const socket = io('ws://127.0.0.1:3000/', {
+      reconnectionDelayMax: 10000,
+      transports: ['websocket'],
+      // path: '/admin/',
+      extraHeaders: {
+        "my-custom-header": "1234"
+      },
+      query: {
+        q: 'abc'
+      },
+      withCredentials: true,
+      reconnectionAttempts: 3,
+    });
+    // client-side
+    socket.on("connect", () => {
+      console.log(socket.id, 'connect'); // x8WIv7-mJelg7on_ALbx
+    });
+
+    socket.on("disconnect", () => {
+      console.log(socket.id, 'disc'); // undefined
+    });
+    socket.onAny((event, ...args) => {
+      console.log(`got ${event}`, args);
+    });
+  </script>
+</body>
+
+</html>
