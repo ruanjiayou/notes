@@ -1,4 +1,18 @@
 # kibana
+> 8.6配置文件
+```yml
+monitoring.ui.container.elasticsearch.enabled: true
+# 8的版本默认true，而且没有这个配置了
+# xpack.security.enabled: true
+elasticsearch.hosts: [ "http://192.168.0.124:9200" ]
+elasticsearch.username: kibana_system
+elasticsearch.password: k123456
+server.name: kibana
+server.host: "0.0.0.0"
+#server.publicBaseUrl: "http://192.168.0.124:5601"
+
+# MOUNT /usr/share/kibana/config/kibana.yml
+```
 
 ## 操作语句
 - 搜索查询

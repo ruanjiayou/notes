@@ -40,3 +40,22 @@ service.videos.insert({
 
 ## service账号上传
 - 
+
+## apikey方式验证
+- windows设置变量`HTTP_PROXY=http://192.168.0.125:8888 NODE_ENV=production node index.js`
+- 创建客户端
+  ```js
+  const { google } = require('googleapis');
+  const client = google.youtube({
+      version: 'v3',
+      auth: api_key  // https://console.cloud.google.com/ 中要添加youtube的权限
+  })
+  ```
+- 获取频道播放列表
+  ```js
+  const res = await client.playlists.list({
+    part: 'id,snippet',
+    channelId: 'UCGBnAQr295FeTE-9e11nMNA',
+    headers: headers,
+  });
+  ```

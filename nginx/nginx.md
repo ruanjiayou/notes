@@ -179,6 +179,6 @@ openssl rsa -noout -modulus -in test.key | openssl md5
 - 访问不了 看是不是端口没打开或防火墙屏蔽了...fuck
 - cors options和后续的请求header里要保持一致 比如 access-control-allow-origin,不然corb
 - 405 method not allowed?fuck
-- chrome自签名不能识别
+- chrome自签名不能识别(必须重新-install并生成证书) [参考](https://blog.csdn.net/qq_45392321/article/details/119676301) 开始还是显示不安全，过几天发现好了...
   - `mkcert --install`(在客户端安装mkcert的根证书，服务端的证书就会被信任)
   - `mkcert -cert-file ./server.crt -key-file ./server.key 192.168.0.124 192.168.100.19 localhost 127.0.0.1 ::1`

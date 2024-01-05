@@ -11,8 +11,9 @@ services:
       - "0.0.0.0:5672:5672"
       - "0.0.0.0:15672:15672"
     environment:
+    ### 貌似没用要手动进终端添加用户和权限
       - RABBITMQ_DEFAULT_USER=dev
-      - RABBITMQ_DEFAULT_PASS=0nPq!RG3x#mcp@Rt0
+      - RABBITMQ_DEFAULT_PASS=111111
 
 networks:
   allinone:
