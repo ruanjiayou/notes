@@ -1,5 +1,8 @@
 # 消息队列
-
+## 用户登录
+- rabbitmqctl add_user admin 123456
+- rabbitmqctl set_user_tags administrator
+- rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 ## 概念
 > ![基本结构](./基本结构.png)
 ## 消息可靠性

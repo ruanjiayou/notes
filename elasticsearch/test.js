@@ -5,6 +5,20 @@ const mapping = {
   "settings": {
     "index": {
       "analysis.analyzer.default.type": "ik_max_word"
+    },
+    "analysis": {
+      "char_filter": {
+        "tsconvert": {
+          "type": "stconvert",
+          "convert_type": "t2s"
+        }
+      },
+      "analyzer": {
+        "custom-analyzer": {
+          "char_filter": ["tsconvert", "html_strip"],
+          "tokenizer": "ik_max_word",
+        },
+      }
     }
   },
   "mappings": {
@@ -33,7 +47,9 @@ const mapping = {
           "type": "keyword"
         },
         "content": {
-          "type": "text"
+          "type": "text",
+          "similarity": "BM25",
+          "analyzer": "custom-analyzer"
         },
         "cover": {
           "type": "text",
@@ -163,7 +179,7 @@ const mapping = {
 
 
 // 删除索引
-client.indices.delete({ index: 'fengshows' }).then(()=>{
+client.indices.delete({ index: 'fengshows' }).then(() => {
   client.indices.create({ index: 'fengshows', include_type_name: true, body: mapping })
 });
 

@@ -491,7 +491,7 @@ GET /_search
 ### 复合查询
 #### bool查询
 bool 查询可以把任意多个简单查询组合在一起，使用 must、should、must_not、filter 选项来表示简单查询之间的逻辑，每个选项都可以出现 0 次到多次
-- minimum_should_match: shoule在与must或者filter同级时，默认是不需要满足should中的任何条件的
+- minimum_should_match: should在与must或者filter同级时，默认是不需要满足should中的任何条件的
 #### boosting查询
 查询用于需要对两个查询的评分进行调整的场景，boosting 查询会把两个查询封装在一起并降低其中一个查询的评分
 - positive: 评分保持不变
@@ -833,6 +833,16 @@ GET /books/_search
 
 ### 常用setting
 - 繁体简体问题
+  ```js
+  {
+    "tokenizer": "keyword",
+    "filter": [
+        "t2s_convert"
+    ],
+    "text": "學生"
+  }
+  // => 学生
+  ```
 - html实体: html_strip
 - 大小写
 - 口音: asciifolding
