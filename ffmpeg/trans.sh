@@ -23,6 +23,8 @@
 # 抽取音频
 -i input.mp4 -vn output.mp3
 
+# 抽取字幕
+-i input.mkv -map 0:s:0 subs.srt
 # 合并音频和视频
 -i input.mp4 -i input.mp3 -c:v copy -c:a copy output.mp4
 

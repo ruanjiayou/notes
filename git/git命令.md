@@ -128,6 +128,11 @@ git pull
 git push
 ```
 
+### 设置取消代理
+`git config --global http.proxy 127.0.0.1:7890`
+`git config --global --get http.proxy`
+`git config --global --unset http.proxy`
+
 ### 取消本地commit但未push的
 - `git reset --soft HEAD~1`
 ### 删除本地 commit 但未 push的
