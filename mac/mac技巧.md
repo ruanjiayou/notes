@@ -5,6 +5,7 @@
   lsof -nP -iTCP -sTCP:LISTEN
   // 过滤
   lsof -nP -iTCP -sTCP:LISTEN | grep node
+  kill -9 进程id
   ```
 - 查看环境变量: `echo $PATH`
 
@@ -59,3 +60,7 @@ $ brew install tree
 ## 解压rar
 - brew install unrar
 - unrar x path-to-file
+
+- ## 导出插件
+- Mac: `cd ~/Library/Application Support/Google/Chrome/Default/Extensions`
+- 

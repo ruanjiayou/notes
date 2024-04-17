@@ -30,7 +30,7 @@
 - 
 ### 生成公匙和私匙
 - cd ~/.ssh
-- ssh-keygen -t rsa -C xxx.gmail.com
+- 改成下面的ecdsa: ~~ssh-keygen -t rsa -C xxx.gmail.com~~
 - 输入名称: id_rsa_site
 - git-bash中断中,还要: 
   > eval "$(ssh-agent -s)"

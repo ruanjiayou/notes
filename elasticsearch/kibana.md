@@ -190,6 +190,43 @@ GET /fengshows/_search
       }
     }
 ```
+- 查专题 labels
+  ```js
+  GET /fengshows/_search
+  {
+    "from": 0, 
+    "size": 10,
+    "_source": ["resource_type","title","labels", "resource_id", "subscription_id", "program_id"],
+    "query": {
+      "bool": {
+        "filter": {
+          "match_phrase": {
+            "labels": "兩會2024"
+          }
+        }
+      }
+    }
+  }
+
+  ```
+- 查节目
+  ```js
+  GET /fengshows/_search
+  {
+    "from": 0,
+    "size": 500,
+    "_source": ["resource_type","title","labels", "resource_id", "subscription_id", "program_id"],
+    "query": {
+      "bool": {
+        "should": {
+          "match_phrase": {
+            "subscription_id": "8ae53640-82ab-11ee-8d16-77c5a7a22f75"
+          }
+        }
+      }
+    }
+  }
+  ```
 - 查询详情
 ```
 GET /fengshows/fengshows/284131f0-339f-11eb-aad2-7712ecbb555d

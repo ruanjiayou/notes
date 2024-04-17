@@ -1,0 +1,42 @@
+{
+  "short_name": "crawler-tool",
+  "name": "crawl resource",
+  "icons": {
+    "16": "./16x16.png",
+    "32": "./32x32.png",
+    "80": "./80x80.png",
+    "120": "./120x120.png"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "contextMenus"
+  ],
+  "background": {
+    "scripts": [
+      "/background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "./content-script.js"
+      ],
+      "css": [
+        "./main.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "manifest_version": 2,
+  "version": "0.1.1",
+  "background_color": "#ffffff"
+}
