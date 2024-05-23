@@ -6,7 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const shelljs = require('shelljs');
 const bodyParser = require('body-parser');
-const amqplib = require('amqplib');
+const crypto = require('crypto');
+// const amqplib = require('amqplib');
 
 let channel = null;
 async function initMQ(client) {
@@ -27,21 +28,21 @@ async function initMQ(client) {
     channel.ack(message);
   }, { noAck: false });
 }
-amqplib.connect('amqp://admin:123456@192.168.0.124')
-  .then(async (client) => {
-    console.log('connected mq');
-    app.mq = client;
-    initMQ(client);
-  })
-  .catch(e => {
-    console.log(e);
-  });
+// amqplib.connect('amqp://admin:123456@192.168.0.124')
+//   .then(async (client) => {
+//     console.log('connected mq');
+//     app.mq = client;
+//     initMQ(client);
+//   })
+//   .catch(e => {
+//     console.log(e);
+//   });
 const got = require('got').default;
 const FormData = require('form-data');
 const qs = require('qs');
 
 app.use(bodyParser.json({ limit: '3mb' }));
-app.use(bodyParser.urlencoded({ limit: '3mb', extended: false }))
+//app.use(bodyParser.urlencoded({ limit: '3mb', extended: false }))
 app.use(express.static('./static'));
 
 app.get('/test/png', async (req, res, next) => {
@@ -71,6 +72,31 @@ app.get('/test/mq', async (req, res) => {
 app.post('/test/return/json', async (req, res) => {
   console.log(req.body, 'body')
   res.json(req.body);
+})
+
+const SECRET = 'CDB5BBE5-3016-41CC-B69A-2B23E0FCB9B6';
+function getSign(d) {
+  const keys = Object.keys(d).sort((a, b) => a.localeCompare(b));
+  let str = keys.map(key => key + '=' + d[key]).join('&') + '&' + SECRET;
+  return crypto.createHash('md5').update(str).digest('hex').toString().toUpperCase();
+}
+app.post('/api/AdvertisingManagement/AdvertisingPush', async (req, res) => {
+  console.log(req.body, 'publish');
+  console.log(req.get('Content-Type'));
+  const { Sign, ...data } = req.body;
+  const sign = getSign(data);
+  const result = sign === Sign ? { Code: 1001, Message: '成功', Data: { BusinessKey: 'C13B2737-76EE-4BC2-A6CE-BFCD9E3210D3' } } : { Code: 1002, Message: 'fail' };
+  res.header('Content-Type', 'application/json; charset=utf-8')
+  res.end(JSON.stringify(JSON.stringify(result)));
+})
+
+app.post('/api/AdvertisingManagement/AdvertisingOffline', async (req, res) => {
+  console.log(req.body, 'offline');
+  const { Sign, ...data } = req.body;
+  const sign = getSign(data);
+  const result = sign === Sign ? { Code: 1001, Message: '成功', Data: { ResultType: 1 } } : { Code: 1020, Message: '失败' }
+  res.header('Content-Type', 'application/json; charset=utf-8')
+  res.end(JSON.stringify(JSON.stringify(result)));
 })
 
 app.get('/test/got-form', async (req, res) => {

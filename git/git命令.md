@@ -138,7 +138,7 @@ git push
 ### 删除本地 commit 但未 push的
 - `git reset --hard HEAD~1`
 ### 删除历史commit(密码等敏感记录)
-- 删除最近一个commit: `git reset --hard HEAD~1` => `git push --force`
+- 删除最近一个commit: `git reset --hard HEAD~1 && git push --force`
 - 切换新分支: git checkout --orphan temp (空的)
 - 删除主分支: git branch -D master
 - 添加文件: git add -A
