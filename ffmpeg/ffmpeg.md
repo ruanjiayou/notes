@@ -1,8 +1,72 @@
 ## ffmpeg
+- 码率: 视频文件体积除以时间,单位 kb/s或kbps
+- 帧率: 每秒显示的图片数量, fps
+- 分辨率: 宽*高像素量
+- 采样率: 单位时间采样点数量
+- 比特率: 分视频和音频
+- 编码模式
+  - 动态比特率 VBR
+  - 平均比特率 ABR
+  - 固定比特率 CBR
+- 容器/格式/封装格式: MKV/MP4/FLV/AVI
+- 编码格式(PCM)
+  - 视频
+    - H264 H265
+    - Real Video(RM RMVB)
+    - Matroska(MKV)
+    - MPEG-1 MPEG-2 MPEG-4
+  - 音频
+- 存储封装格式
+  - AVI(.avi)
+  - RM(.rm .rmvb)
+  - m2ts(.m2ts .mts)
+- 转码(Transcoding): 将已经压缩编码的视频码流转换成另一个视频码流
+- 转封装(Remux): 将视频或音频的封装格式进行转换
+- 分离(Demux): 将编码轨道从封装格式中拆出来
 
+- 全局参数
+  - 显示编码进度: `-stats`
+  - 日志等级: `-v [level]`, `-loglevel [level]`
+  - 生成报告: `-report`
+  - 覆盖文件: `-y`
+  - 绝不覆盖文件: `-n`
+- 单个文件参数
+  - 强制格式: `-f [fmt]`
+  - 编码名称: `-c [codec]`, `-codec [codec]`
+  - 预设名称: `-pre [name]`
+  - 记录或转码时长秒数: `-t [duration]`
+  - 记录或转码的停止时间: `-to [time_stop]`
+  - 设置开始偏移时间: `-ss [timeoff]`
+  - 设置元数据: `-metadata [str=str]`
+  - 设置目标文件类型: `-target [type]`
+  - 文件大小限制: `-fs [limit_size]`
+  - 设置关键帧数量: `-frams [number]`
+- 视频参数
+  - 设置视频输出帧数量: `-vframs [number]`
+  - 设置帧率: `-r [rate]`
+  - 设置最大帧率: `-fpsmax [rate]`
+  - 设置帧大小(wxh): `-s [size]`
+  - 设置宽高比: `-aspect [aspect]`, 4:3,16:9,1.3333,1.7777
+  - 禁用视频: `-vn`
+  - 强制视频编码: `-vcodec [codec]`,copy 代表复制
+  - 设置视频比特率: `-b [bitrate]`, 最好用`-b:v`
+  - 禁用数据: `-dn`
+- 音频参数
+  - 设置音频输出帧数量: `-aframes [number]`
+  - 设置音频质量: `-aq [quality]`
+  - 设置音频采样频率(Hz): `-ar [rate]`
+  - 设置音频通道数量: `-ac [channel]`
+  - 禁用音频: `-an`
+  - 强制音频编码: `-acodec [codec]`
+  - 音频比特率: `-ab [bitrate]`,用`-b:a`代替
+- 字幕参数
+  - 设置帧大小: `-s [size]`
+  - 禁用字幕: `-sn`
+  - 强制编码器: `-scodec [codec]`
+  - 设置画布大小: `-canvas_size [size]`
 - 查看视频信息: 
   - 详细: `ffmpeg -i xxx.mp4`, `ffprobe xxxx.mp4`
-  - 查看视频时长: `ffprobe -v quiet -select_streams v -show_entries stream=duration -of csv="p=0" xxx.mp4`
+  - 查看视频时长: `ffprobe -v quiet -show_format -print_format json -show_entries stream=index,codec_name,codec_tag_string,codec_type,profile,level,bit_rate,tags,nb_frames,avg_frame_rate,sample_rate,channels,width,height,duration xxx.mp4`
 - 转换格式: `ffmpeg -i 'xxx.mp4' -c:v libx264  -preset ultrafast -vf format=yuvj420p -c:a copy 2.mp4`
 - 指定宽高输出: `ffmpeg -y -i Titanic.mkv -s 640*480 out.h264`
 - 截取素材

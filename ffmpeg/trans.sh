@@ -9,9 +9,12 @@
 # mp4转m3u8
 -i /data/videos/-.mp4  -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list /data/videos/m3u8/test.m3u8 -segment_time 5 /data/videos/m3u8/p_%03d.ts
 
-# m3u8转mp4
--i /data/videos/m3u8/test.m3u8 -allowed_extensions ALL -movflags faststart -protocol_whitelist "file,http,crypto,tcp" -codec copy /data/videos/mp4/test.mp4
+# m3u8转mp4 应该先 protocal_whitelist 再 allowed_extions 接着 -i 不然可能出错
+-i /data/videos/m3u8/test.m3u8 -allowed_extensions ALL -movflags faststart -protocol_whitelist file,tls,tcp,https,crypto -c copy /data/videos/mp4/test.mp4
 # 元信息放文件开头 -movflags faststart
+
+# 剪切视频
+-i example.mp4 -ss 5m -t 10m output.mp4
 
 # 截图
 -ss 5.1 -i /data/videos/-.mp4  -s 320x240 -frames:v 1 -f image2 /data/videos/screenshots/test.png

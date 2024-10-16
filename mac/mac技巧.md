@@ -63,4 +63,6 @@ $ brew install tree
 
 - ## 导出插件
 - Mac: `cd ~/Library/Application Support/Google/Chrome/Default/Extensions`
-- 
+
+## 执行文件全局访问(软连接)
+- ln ~/.bun/bin/bun /usr/local/bin/bun
