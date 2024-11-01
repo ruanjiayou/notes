@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec 'HTTPS_PROXY=http://127.0.0.1:8899 HTTP_PROXY=http://127.0.0.1:8899 node' index.js",
+    "start": "nodemon --exec 'HTTPS_PROXY=http://10.0.15.126:8899 HTTP_PROXY=http://10.0.15.126:8899 node' index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "https-proxy-agent": "^7.0.5",
     "superagent": "^8.1.2",
-    "superagent-proxy": "^3.0.0"
+    "superagent-proxy": "^3.0.0",
+    "twitter-api-sdk": "^1.2.1"
   }
 }

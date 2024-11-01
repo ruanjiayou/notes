@@ -16,17 +16,17 @@ function videoProcess(arg, DealLine, cb) {
     input: std.stdout,
     crlfDelay: Infinity, // Handle all types of newlines
   });
-  rl1.on('line', DealLine);
+  rl1.on('line', line => DealLine(line, std));
   const rl2 = readline.createInterface({
     input: std.stderr,
     crlfDelay: Infinity, // Handle all types of newlines
   });
-  rl2.on('line', DealLine);
-  std.on('exit', code => cb(code.toString() === '0'));
+  rl2.on('line', line => DealLine(line, std));
+  std.on('exit', code => { console.log(code.toString()); cb(code.toString() === '0') });
 }
 
 const QTranscoding = new Queue('transcoding', {
-  prefix: 'transcoding',
+  prefix: 'download',
   redis: {
     host: '10.0.15.240',
     port: '6379'
@@ -36,12 +36,21 @@ const QTranscoding = new Queue('transcoding', {
 QTranscoding.process('video', 1, function (job, done) {
   console.log('deal job', job.data);
   const data = job.data;
-  // 获取视频时长
-  const str = exec(`ffprobe -v quiet -show_format -print_format json -show_entries stream=index,codec_name,codec_tag_string,codec_type,profile,level,bit_rate,tags,nb_frames,avg_frame_rate,sample_rate,channels,width,height,duration ${data.path}`, { encoding: 'utf-8', cwd: process.cwd() });
-  const info = JSON.parse(str);
-  const duration = parseFloat(info.format.duration);
-
-  videoProcess(`ffmpeg -i ${data.path} -c:v libx264 -c:a aac ${data.dist} -y`, line => {
+  let duration = 0;
+  try {
+    // 获取视频时长
+    const str = exec(`ffprobe -v quiet -show_format -print_format json -show_entries stream=index,codec_name,codec_tag_string,codec_type,profile,level,bit_rate,tags,nb_frames,avg_frame_rate,sample_rate,channels,width,height,duration ${data.path}`, { encoding: 'utf-8', cwd: process.cwd() });
+    const info = JSON.parse(str);
+    duration = parseFloat(info.format.duration);
+  } catch (e) {
+    done(e);
+  }
+  videoProcess(`ffmpeg -fflags +genpts -i ${data.path} -movflags faststart -c:v libx264 -c:a aac ${data.dist} -y`, (line, p) => {
+    if (line.includes('corrupt')) {
+      p.kill('SIGKILL');
+      job.remove();
+      return;
+    }
     // 获取处理进度
     if (line.startsWith('frame=')) {
       const match = line.match(/time=(\d{2}):(\d{2}):(\d{2})\.(\d{2})\s/);
@@ -62,9 +71,7 @@ QTranscoding.process('video', 1, function (job, done) {
 // test example
 QTranscoding.add('video', { path: 'data/output.mp4', dist: 'data/test.mp4' }, {
   priority: 3,
-  attempts: 3,
+  attempts: 0,
   removeOnComplete: true,
-});
-QTranscoding.getJobCounts().then(total => {
-  console.log(total);
+  removeOnFail: true,
 });

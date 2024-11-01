@@ -33,10 +33,12 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
     {$match: {}},
     {$project: {title:1,original:0}},
     {$lookup:[
-      from: "media-videos",
-      localField: "id",
-      foreignField: "mid",
-      as: "videos"
+      {
+        from: "media-videos",
+        localField: "id",
+        foreignField: "mid",
+        as: "videos"
+      }
     ]}
   ])
   ```

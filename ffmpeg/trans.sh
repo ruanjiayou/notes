@@ -48,3 +48,16 @@
 
 # 设置代理
 -http_proxy "http://localhost:55173"
+
+# h264 (profile: baseline->低性能设备,main->支持B帧,high->压缩率最高,高性能设备 level: 3.1->720p,4.0->1080p,4.1->高比特率 1080p,5.0->4k)
+-i input.mp4 -c:v libx264 -profile:v high -level 4.1 -c:a aac output.mp4
+# h265 (profile: main->8位颜色深度,main10->10位深度,level: 4.0->1080p,5.0->4k)
+-i input.mp4 -c:v libx265 -profile:v main -level:v 4.0 -c:a aac output.mp4
+
+# 设置视频码率
+-i input.mp4 -b:v 2000k output.mp4
+# 设置音频码率
+-i input.mp4 -b: 128k output.mp4
+# 可变码率(0-51,越小质量越高,18-23 是高质量范围)
+-i input.mp4 -c:v libx264 -crf 23 output.mp4
+# 直播或流媒体中限制码率波动

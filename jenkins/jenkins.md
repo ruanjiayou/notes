@@ -24,6 +24,33 @@
 - gogs设置请求的auth信息: jenkins用户列表给对应用户设置api token
 [参考](https://juejin.cn/post/7067790095767568397)
 
+## 构建次数超过99,重置为1
+```
+println(Jenkins.instance.getJobNames()) //查看获取任务名列表
+
+def jobName = "novel-api-build"
+def job = Jenkins.instance.getItemByFullName(jobName)
+
+if(job) {
+    def buildCount = job.getBuilds().size()
+    
+    // 判断构建次数是否大于 99
+    if (buildCount >= 99) {
+        println("构建次数超过 100，重置构建次数为 1")
+        
+        // 删除旧构建记录
+        job.getBuilds().each { it.delete() }
+        
+        // 输出确认信息
+        job.updateNextBuildNumber(1)
+        println("已重置 ${jobName} 的构建次数")
+    } else {
+        println("${jobName} 的当前构建次数为 ${buildCount}")
+    }
+} else {
+  println("未找到名为 '${jobName}' 的 Jenkins Job")
+}
+```
 ## node项目打包镜像
 - 在有docker环境的系统expose端口
   1. 修改daemon.json 添加hosts:["tcp://0.0.0.0:2375"],`netsh advfirewall firewall add rule name="docker_name" dir=in action=allow protocol=TCP localport=2375`
