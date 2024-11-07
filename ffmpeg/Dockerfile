@@ -1,6 +1,6 @@
-FROM node:alpine
+FROM --platform=linux/amd64 node:16-alpine
 
-RUN apk add curl vim ffmpeg yt-dlp
+RUN apk add --no-cache curl vim chromium
 
 # docker build . -t ruanjiayou/node:6.0
 # docker login

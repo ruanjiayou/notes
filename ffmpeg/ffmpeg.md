@@ -78,6 +78,7 @@
   - 添加水印 视频宽度为100,水印宽度为20,位置10,10?比例1?: `ffmpeg -i input.mp4 -i image.png -filter_complex 'overlay=x=10:y=10' output.mp4`
   - 跑马灯: `-filter_complex "overlay='if(gte(t,1), -w+(t-1)*200, NAN)':(main_h-overlay_h)/2"`
   - 添加srt/ass字幕: `ffmpeg -i video.avi -vf subtitles=subtitle.srt(或ass) out.avi`
+  - 烧录到视频中: `-i input.mp4 -vf subtitles=subtitle.srt output.mp4`
   - srt转为ass格式: `ffmpeg -i subtitle.srt subtitle.ass`
   - 添加idx/sub字幕: `ffmpeg -i 1.mp4 -i 1.sub -i 1.idx -filter_complex "[0:v][2:s]overlay=0:H-h" -c:v libx264 out.mp4`
   - 同时添加字幕和水印: `ffmpeg -i ganguan.mkv -c:v libx264 -vf "movie=logo.png[wm];[i][wm]overlay=0:0,subtitles=ganguan.srt[out]" ganguan.mp4`

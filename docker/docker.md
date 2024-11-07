@@ -317,3 +317,4 @@ services:
   - wsl --shutdown
   - netsh winsock reset 
   - 清空docker的数据和配置,重启APP几次..
+- 命令被拒绝 permission denied: docker -exec -u 0 -ti jenkins /bin/bash

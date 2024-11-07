@@ -6,7 +6,7 @@
 - 安装推荐的插件
 - 创建管理员
 - 选择url地址等待重启成功
-- 首页 > 系统管理 > 插件管理 > 可选插件 > 搜索选中 NodeJS/docker-build-step/docker/version number > 安装完成后重启服务
+- 首页 > 系统管理 > 插件管理 > 可选插件 > 搜索选中 NodeJS/docker-build-step/docker/version number/docker-workflow > 安装完成后重启服务
 - 安装node版本(首页 > 系统管理 > 全局工具工具配置 > NodeJS > 新增)
 - 新建自由风格的项目
 - 设置源码管理的git
@@ -73,3 +73,4 @@ if(job) {
     - push image: 
     - clean local images: true
     - pull base image: true
+- 自由风格中可以使用build/publish image,pipeline 中提示没有 docker 命令: 进入容器安装: apt-get update && apt-get install -y docker.io
