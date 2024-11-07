@@ -61,3 +61,4 @@
 # 可变码率(0-51,越小质量越高,18-23 是高质量范围)
 -i input.mp4 -c:v libx264 -crf 23 output.mp4
 # 直播或流媒体中限制码率波动
+https://www.zhihu.com/people/linuxsao-di-seng

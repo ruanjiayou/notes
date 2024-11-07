@@ -258,6 +258,7 @@ services:
 ### ubantu
 
 ## 问题
+- 删除所有<none>: `docker rmi $(docker images --filter "dangling=true" -q --no-trunc)`
 - Delta RPMs disabled because /usr/bin/applydeltarpm
   > 先看`docker -v` \
   > 如果没有该命令: `yum provides '*/applydeltarpm'`, `yum install deltarpm`

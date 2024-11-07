@@ -75,3 +75,29 @@ QTranscoding.add('video', { path: 'data/output.mp4', dist: 'data/test.mp4' }, {
   removeOnComplete: true,
   removeOnFail: true,
 });
+// QTranscoding.getJobCounts().then(total => {
+//   console.log(total);
+// });
+
+const QDownload = new Queue('download', {
+  prefix: 'download',
+  redis: {
+    host: '10.0.15.240',
+    port: '6379'
+  }
+});
+
+QDownload.process('m3u8', 8, function (job, done) {
+
+});
+
+QDownload.process('ts', 8, function (job, done) {
+
+});
+
+QDownload.process('video', 8, function (job, done) {
+
+});
+QDownload.process('image', 8, function (job, done) {
+
+});

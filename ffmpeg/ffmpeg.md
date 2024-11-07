@@ -68,6 +68,12 @@
   - 详细: `ffmpeg -i xxx.mp4`, `ffprobe xxxx.mp4`
   - 查看视频时长: `ffprobe -v quiet -show_format -print_format json -show_entries stream=index,codec_name,codec_tag_string,codec_type,profile,level,bit_rate,tags,nb_frames,avg_frame_rate,sample_rate,channels,width,height,duration xxx.mp4`
 - 转换格式: `ffmpeg -i 'xxx.mp4' -c:v libx264  -preset ultrafast -vf format=yuvj420p -c:a copy 2.mp4`
+- 视频编码器
+  - libx264: 用于H.264视频编码。
+  - libx265: 用于H.265/HEVC编码。
+  - libvpx: 用于VP8和VP9编码。
+  - mpeg4: 用于MPEG-4编码。
+  - libaom-av1: 用于AV1编码
 - 指定宽高输出: `ffmpeg -y -i Titanic.mkv -s 640*480 out.h264`
 - 截取素材
   - 截取gif,从25秒开始,截取10秒,帧率16: `ffmpeg -ss 25 -t 10 -r 16 -i path-to-vedio -f gif test.gif` 
