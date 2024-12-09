@@ -8,6 +8,7 @@ const shelljs = require('shelljs');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 // const amqplib = require('amqplib');
+const diffsrt = require('./diff-utils.js');
 
 let channel = null;
 async function initMQ(client) {
@@ -44,6 +45,14 @@ const qs = require('qs');
 app.use(bodyParser.json({ limit: '3mb' }));
 //app.use(bodyParser.urlencoded({ limit: '3mb', extended: false }))
 app.use(express.static('./static'));
+app.use((req, res, next) => {
+  console.log(req.url);
+  next();
+})
+app.get('/Cmpp/runtime/interface_270002.jhtml', async (req, res) => {
+  console.log(req.query);
+  res.end()
+})
 
 app.get('/test/png', async (req, res, next) => {
   let png = new PNGlib(150, 150);
@@ -81,6 +90,7 @@ function getSign(d) {
   return crypto.createHash('md5').update(str).digest('hex').toString().toUpperCase();
 }
 app.post('/api/AdvertisingManagement/AdvertisingPush', async (req, res) => {
+  console.log(req.query)
   console.log(req.body, 'publish');
   console.log(req.get('Content-Type'));
   const { Sign, ...data } = req.body;
@@ -98,6 +108,15 @@ app.post('/api/AdvertisingManagement/AdvertisingOffline', async (req, res) => {
   res.header('Content-Type', 'application/json; charset=utf-8')
   res.end(JSON.stringify(JSON.stringify(result)));
 })
+
+app.post('/social-examine/posts/core-detail', async (req, res) => {
+  res.json({
+    code: 0,
+    data: {
+      title: 'test'
+    }
+  })
+});
 
 app.get('/test/got-form', async (req, res) => {
   const form = new FormData();
@@ -119,6 +138,11 @@ app.get('/test/got-form', async (req, res) => {
     },
   }).json();
   res.json(data);
+})
+
+app.post('/test/diff-srt', async (req, res) => {
+  const srt = diffsrt(req.body.document, req.body.segments);
+  res.end(srt);
 })
 
 app.listen(7003, function () {
