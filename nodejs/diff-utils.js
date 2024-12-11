@@ -76,7 +76,6 @@ function txt2srt(libretto, srt_list) {
       diffed_txt += part.value;
     }
   });
-  write('diff.txt', diffed_txt);
   const diff_arr = diffed_txt.trim().split('\n');
 
   const full_info_arr = diff_arr.map((line, n) => ({
@@ -161,7 +160,7 @@ function txt2srt(libretto, srt_list) {
   console.log('处理后的字幕对象和原始文稿一样长', dealed_arr.length, libretto_str_arr.length);
 
   return dealed_arr.map((item, no) => {
-    return `${no + 1}\n${n2t(item.start)} --> ${n2t(item.end)}\n${libretto_str_arr[no]}\n${item.text}\n\n`;
+    return `${no + 1}\n${n2t(item.start)} --> ${n2t(item.end)}\n${libretto_str_arr[no]}\n\n`;
   }).join('\n');
 }
 
