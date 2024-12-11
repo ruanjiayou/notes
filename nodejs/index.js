@@ -7,6 +7,7 @@ const path = require('path');
 const shelljs = require('shelljs');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
+const multer = require('multer');
 // const amqplib = require('amqplib');
 const diffsrt = require('./diff-utils.js');
 
@@ -41,6 +42,21 @@ async function initMQ(client) {
 const got = require('got').default;
 const FormData = require('form-data');
 const qs = require('qs');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, './.tmp'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+const uploader = multer({ storage: storage });
+const multi = uploader.fields([
+  { name: 'libretto', maxCount: 1 },
+  { name: 'transcription', maxCount: 1 },
+]);
 
 app.use(bodyParser.json({ limit: '3mb' }));
 //app.use(bodyParser.urlencoded({ limit: '3mb', extended: false }))
@@ -140,10 +156,38 @@ app.get('/test/got-form', async (req, res) => {
   res.json(data);
 })
 
-app.post('/test/diff-srt', async (req, res) => {
+app.post('/diff-srt/json', async (req, res) => {
   const srt = diffsrt(req.body.document, req.body.segments);
   res.end(srt);
-})
+});
+
+// ffmpeg -i input.mp4 -map-metadata -1 -c:a aac output.aac
+app.post('/diff-srt/file', multi, async (req, res) => {
+  const transcription = (req.files.transcription || []).find(a => a.fieldname === 'transcription');
+  const libretto = (req.files.libretto || []).find(a => a.fieldname === 'libretto');
+  if (!transcription || !libretto) {
+    return res.end('MissFile');
+  }
+
+  try {
+    const o = JSON.parse(fs.readFileSync(transcription.path, { encoding: 'utf-8' }).toString());
+    const srt = diffsrt(
+      // 唱词
+      fs.readFileSync(libretto.path, { encoding: 'utf-8' }).toString(),
+      // 分节
+      o.segments.map(t => ({ text: t.text, start: t.start, end: t.end })),
+    )
+    res.end(srt);
+  } catch (e) {
+    console.log(e)
+    res.status(400);
+    res.end(e.message);
+  } finally {
+    fs.unlinkSync(libretto.path);
+    fs.unlinkSync(transcription.path);
+  }
+
+});
 
 app.listen(7003, function () {
   console.log('express started at: 7003')

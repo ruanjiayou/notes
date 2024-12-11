@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const cheerio = require('cheerio');
 const got = require('got').default;
 
-mongoose.connect('mongodb://root:123456@localhost:27016/test?authSource=admin&readPreference=primaryPreferred')
+mongoose.connect('mongodb://root:123456@localhost:27016/test?authSource=admin&readPreference=primaryPreferred', { useNewUrlParser: true, useUnifiedTopology: true })
 const projectModel = mongoose.model('house', new mongoose.Schema({
     _id: String,
     name: String,
@@ -100,6 +100,12 @@ async function getDetail(_id) {
                 data.green_ratio = parseFloat($(tds).eq(3).text().replace('%', '').trim());
             }
         });
+        data.plan_finish_date = new Date(data.plan_finish_date)
+        data.plan_start_date = new Date(data.plan_start_date)
+        data.plot_ratio = parseFloat(data.plot_ratio)
+        data.area_building = parseFloat(data.area_building)
+        data.area_land = parseFloat(data.area_land)
+        data.green_ratio = parseFloat(data.green_ratio)
         // data, certifications
         if (certifications.length) {
             await certificationModel.bulkWrite(certifications.map(item => ({
@@ -116,24 +122,24 @@ async function getDetail(_id) {
     }
 }
 ; (async () => {
-    // for (let page = pages; page <= pages; page++) {
-    //     const resp = await got.get('http://218.200.147.160:83/More_xm.aspx?page=' + page, { encoding: 'utf-8' });
-    //     const items = getList(resp.body);
-    //     console.log('page: ' + page + ' items: ' + items.length);
-    //     if (items.length) {
-    //         await projectModel.bulkWrite(items.map(item => ({
-    //             updateOne: {
-    //                 filter: { _id: item._id },
-    //                 update: {
-    //                     $set: item
-    //                 },
-    //                 upsert: true
-    //             }
-    //         })))
-    //     }
-    // }
+    for (let page = pages; page <= pages; page++) {
+        const resp = await got.get('http://218.200.147.160:83/More_xm.aspx?page=' + page, { encoding: 'utf-8' });
+        const items = getList(resp.body);
+        console.log('page: ' + page + ' items: ' + items.length);
+        if (items.length) {
+            await projectModel.bulkWrite(items.map(item => ({
+                updateOne: {
+                    filter: { _id: item._id },
+                    update: {
+                        $set: item
+                    },
+                    upsert: true
+                }
+            })))
+        }
+    }
 
-    const cursor = projectModel.find({  }).cursor();
+    const cursor = projectModel.find({}).cursor();
     let doc = null, i = 0;
     do {
         i++;
@@ -143,17 +149,7 @@ async function getDetail(_id) {
             // console.log(doc);
             // process.exit(0);
             console.log(i)
-            // await getDetail(doc._id);
-            await projectModel.updateOne({ _id: doc._id }, {
-                $set: {
-                    plan_finish_date: new Date(doc.plan_finish_date),
-                    plan_start_date: new Date(doc.plan_start_date),
-                    plot_ratio: parseFloat(doc.plot_ratio),
-                    area_building: parseFloat(doc.area_building),
-                    area_land: parseFloat(doc.area_land),
-                    green_ratio: parseFloat(doc.green_ratio),
-                }
-            })
+            await getDetail(doc._id);
         }
 
     } while (doc);

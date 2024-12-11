@@ -1,11 +1,13 @@
 # ffmepg的docker形式
-## alias
+- alias
 > 添加alias后可以快速使用,抽取音频: ff -i input.mp4 -vn output.mp3
 - linux
   > `alias ff="docker run -v $PWD:/data -w /data jrottenberg/ffmpeg:4.1-alpine -hide_banner $@"`
 - powershell
   > `function ff() { docker run -v /c/Users/Administrator/Downloads:/data -w /data --name temp jrottenberg/ffmpeg:4.1-alpine -hide_banner $args; docker rm temp }`
 
+- 查看编码器
+> -codecs -hide_banner |grep libmp3lame
 # mp4转m3u8
 -i /data/videos/-.mp4  -codec copy -vbsf h264_mp4toannexb -map 0 -f segment -segment_list /data/videos/m3u8/test.m3u8 -segment_time 5 /data/videos/m3u8/p_%03d.ts
 
@@ -13,8 +15,8 @@
 -i /data/videos/m3u8/test.m3u8 -allowed_extensions ALL -movflags faststart -protocol_whitelist file,tls,tcp,https,crypto -c copy /data/videos/mp4/test.mp4
 # 元信息放文件开头 -movflags faststart
 
-# 剪切视频
--i example.mp4 -ss 5m -t 10m output.mp4
+# 剪切视频 从 17s 开始,剪切 25s 长度
+-i example.mp4 -ss 00:17 -t 25 output.mp4
 
 # 截图
 -ss 5.1 -i /data/videos/-.mp4  -s 320x240 -frames:v 1 -f image2 /data/videos/screenshots/test.png
