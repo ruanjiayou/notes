@@ -8,6 +8,7 @@ const shelljs = require('shelljs');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const multer = require('multer');
+const _ = require('lodash');
 // const amqplib = require('amqplib');
 const diffsrt = require('./diff-utils.js');
 
@@ -159,6 +160,30 @@ app.get('/test/got-form', async (req, res) => {
 app.post('/diff-srt/json', async (req, res) => {
   const srt = diffsrt(req.body.document, req.body.segments);
   res.end(srt);
+});
+
+app.post('/diff-srt/2srt', uploader.single('transcription'), async (req, res) => {
+  let transcription = null;
+  if (!_.isEmpty(req.body)) {
+    transcription = req.body;
+  }
+  if (req.file) {
+    console.log(req.file)
+    transcription = JSON.parse(fs.readFileSync(req.file.path, { encoding: 'utf-8' }).toString());
+  }
+  if (!transcription || !transcription.segments) {
+    return res.status(400).end('');
+  }
+  function n2t(seconds) {
+    const millis = Math.round((seconds % 1) * 1000);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    seconds = Math.floor((seconds % 60));
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")},${String(millis).padStart(3, "0").substring(0, 3)}`;
+  }
+  res.header({ 'content-type': 'application/json; charset=utf-8' });
+  res.end(transcription.segments.map((s, n) => `${n + 1}\n${n2t(s.start)} --> ${n2t(s.end)}\n${s.text}\n\n`).join('\n'));
 });
 
 // ffmpeg -i input.mp4 -map-metadata -1 -c:a aac output.aac

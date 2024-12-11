@@ -16,8 +16,7 @@ def transcribe():
 
     # 将 segments 转换为 JSON 格式
     result = []
-    segments, _ = model.transcribe(
-        audio_file, language=lang, beam_size=5, word_timestamps=True)
+    segments, _ = model.transcribe(audio_file, language=lang, beam_size=5, word_timestamps=True)
     for segment in segments:
         result.append(
             {
