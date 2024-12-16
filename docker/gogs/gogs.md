@@ -27,15 +27,15 @@
   flush privileges;
   exit;
   ```
-- (设置启动端口)执行初始化配置安装: `./gogs web -port 8888`
+- (设置启动端口)执行初始化配置安装: `./gogs web -port 8888`
 - 添加服务: `sudo cp /home/git/gogs/scripts/init/centos/gogs /etc/init.d/`
 - 给予执行权限: `sudo chmod +x /etc/init.d/gogs`
-- 检查gogs下的文件夹的权限: `ls -l` => 修改所有者: `sudo chown git:git log`
+- 检查gogs下的文件夹的权限: `ls -l` => 修改所有者: `sudo chown git:git log`
 - centos中修改scripts/system/gogs.service: after的数据库只写mysqld.service(因为我们用的mysql...)
 - 开机自启动: `sudo chkconfig gogs on`,取消: `sudo chkconfig gogs off`
 - 启动服务: `sudo service gogs start`
 
-- [配置介绍](https://gogs.io/docs/advanced/configuration_cheat_sheet)
+- [配置介绍](https://gogs.io/docs/advanced/configuration_cheat_sheet)
 - [常见问题](https://gogs.io/docs/intro/faqs)
 
 ## 步骤
