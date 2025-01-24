@@ -1,7 +1,8 @@
 # docker
+
 常用命令
-- 
-- 
+--------
+
 [docker 命令大全](http://www.runoob.com/docker/docker-command-manual.html)
 
 ```bash
@@ -14,7 +15,7 @@ docker tag project:0.1 username/project:0.1 && docker push username/project:.01
 // 将镜像保存为文件
 docker save username/project:0.1 > project.tar
 // 从文件中加载镜像
-docker load path/to/file
+docker load -i path/to/file
 // 列出进程(容器)
 docker ps
 // 列出本地主机上的镜像 --filter -f -q --format 
@@ -41,10 +42,12 @@ docker restarting name
 // 调试
 docker exec -it [container_id] bash
 ```
+
 ## dockerfile
+
 - FROM 指定基础镜像, scratch代表不以任何镜像为基础
 - RUN 执行命令并创建新的Image Layer
-- COPY 复制文件 COPY [--chown=<user>:<group>] <源路径>... <目标路径>
+- COPY 复制文件 COPY [--chown=`<user>`:`<group>`] <源路径>... <目标路径>
 - ADD 自动下载解压
 - CMD 设置容器启动后默认执行的命令和参数，如果docker run指定了其他命令，CMD命令被忽略，如果定义了多个CMD，只有最后一个会执行。
 - ENTRYPOINT 设置容器启动时运行的命令，让容器以应用程序或服务的形式运行，如果定义了多个ENTRYPOINT，不会被忽略，都会执行
@@ -58,10 +61,11 @@ docker exec -it [container_id] bash
 - ONBUILD 是一个特殊的指令，它后面跟的是其它指令，比如 RUN, COPY 等，而这些指令，在当前镜像构建时并不会被执行。只有当以当前镜像为基础镜像，去构建下一级镜像的时候才会被执行。
 - 
 
+## docker-compose 编排容器,方便起
 
-## docker-compose 编排容器,方便起 
 https://blog.csdn.net/skh2015java/article/details/80410306
 https://www.jianshu.com/p/2217cfed29d7
+
 - 使用: `docker-compose [-f=<arg>...] [options] [COMMAND] [ARGS...]`
 - commands
   - build
@@ -77,8 +81,8 @@ https://www.jianshu.com/p/2217cfed29d7
   - ps
   - pull
   - restart
-  - rm 
-  - run 
+  - rm
+  - run
   - scale
   - start
   - stop
@@ -99,7 +103,7 @@ https://www.jianshu.com/p/2217cfed29d7
   - --skip-hostname-check
 - image
 - container_name
-- arg与env_file 
+- arg与env_file
 - environment
 - depends_on 解决启动顺序问题
 - entrypoint
@@ -134,10 +138,11 @@ https://www.jianshu.com/p/2217cfed29d7
 - security_opt
 - tmpfs 挂载临时目录到容器内部
 - cap_add, cap_drop 添加或删除容器的内核功能
-- cgroup_parent 
+- cgroup_parent
 - devices
 - cpu_shares, cpu_quota, cpuset, domainname, hostname, ipc, mac_address, mem_limit, memswap_limit, privileged, read_only, restart, shm_size, stdin_open, tty, user, working_dir
-水平扩展: docker-compose up --scale web=3 -d
+  水平扩展: docker-compose up --scale web=3 -d
+
 ```yml
 #docker-compose部署通用型项目
 version: '3'
@@ -159,7 +164,9 @@ services:
       - back-tier
 
 ```
+
 负载均衡 ![负载均衡](https://user-gold-cdn.xitu.io/2018/8/12/1652a0175d461457?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
 ```yml
 #docker-compose.yml
 version: "3"
@@ -183,7 +190,9 @@ services:
 ```
 
 ## REST API
+
 - 执行shell备份mongo数据库:
+
   ```sh
   POST /containers/:id/exec
   {
@@ -211,7 +220,8 @@ services:
       ]
   }
   ```
-  然后 
+
+  然后
   ```sh
   POST /exec/:id/start
   {
@@ -224,11 +234,15 @@ services:
   }
   ```
 - 拉取镜像
+
   ```sh
   curl --location --request POST '192.168.0.124:9573/images/create?fromImage=192.168.0.124:5000/ruanjiayou/novel-api&tag=0.1.44&message=test' --header 'X-Registry-Auth: eyJzZXJ2ZXJhZGRyZXNzIjoiMTkyLjE2OC4wLjEyNDo1MDAwIiwidXNlcm5hbWUiOiJyZWdpc3RyeSIsInBhc3N3b3JkIjoiMTIzNDU2In0='
   ```
+
 ## 安装
+
 ### centos
+
 - docker-ce http://www.runoob.com/docker/centos-docker-install.html
 - 更新软件包: `sudo yum update`
 - yum provides '*/applydeltarpm'
@@ -237,19 +251,22 @@ services:
 - sudo docker engine activate
 - 运行: `systemctl start docker`
 - 失败?: `systemctl status -l docker.service`
-- 自启动: 
-  > `systemctl enable docker` \
+- 自启动:
+  > `systemctl enable docker` 
   > `in -s '/usr/lib/systemd/system/docker.service' '/etc/systemd/system/multi-user.target.wants/docker.service'`
+  >
 - 安装SQlite: `yum install sqlite-devel`
 - 安装docker-compose
-  - 安装python-pip: 
+  - 安装python-pip:
   - `yum -y install epel-release`
   - `yum -y install python-pip`
   - `pip install --upgrade pip`
   - `pip install docker-compose`
 
 ### windows 10
+
 > 启动docker desktop要切换到wsl2
+
 - wsl --update
 - wsl --set-default-version 2
 - netsh winsock reset
@@ -258,19 +275,25 @@ services:
 ### ubantu
 
 ## 问题
-- 删除所有<none>: `docker rmi $(docker images --filter "dangling=true" -q --no-trunc)`
+
+- 删除所有`<none>`: `docker rmi $(docker images --filter "dangling=true" -q --no-trunc)`
 - Delta RPMs disabled because /usr/bin/applydeltarpm
-  > 先看`docker -v` \
+  > 先看 `docker -v` 
   > 如果没有该命令: `yum provides '*/applydeltarpm'`, `yum install deltarpm`
+  >
 - the docker command appears to already exist on this system
   > `yum list installed | grep docker`
+  >
 - unable to access local containerd: failed to dial "/run/containerd/containerd.sock": context deadline exceeded
   > ? enterprise?
+  >
 - cannot connect to the docker daemon at unix ///var/run/docker.sock. is the docker daemon running
-  > docker 客户端通过unix:///var/run/docker.sock与docker daemon通信，unix:///var/run/docker.sock需要管理员权限才能访问，所以要么运行`sudo docker run hello-world`，要么将当前用户添加在docker用户组中 
-`sudo usermod -aG docker $USER`,但必须重新登陆 \
+  > docker 客户端通过unix:///var/run/docker.sock与docker daemon通信，unix:///var/run/docker.sock需要管理员权限才能访问，所以要么运行 `sudo docker run hello-world`，要么将当前用户添加在docker用户组中
+  > `sudo usermod -aG docker $USER`,但必须重新登陆 
   > 还是要修改docker.sock文件.https://stackoverflow.com/questions/42217526/cannot-start-docker-daemon-in-centos7
-  先改用户和组然后:
+  > 先改用户和组然后:
+  >
+
   ```sh
   systemctl daemon-reload
   systemctl start docker.socket
@@ -284,26 +307,35 @@ services:
 - docker无法启动: 登录Kitematic(不是Docker Quickstart)
 - the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
   > winpty docker exec -it --name redis-master bash
+  >
 - starting container process caused "exec: \"bash\"
   > bash改为sh试试
+  >
 - 复制docker中的文件到宿主: docker cp container_name:/path /path-to-out
--  'requests'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.
-  > pip install docker-compose --ignore-installed requests 
+- 'requests'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.
+
+> pip install docker-compose --ignore-installed requests
+
 - ERROR: Failed to Setup IP tables: Unable to enable SKIP DNAT rule:  (iptables failed: iptables --wait -t nat -I DOCKER -i br-a32657d7990a -j RETURN: iptables: No chain/target/match by that name.
+
   > 原因是关闭防火墙之后docker需要重启，执行以下命令重启docker即可：service docker restart
+  >
+
   - 查看日志: `docker logs --tail 10 xxx`
 - 进入容器: `docker exec -ti name或id sh或bash` [--user=root 管理员身份进入]
 - 容器内测试http请求: `wget localhost:3000 -O -`
 - ERROR:Docker Got permission denied while trying to connect to the Docker daemon socket
+
   ```
   sudo groupadd docker
   sudo gpasswd -a ${USER} docker? sudo usermod -aG docker ${USER}
   reboot
   groups
   ```
-- No route to host: 重启docker`service docker restart`
+- No route to host: 重启docker `service docker restart`
 - [1号进程处理SIG*消息](https://github.com/Yelp/dumb-init)
 - Cannot restart container manage: iptables failed
+
   ```
   pkill docker 
   iptables -t nat -F 
@@ -311,11 +343,13 @@ services:
   ifconfig docker0 up
   systemctl restart docker
   ```
-
 - fail to start
+
   > checking if isocache exists: CreateFile \\wsl$\docker-desktop-data\isocache\: The network name canno \
+  >
+
   - wsl --update
   - wsl --shutdown
-  - netsh winsock reset 
+  - netsh winsock reset
   - 清空docker的数据和配置,重启APP几次..
 - 命令被拒绝 permission denied: docker -exec -u 0 -ti jenkins /bin/bash
