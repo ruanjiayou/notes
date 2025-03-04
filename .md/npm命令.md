@@ -17,6 +17,8 @@ https://docs.npmjs.com/cli-documentation/cli
 - npm config
  - npm get key
  - npm set key value [-g|--global]
+- 设置安装包时不自动添加前缀^或~: `npm config set save-exact true`
+- 默认使用前缀~：npm config set save-prefix '~'
 
 版本号
 https://blog.xcatliu.com/2015/04/14/semantic_versioning_and_npm/

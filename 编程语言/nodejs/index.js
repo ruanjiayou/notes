@@ -95,6 +95,10 @@ app.get('/test/mq', async (req, res) => {
 });
 
 
+app.get('/test/return/text', async (req, res) => {
+  console.log('test get');
+  res.end('hello');
+})
 app.post('/test/return/json', async (req, res) => {
   console.log(req.body, 'body')
   res.json(req.body);
@@ -182,7 +186,8 @@ app.post('/diff-srt/2srt', uploader.single('transcription'), async (req, res) =>
 
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")},${String(millis).padStart(3, "0").substring(0, 3)}`;
   }
-  res.header({ 'content-type': 'application/json; charset=utf-8' });
+  res.header({ 'content-type': 'text/plain; charset=utf-8' });
+  res.header({ 'Content-Disposition': 'inline; filename="subtitle.srt"' });
   res.end(transcription.segments.map((s, n) => `${n + 1}\n${n2t(s.start)} --> ${n2t(s.end)}\n${s.text}\n\n`).join('\n'));
 });
 
