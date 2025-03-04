@@ -50,7 +50,7 @@ start_payload='{"Detach": false, "Tty": false}'
 result=$(curl $param \
   -H "Content-Type: application/json" \
   -d "$start_payload" \
-  -X POST "${http://localhost}/exec/${exec_id}/start")
+  -X POST "${base_url}/exec/${exec_id}/start")
 
 # 输出命令执行结果
 echo "$result"
