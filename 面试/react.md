@@ -86,7 +86,8 @@
 - 更容易复用,(原来通过高阶组件复用都是方法提升到最顶层)
 - 写代码效率更高,
 - 钩子
-  - useState,必须在useEffect里才能有setState的效果
+  - useState有闭包问题,必须在useEffect里才能有setState的效果
+  - useRef能解决闭包问题，但值变化不会触发渲染
   - useMemo 和 useCallback仅仅 依赖数据 发生变化, 才会重新计算结果，也就是起到缓存的作用.前者缓存值,后者缓存函数.
 
 ## 优化

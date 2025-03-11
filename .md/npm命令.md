@@ -17,6 +17,7 @@ https://docs.npmjs.com/cli-documentation/cli
 - npm config
  - npm get key
  - npm set key value [-g|--global]
+ - npm set proxy http://192.168.0.1:8888
 
 版本号
 https://blog.xcatliu.com/2015/04/14/semantic_versioning_and_npm/
