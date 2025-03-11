@@ -54,6 +54,9 @@
 - Redux Store 和更改逻辑是分开的,只有一个store,状态不可改变
 - 组件或页面间需要数据共享时,方便测试
 
+## mobx
+- useLocalStore 不会追踪外部的observable,需要自己保存该值,useEffect 中监听并修改
+
 ## react-router4
 > 前端路由本质: 两种方法,#之后发生变化,historyAPI提供的方法
 - 当浏览器的url产生变化,不刷新,产生类似页面跳转等效果

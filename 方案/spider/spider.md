@@ -1,6 +1,19 @@
 # spider
 
-## 结构
+## 表
+| 字段      | 类型                                             | 说明     |
+|-----------|--------------------------------------------------|--------|
+| _id       | string                                           | 唯一id   |
+| name      | string                                           | 名称     |
+| desc      | string                                           | 描述     |
+| urls      | [{<br/>  url:string,<br/> enabled:boolean<br/>}] | 域名列表 |
+| pattern   | string                                           | 匹配规则 |
+| config    | {proxy,from}                                     | 配置     |
+| header    | object                                           | 请求头   |
+| script    | string                                           | 脚本     |
+| status    | number                                           | 状态     |
+| createdAt | date                                             | 创建时间 |
+
 - model
 - task
   - ffmpeg
@@ -31,3 +44,21 @@
 - origin source-id uuid
 - 同网站多入口
 - 任务与子任务.参数-任务类型 null或name
+
+
+
+- 资源管理
+- 媒体管理
+  - 视频
+  - 图片
+  - 画册
+  - 章节
+  - pixiv
+  - 音乐
+  - 文件
+- 下载管理
+- 爬虫管理
+- 定时任务
+- 数据备份
+- 链接管理
+- 线路管理

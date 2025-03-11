@@ -1,18 +1,21 @@
-
 ## monsoose
+
 - 官网API文档: https://mongoosejs.com/docs/api.html#Aggregate
-https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
+  https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
 - it笔录: https://itbilu.com/nodejs/npm/B1FfBss6X.html#model_Model.findOneAndUpdate
 
 ## option参数
+
 - 对find有效: sort,limit,skip
 - 对update,updateOne,updateMany,replaceOne,findOneAndUpdate,findByIdAndUpdate有效: upsert
 - 对find,findOne,findById,findOneAndUpdate,findByIdAndUpdate有效: lean
 
 ## 增加
+
 - 一般通过update(),option upsert=true实现
 
 ## 删除
+
 - remove() 没啥用?
 - 删除多个: deleteMany(condition) single=false
 - 删除一个: deleteOne(condition)  single=true
@@ -21,6 +24,7 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
 - findByIdAndRemove()
 
 ## 查询
+
 - 模糊查询,正则: {title: {$regex: new RegExp(""或者/1$/)}}
 - 范围: $gt,$lt,$gte,$lte,$in,$nin,$ne
 - and,or,nor
@@ -42,16 +46,19 @@ https://docs.mongodb.com/manual/reference/operator/aggregation/sum/
     ]}
   ])
   ```
+
 ## 修改数据
+
 > 参数: upsert,multi,setDefaultOnInsert(upsert=true),strict=false,overwrite=false/
 > 原子类型: $set,$unset,$setOnInsert
+
 - update(condition,data,option) 包含updateOne和replaceOne
 - updateOne(condition,{$xxx:data},option) 修改一条数据data必须是原子操作$,所以multi和overwrite参数无效
 - replaceOne(condition,data,option) 覆盖一条数据
 - updateMany 相当update中multi为true,也必须是原子操作$
 
-
 ## 创建索引
+
 ```js
 db.getCollection('point_info').createIndexes([
   { 
@@ -61,9 +68,12 @@ db.getCollection('point_info').createIndexes([
   }
 ], {background:true, name: "subscriptionId_createTime_type"})
 ```
+
 ## 批量修改
+
 - bulkWrite中修改: updateOne{ {filter}, {$set: data}, {option}}
 - skip比cursor方便.
+
 ```js
   const mongoose = require('mongoose');
   mongoose.connect('mongodb://user:pass@ip:port/db');
@@ -88,6 +98,7 @@ db.getCollection('point_info').createIndexes([
   console.log('id=>code 完成!');
   process.exit();
 ```
+
 ```js
   // next
   const cursor = M.find({}).cursor();
@@ -116,9 +127,11 @@ db.getCollection('point_info').createIndexes([
 ```
 
 ## 分组 (参考)[https://blog.csdn.net/leshami/article/details/55192965]
-> $match: 过滤条件 \
-  > $group: 按照给定表达式组合结果 \
-  ```
+
+> $match: 过滤条件 
+> $group: 按照给定表达式组合结果 \
+
+```
   统计: count: { $sum: 1 }
   求和: count: { $sum: '$price' }
   引用字段: { _id: "$title" }
@@ -130,22 +143,25 @@ db.getCollection('point_info').createIndexes([
   $push 重复的不会合并
   $addToSet 重复的会合并
   拆分为多条: $unwind
-  $pull
+  $pull 删除数组中符合条件的元素
   $pullAll
   $pop
   $ne
-  ```
-  > $project：包含、排除、重命名和显示字段 \
-  ```js
+```
+
+> $project：包含、排除、重命名和显示字段 \
+
+```js
   db.getCollection('resources').aggregate([  
     { $match: { group: { $gt: '2018-04-21', $lt: '2018-05-21'}} },  
     { $group: { _id: '$movie_id', count: { $sum: 1 } } },  
     { $sort: { count: -1 } },
     { $limit: 100 }
   ])
-  ```
+```
 
 ## schema 定义model
+
 ```js
 const Schema = require('mongoose').Schema;
 const blogSchema = new Schema({
@@ -155,6 +171,7 @@ const Blog = mongoose.model('Blog', blogSchema);
 ```
 
 ### 刷号封号的主要代码
+
 ```js
 var opts = [];
 db.share_relations.aggregate([
@@ -163,7 +180,7 @@ db.share_relations.aggregate([
   // 重复3次的 为可疑 账号
   { $match: { count: { $gte: 3 }, '_id.ip': { $ne: null } } },
   { $group: { _id: "$_id.user_code" , total: { $sum: 1 } } } , 
-  // 在3个不同地方刷的 认定为刷号               
+  // 在3个不同地方刷的 认定为刷号             
   { $match: { total: { $gte: 3 } } },
   { $skip: 150 }
 ]).forEach(function(item){
@@ -188,6 +205,7 @@ db.share_relations.aggregate([
 ```
 
 ## 数据库优化
+
 - 索引列5个最佳
 - find().explain(),hint()强制使用索引
 - 开启慢日志:db.setProfilingLevel(2)
@@ -206,6 +224,7 @@ ne：如果当取反的值为大多数，则会扫描整个索引
 not：可能会导致查询优化器不知道应当使用哪个索引，所以会经常退化为全表扫描
 nin：全表扫描
 or：有多少个条件就会查询多少次，最后合并结果集，所以尽可能的使用in
+
 - locks.timeAcquiringMicros除以locks.acquireWaitCount能计算出特定锁模式的平均等待时间。
 - locks.deadlockCount获取死锁次数
 - 对于“读”较频繁的应用，您需要增加  复制集  的大小并将读操作路由到  secondary  节点
@@ -216,8 +235,10 @@ or：有多少个条件就会查询多少次，最后合并结果集，所以尽
 - 
 
 ## 文件恢复
+
 - `tar (child): cannot run bzip2: No such file or directory`
   > apt-get install bzip2
+  >
 - `E: Package 'mongodb' has no installation candidate`
 - 卸载mongo: apt-get purge mongo*
 - mongod -f /etc/mongod.conf &(启动后才能连接..)
@@ -229,6 +250,7 @@ or：有多少个条件就会查询多少次，最后合并结果集，所以尽
 - 
 
 ## 问题
+
 - MongoError: no primary found in replicaset or invalid replica set name 连不上数据库集群 ===> 停电挂了...
 - db.getCollection('crawler_url').updateMany({finished:true},{$set:{finished:false}})
 - bulkWrite() 写不进去 filter/update/upsert都放updateOne里
@@ -239,4 +261,5 @@ or：有多少个条件就会查询多少次，最后合并结果集，所以尽
 - 查询结果是个特殊对象.直接修改不起作用: 调用.toJSON(),再修改.
 
 ## 参考
+
 - [索引](https://juejin.cn/post/6844904039981776910)
