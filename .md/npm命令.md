@@ -19,8 +19,9 @@ https://docs.npmjs.com/cli-documentation/cli
 - npm help
 - 查看信息: npm view [moduleName]
 - npm config
-- npm get key
-- npm set key value [-g|--global]
+ - npm get key
+ - npm set key value [-g|--global]
+ - npm set proxy http://192.168.0.1:8888
 - 设置安装包时不自动添加前缀^或~: `npm config set save-exact true`
 - 默认使用前缀~：npm config set save-prefix '~'
 
