@@ -92,6 +92,7 @@ redis集群
   - blpop
   - brpop
   - brpoplpush
+  - ZREMRANGEBYRANK key start stop 删除多余的
   
 ## 发布订阅
 - subscribe [channel ...] 订阅频道

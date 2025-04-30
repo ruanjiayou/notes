@@ -56,6 +56,7 @@
 
 ## mobx
 - useLocalStore 不会追踪外部的observable,需要自己保存该值,useEffect 中监听并修改
+- `const Page = !local.template ? null : (pages[local.template.type] || Dynamic);`要放 Observer 里面才能监听
 
 ## react-router4
 > 前端路由本质: 两种方法,#之后发生变化,historyAPI提供的方法
@@ -89,8 +90,9 @@
 - 更容易复用,(原来通过高阶组件复用都是方法提升到最顶层)
 - 写代码效率更高,
 - 钩子
-  - useState,必须在useEffect里才能有setState的效果
+  - useState,必须在useEffect里才能有setState的效果.存在值不更新的问题需改用 useRef
   - useMemo 和 useCallback仅仅 依赖数据 发生变化, 才会重新计算结果，也就是起到缓存的作用.前者缓存值,后者缓存函数.
+  - Context 的 value 只判断引用是否改变,所以不能用 useRef,需用 useState
 
 ## 优化
 - 减少请求,合并文件,压缩文件.http2和预加载,预解析DNS

@@ -13,7 +13,12 @@
 ## 态度
 - 写完直接提交代码.过分自信和懒惰都不可取!
 - 不良情绪会感染.
+- roleArn授权资源: 前端等回复,运维找不到位置,评审同事硬要单独oss一级目录.我...
 
+
+## 千奇百怪的bug
+- nodejs 内置的 http 模块不支持 https 协议
+- request 模块如果没明确支持重定向会报错
 
 ## 前世今生
 
@@ -47,3 +52,13 @@
 
 ## 字符集与编码
 > https://zhuanlan.zhihu.com/p/461731357
+
+
+
+rpc
+graphQL
+monorepo 单代码库多个关联项目
+nestjs
+nextjs
+微服务
+高并发
