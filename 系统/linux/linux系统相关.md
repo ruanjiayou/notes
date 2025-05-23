@@ -5,6 +5,7 @@
 - linux命令大全: http://man.linuxde.net/
 
 ## 文件相关
+
 <details>
   <summary>文件相关</summary>
 
@@ -14,7 +15,7 @@
   - \- 回到上一个访问的目录
 - 创建文件夹: `mkdir`
   - -p 支持创建多级文件夹
-- 查看文件与目录: `ls` 
+- 查看文件与目录: `ls`
   - -a 显示隐藏文件(.开头)
   - -l 显示文件的属性与权限数据
   - -d 仅列出目录本身，而不是列出目录的文件数据
@@ -26,8 +27,10 @@
   - -i 若目标文件已经存在时，在覆盖时会先询问操作的进行
   - -r 递归持续复制，用于目录的复制行为
   - -u 目标文件与源文件有差异时才会复制
-  > cp -a file1 file2 #连同文件的所有特性把文件file1复制成文件file2 \
-    cp file1 file2 file3 dir #把文件file1、file2、file3复制到目录dir中
+
+  > cp -a file1 file2 #连同文件的所有特性把文件file1复制成文件file2 
+  > cp file1 file2 file3 dir #把文件file1、file2、file3复制到目录dir中
+  >
 - rsync -avzu --progress test root@ip:/path
   - -v, --verbose 详细模式输出
   - -q, --quiet 精简输出模式
@@ -41,7 +44,7 @@
   - -l, --links 保留软链接
   - -u, --update 仅进行更新,跳过所有已存在DST且文件时间晚于要备份的文件
   - -L, --copy-links 软链接也进行传输
-  - --copy-unsafe-links 
+  - --copy-unsafe-links
   - --safe-links 忽略指向src路径目录以外的连接
   - -H, --hard-links 保留硬链接
   - -p, --perms 保持文件权限
@@ -103,11 +106,13 @@
 - diff
 - touch 创建新文件/修改访问时间修改时间
 - 查看文件前5行: head -n 5 path-to-file
-- vim 
-- find 
+- vim
+- find
   > find [PATH] [option] [action]
+  >
 - zip解压和压缩: unzip file / zip file
   > yum install zip unzip
+  >
 - tar 压缩和解压: `tar -zcvf dist.tar.gz ./dist`, `tar -xzvf dist.tar.gz`
   - -c 新建打包文件
   - -t 查看打包文件的内容含有哪些文件名
@@ -124,6 +129,7 @@
   查看挂载的磁盘情况: du -h
   查看文件夹大小: du -h --max-depth=1, du -sh images
   ```
+
   - -a 显示目录中个别文件的大小
   - -b 显示目录或文件大小时，以byte为单位
   - -c 除了显示个别目录或文件的大小外，同时也显示所有目录或文件的总和
@@ -138,6 +144,7 @@
   - 查找文件： `find / -name kafka-topics.sh`
   - 查找程序： `which nginx`
   - `whereis docker`
+
 </details>
 
 <details>
@@ -156,16 +163,19 @@
 - 修改用户密码: `passwd git`
 - chgrp 改变文件所属用户组
   > chgrp users -R ./dir # 递归地把dir目录下中的所有文件和子目录下所有文件的用户组修改为users
+  >
 - chown 改变文件的所有者
 - ls -l file
 - ls-ld dir
 - chmod 改变文件的权限
-  > chmod [-R] xyz 文件或目录\
-  > chmod 0755 file # 把file的文件权限改变为-rxwr-xr-x\
+  > chmod [-R] xyz 文件或目录
+  > chmod 0755 file # 把file的文件权限改变为-rxwr-xr-x
   > chmod g+w file # 向file的文件权限中加入用户组可写权限
+  >
 - passwd
 - 
-</details> 
+
+</details>
 
 <details>
   <summary>程序相关</summary>
@@ -186,8 +196,9 @@
   验证配置: sudo mount -a
   reboot
   ‵‵‵
+  ```
 - free
-- top 
+- top
 - service
 - crontab
 - nslookup baidu.com 查ip
@@ -197,43 +208,57 @@
   - -c
   - -i
   - -v
-  - --color 
+  - --color
 - 查找进程: ps -ef | grep logstash
 - kill -signal PID
   - 1：SIGHUP，启动被终止的进程
-  - 2：SIGINT，相当于输入ctrl+c，中断一个程序的进行 
+  - 2：SIGINT，相当于输入ctrl+c，中断一个程序的进行
   - 9：SIGKILL，强制中断一个进程的进行
   - 15：SIGTERM，以正常的结束进程方式来终止进程
   - 17：SIGSTOP，相当于输入ctrl+z，暂停一个进程的进行
-</details> 
+
+</details>
 
 网络相关
-- netstat -ntlp | grep 3306
-wget
-ping
-rpm
-curl
-- curl -o filename "url:..."
 
-- 修改环境变量后有的要退出终端生效,有的要 
+- netstat -ntlp | grep 3306
+  wget
+  ping
+  rpm
+  curl
+- curl -o filename "url:..."
+- 修改环境变量后有的要退出终端生效,有的要
+
   > $ `source ~/.bashrc`
-- 清除shell记录: 
+  >
+- 清除shell记录:
+
   > $ `history -c`
-- 查看shell记录: 
+  >
+- 查看shell记录:
+
   > $ `vim ~/.bash_history`
+  >
 - Linux系统有三个标准的显示用户最近登录信息的命令： last, lastb,和lastlog
+
   - last命令，对应的日志文件/var/log/wtmp； 成功登录用户
   - lastb命令，对应的日志文件/var/log/btmp； 尝试登录信息
   - lastlog命令，对应的日志文件/var/log/lastlog； 显示最近登录信息
   - 清除当前登录session的历史：
     > $ `history -r`
+    >
   - 清除所有历史：
     > $ `history -cw`
-- 查看程序端口占用情况: 
+    >
+- 查看程序端口占用情况:
+
   > $ `ps -aux | grep node`
+  >
 - 显示服务器端口
+
   > 所有tcp端口: $ `netstat -ntlp`
   > 所有端口: $ `netstat -ntulp | grep 80`
+  >
 - shutdown
 - sort
 - ifconfig
@@ -244,6 +269,7 @@ curl
 - 
 
 ## 挂载
+
 - 查看硬盘信息: `sudo fdisk -l`
 - 临时挂载: `mkdir /mnt/resource`, `sudo mount /dev/sda2 /mnt/resource`
   ```
@@ -257,12 +283,13 @@ curl
   <fs passno>：磁盘检查，默认为0，不需要检查
   ```
 - 查看磁盘分区的UUID: `sudo blkid`
-- 配置开机自动挂载: 
+- 配置开机自动挂载:
   - `sudo vim /etc/fstab`
   - 增加: `UUID=xxxx /mnt/resource ntfs defaults 0 1`
   - 验证配置: `sudo mount -a`
 
 ## tree
+
 - -a 显示所有文件和目录。
 - -A 使用ASNI绘图字符显示树状图而非以ASCII字符组合。
 - -C 在文件和目录清单加上色彩，便于区分各种类型。
@@ -285,12 +312,15 @@ curl
 - -x 将范围局限在现行的文件系统中，若指定目录下的某些子目录，其存放于另一个文件系统上，则将该子目录予以排除在寻找范围外。
 
 ## alias
+
 - `sudo vim ~/.bashrc`
 - `alias cmd='cd ~/projects && npm run dev'`
 - `source ~/.bashrc`
 
 ## systemctl
+
 > 是CentOS7的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体
+
 - 启动一个服务：`systemctl start firewalld.service`
 - 关闭一个服务：`systemctlstop firewalld.service`
 - 重启一个服务：`systemctlrestart firewalld.service`
@@ -302,17 +332,23 @@ curl
 - 查看启动失败的服务列表：`systemctl --failed`
 
 ## semanage
+
 > selinux极大的增强了Linux的安全性,包括 文件系统,目录,文件,文件启动描述符,端口,消息接口和网络接口
+
 - 查看当前允许的httpd端口: `semanage port -l|grep xxx`,xxx代表端口类型(名称?)或端口号
 - 添加允许的httpd端口: `semanage port -a -t http_port_t -p tcp 8090`.像squid是squid_port_t
 - 删除允许的httpd端口: `semanage port -d -t http_port_t -p tcp 8097`
 
 ## Linux 的安全配置四个级别
+
 - firewall -> service -> filesystem -> selinux
 
 ## 防火墙
+
 > CentOS7的防火墙换成了firewall了
+
 - 开启端口 : `firewall-cmd --zone=public --add-port=80/tcp --permanent`
+
   - 命令含义：
   - --zone #作用域
   - --add-port=80/tcp #添加端口，格式为：端口/通讯协议
@@ -327,7 +363,6 @@ curl
 - 设置端口范围: `firewall-cmd --add-port=80-8080/tcp`
 - 删除例外端口: `firewall-cmd --remove-port=8080/tcp`
 - 查看例外端口: `firewall-cmd --query-port=8080/tcp`
-
 - 查看版本： `firewall-cmd --version`
 - 查看帮助： `firewall-cmd --help`
 - 显示状态： `firewall-cmd --state`
@@ -340,7 +375,9 @@ curl
 - 查看是否拒绝： `firewall-cmd --query-panic`
 
 ## ftp
+
 > https://www.cnblogs.com/zhouhbing/p/5564512.html
+
 - yum install vsftpd
 - vim /etc/vsftpd/vsftpd.conf
   ```
@@ -359,14 +396,15 @@ curl
 - 设置开机启动: chkconfig vsftpd on
 - 配置防火墙...
 - 不支持 FTP over TLS: 文件->站点管理器 选择普通ftp
-- 530 Permission denied: 
+- 530 Permission denied:
 - 530 login incorrect 是密码错了...
 - 竟然能访问根目录...
 
 ## dns服务器
+
 - `yum install bind-chroot bind-utils`
 - 开机启动: `systemctl enable named-chroot`
-- 修改: vim /etc/named.conf. 
+- 修改: vim /etc/named.conf.
   ```
   listen-on port 53 { any;}; # 监听任何ip对53端口的请求
   allow-query     { any; }; # 接收任何来源查询dns记录
@@ -378,6 +416,7 @@ curl
 - 测试dns: `host -t A www.jiayou.com 172.18.0.1`, 端口怎么来的? `netstat -ntlp`
 
 ## 技巧
+
 - centos: xxx is not in the sudoers file
   ```bash
   su root
@@ -391,15 +430,22 @@ curl
 - 安装tree: `yum -y install tree`
 
 ## ssh登陆
+
 ```sh
 ssh -p 22 root@baidu
 ```
-  > .ssh/config
-  ```
+
+> .ssh/config
+
+```
   Host 别名
   HostName ip或域名
   Port 22
   User root
   IdentityFile ~/.ssh/id_rsa.pub
   IdentitiesOnly yes
-  ```
+```
+
+## apk
+
+- `http_proxy=http://192.168.0.125:8888 https_proxy=http://192.168.0.125:8888 apk add curl`

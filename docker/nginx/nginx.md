@@ -120,6 +120,8 @@
     return 200 '{"/form/advanced-form":{"authority":["admin","user"]}}';
   }
   ```
+- 正则匹配: ~ ^
+- 前缀匹配: ^~ 不支持正则表达式,优先级高, `^~/gw/(manger/demo)/`这种是不支持的
 ## window上
 - win10-64位 下载 1.17.0
 - http://nginx.org/en/download.html
