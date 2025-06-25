@@ -46,3 +46,6 @@ DISM /Online /Cleanup-image /RestoreHealth
 同时检查更新您计算机所有的设备驱动程序
 
 ## 安装docker
+
+## 查找并关闭端口
+- netstat -ano|findstr "3333"

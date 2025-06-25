@@ -1,8 +1,9 @@
 #!/bin/bash
 # chmod u+x ./exec.sh
 # 用法示例: ./exec.sh <container_id|name> "cd /root && ls -a"
+# 容器里不能用&&的问题： alias duck='f() { docker exec "$1" sh -c "${*:2}"; }; f'
 #                                        "mongodump -u root -p 123456 --authenticationDatabase admin --db cms-manager -o /data/backup/2025-03-04"
-#                                        "mongorestore -u root -p 123456 --authenticationDatabase admin --db cms-manager '/data/backup/2025-03-04/cms-manager'"
+#                                        "mongorestore -u root -p 123456 --authenticationDatabase admin --db cms-manager '/data/backup/2025-04-04/cms-manager'"
 
 # 配置
 base_url=""
@@ -11,8 +12,8 @@ if [ "$(uname)" = "Darwin" ]; then
   param="-s --unix-socket /var/run/docker.sock"
   base_url="http://localhost"
 else
-  param=""
-  base_url="http://192.168.0.124:2375"
+  param="--header 'X-Registry-Auth: xxx'"
+  base_url="http://192.168.0.124:9375"
 fi
 
 # 检查参数数量
