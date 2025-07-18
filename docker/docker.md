@@ -353,3 +353,12 @@ services:
   - netsh winsock reset
   - 清空docker的数据和配置,重启APP几次..
 - 命令被拒绝 permission denied: docker -exec -u 0 -ti jenkins /bin/bash
+- 修改 daemon.json 启动失败: 改为修改systemd 配置文件
+  - sudo systemctl edit docker
+  - ```ini
+    [Service]
+    Environment="HTTP_PROXY=http://your-proxy-server:port"
+    Environment="HTTPS_PROXY=http://your-proxy-server:port"
+    Environment="NO_PROXY=localhost,127.0.0.1"
+    ```
+  - sudo systemctl daemon-reload && sudo systemctl restart docker

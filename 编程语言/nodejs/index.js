@@ -219,6 +219,10 @@ app.post('/diff-srt/file', multi, async (req, res) => {
 
 });
 
+app.get('/ai-poster-article', async (req, res) => {
+  res.sendFile(path.join(__dirname, './.tmp/article-poster.html'))
+});
+
 app.listen(7003, function () {
   console.log('express started at: 7003')
 })

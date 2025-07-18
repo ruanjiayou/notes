@@ -1,7 +1,7 @@
 #!/bin/bash
 # chmod u+x ./exec.sh
 # 用法示例: ./exec.sh <container_id|name> "cd /root && ls -a"
-#                                        "mongodump -u root -p 123456 --authenticationDatabase admin --db cms-manager -o /data/backup/2025-03-04"
+#                                        "mongodump -u root -p 123456 --authenticationDatabase admin --db cms-manager -o /data/backup/2025-04-04"
 #                                        "mongorestore -u root -p 123456 --authenticationDatabase admin --db cms-manager '/data/backup/2025-03-04/cms-manager'"
 
 # 配置
