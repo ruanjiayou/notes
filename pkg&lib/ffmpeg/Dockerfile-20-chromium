@@ -1,0 +1,7 @@
+FROM --platform=linux/amd64 node:20.19-alpine
+
+RUN apk update && apk add --no-cache curl vim chromium
+
+# docker build . -t ruanjiayou/node:amd64_20-chromium
+# docker login
+# docker push ruanjiayou/node:amd64_20-chromium

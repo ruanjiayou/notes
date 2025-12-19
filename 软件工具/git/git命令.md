@@ -18,6 +18,7 @@
 - 修改: git remote set-url --push [name] [newUrl]
 - 删除: git remote rm [name]
 - 删除本地分支: git branch -d [name]
+- 删除远程分支: git push origin --delete [name]
 - 查看日志: git log
 - 还原版本: git revert hash
 - 变基: git rebase

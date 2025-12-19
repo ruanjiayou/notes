@@ -1,0 +1,72 @@
+<html>
+
+<head>
+  <title>test</title>
+</head>
+
+<body>
+  <input id="oinput" />
+  <button id="obtn">测试</button>
+  <table>
+    <th>
+    <td></td>
+    <td>iPhone 13;v18.2</td>
+    </th>
+    <tr>
+      <td>video/mp4; codecs="hev1.1.1.L150, mp4a.40.2"</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>video/mp4; codecs="avc1.640029, mp4a.40.2"</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>video/mp4; codecs="av01.0.05M.08, mp4a.40.2"</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>video/mp4; codecs="hvc1.1.1.L150, mp4a.40.2"</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</body>
+<script>
+  const obtn = document.getElementById('obtn');
+  const oinput = document.getElementById('oinput');
+  obtn.addEventListener('click', function () {
+    const value = oinput.value.trim();
+    const tests = [
+      { name: 'HEVC (hev1)', type: 'video/mp4; codecs="hev1.1.1.L150, mp4a.40.2"' },
+      { name: 'HEVC (hvc1)', type: 'video/mp4; codecs="hvc1.1.1.L150, mp4a.40.2"' },
+      { name: 'HEVC 简化', type: 'video/mp4; codecs="hvc1.1.6.L150, mp4a.40.2"' },
+      { name: 'AVC/H.264', type: 'video/mp4; codecs="avc1.640029, mp4a.40.2"' },
+      { name: 'AV1', type: 'video/mp4; codecs="av01.0.05M.08, mp4a.40.2"' },
+      { name: 'VP9', type: 'video/webm; codecs="vp9, opus"' },
+      { name: '通用 MP4', type: 'video/mp4' },
+      { name: '通用 WebM', type: 'video/webm' }
+    ]
+    if (value) {
+      const video = document.createElement("video");
+      const supported = !!video.canPlayType(value);
+      alert(supported);
+    }
+  })
+</script>
+
+</html>

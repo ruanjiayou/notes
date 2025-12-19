@@ -42,11 +42,12 @@
   ```
 - 指定用户运行 su - username (-表示到用户默认目录)
 
-1. 创建脚本 /usr/bin/start-ttyd.sh 
+- 脚本方式 /usr/bin/start-ttyd.sh `opkg install ttyd`的版本只有 1.6.3,github 发行版本 1.7.7 有问题用 1.7.2 `https_proxy=http://192.168.0.125:8888 wget https://github.com/tsl0922/ttyd/releases/download/1.7.2/ttyd.x86_64 -O /usr/bin/ttyd`
 ```sh
 #!/bin/sh
 exec su ruanjiayou -c "/usr/bin/ttyd -p 8222 /bin/bash"
-``````
+```
+- 服务方式
 1. 创建服务脚本: `vim /etc/init.d/ttyd8222`
    ```sh
    #!/bin/sh /etc/rc.common
@@ -58,7 +59,7 @@ exec su ruanjiayou -c "/usr/bin/ttyd -p 8222 /bin/bash"
 
    start_service() {
       procd_open_instance
-      procd_set_param command /usr/bin/ttyd -p 8222 /bin/bash --rcfile /home/ruanjiayou/.bashrc -i
+      procd_set_param command /usr/bin/ttyd -p 8222 --base-path /ssh -- /bin/bash --rcfile /home/ruanjiayou/.bashrc -i
       procd_set_param respawn
       procd_close_instance
    }

@@ -9,6 +9,12 @@
   - 平均比特率 ABR
   - 固定比特率 CBR
 - 容器/格式/封装格式: MKV/MP4/FLV/AVI
+- 视频编码器
+  - libx264: 用于H.264视频编码。
+  - libx265: 用于H.265/HEVC编码。
+  - libvpx: 用于VP8和VP9编码。
+  - mpeg4: 用于MPEG-4编码。
+  - libaom-av1: 用于AV1编码
 - 编码格式(PCM)
   - 视频
     - H264 H265
@@ -16,13 +22,18 @@
     - Matroska(MKV)
     - MPEG-1 MPEG-2 MPEG-4
   - 音频
-- 存储封装格式
-  - AVI(.avi)
-  - RM(.rm .rmvb)
-  - m2ts(.m2ts .mts)
 - 转码(Transcoding): 将已经压缩编码的视频码流转换成另一个视频码流
 - 转封装(Remux): 将视频或音频的封装格式进行转换
 - 分离(Demux): 将编码轨道从封装格式中拆出来
+- codec_name 编解码器名称,指明了用于编码或解码该数据流的具体算法和格式,`h264/hevc/av1/vp9/mpeg4`
+- codec_type 数据流的类型,`video/audio/subtitle`
+- codec_tag_string 容器级别的标识,在特定的容器格式中快速标识编解码器,`avc1/hvc1/dxva/mp4a`
+- profile 义了编码器可以使用的一组编码工具和算法。不同的Profile是为了满足不同的应用场景（如兼容性、压缩效率、硬件支持）而设定的
+- level 等级.对编解码器Profile所定义功能集的进一步限制，它主要规定了关键性能参数的上限，以确保解码器能够正常解码。等级越高，支持的分辨率、帧率和比特率也越高
+  - 3.0： 适合标清到720p视频。
+  - 4.0 / 4.1： 非常常见，用于1080p视频。
+  - 5.0 / 5.1： 用于1080p高帧率或2K视频。
+  - 5.2 / 6.0 / 6.1 / 6.2： 用于4K甚至8K视频。
 
 - 全局参数
   - 显示编码进度: `-stats`
@@ -68,12 +79,7 @@
   - 详细: `ffmpeg -i xxx.mp4`, `ffprobe xxxx.mp4`
   - 查看视频时长: `ffprobe -v quiet -show_format -print_format json -show_entries stream=index,codec_name,codec_tag_string,codec_type,profile,level,bit_rate,tags,nb_frames,avg_frame_rate,sample_rate,channels,width,height,duration xxx.mp4`
 - 转换格式: `ffmpeg -i 'xxx.mp4' -c:v libx264  -preset ultrafast -vf format=yuvj420p -c:a copy 2.mp4`
-- 视频编码器
-  - libx264: 用于H.264视频编码。
-  - libx265: 用于H.265/HEVC编码。
-  - libvpx: 用于VP8和VP9编码。
-  - mpeg4: 用于MPEG-4编码。
-  - libaom-av1: 用于AV1编码
+
 - 指定宽高输出: `ffmpeg -y -i Titanic.mkv -s 640*480 out.h264`
 - 截取素材
   - 截取gif,从25秒开始,截取10秒,帧率16: `ffmpeg -ss 25 -t 10 -r 16 -i path-to-vedio -f gif test.gif` 

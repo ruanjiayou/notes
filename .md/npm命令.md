@@ -63,3 +63,4 @@ https://blog.xcatliu.com/2015/04/14/semantic_versioning_and_npm/
   echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
   sudo sysctl --system
   ```
+- 安装了@elastic/elasticsearch@7.17.0, npm ci 失败

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>直播流测试</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/flv.js@latest/dist/flv.min.js"></script>
+</head>
+
+<body>
+  <h2>直播流测试工具</h2>
+
+  <div>
+    <input type="text" id="streamUrl" placeholder="输入流地址" style="width: 400px;">
+    <button onclick="testStream()">测试播放</button>
+  </div>
+
+  <div>
+    <video id="videoPlayer" controls width="640" height="360"></video>
+  </div>
+
+  <div id="status"></div>
+
+  <script>
+    async function testStream() {
+      const url = document.getElementById('streamUrl').value;
+      const statusDiv = document.getElementById('status');
+      const video = document.getElementById('videoPlayer');
+
+      if (!url) {
+        statusDiv.innerHTML = '❌ 请输入流地址';
+        return;
+      }
+
+      statusDiv.innerHTML = '🔍 测试中...';
+
+      try {
+        if (url.endsWith('.m3u8')) {
+          // HLS 测试
+          if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              statusDiv.innerHTML = '✅ HLS 流播放成功';
+              video.play();
+            });
+          } else {
+            statusDiv.innerHTML = '❌ 浏览器不支持 HLS';
+          }
+        } else if (url.endsWith('.flv')) {
+          // FLV 测试
+          if (flvjs.isSupported()) {
+            const player = flvjs.createPlayer({
+              type: 'flv',
+              url: url
+            });
+            player.attachMediaElement(video);
+            player.load();
+            player.play();
+            statusDiv.innerHTML = '✅ FLV 流播放成功';
+          } else {
+            statusDiv.innerHTML = '❌ 浏览器不支持 FLV';
+          }
+        } else {
+          statusDiv.innerHTML = '❌ 不支持的流格式';
+        }
+      } catch (error) {
+        statusDiv.innerHTML = `❌ 播放失败: ${error.message}`;
+      }
+    }
+
+    // 预设测试地址
+    document.getElementById('streamUrl').value = 'http://play-huawei.fengshows.cn/fs/p1_lhd.flv';
+  </script>
+</body>
+
+</html>
