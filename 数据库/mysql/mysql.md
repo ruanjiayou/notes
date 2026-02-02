@@ -154,7 +154,7 @@ CREATE TABLE `profile_infos` (
   | `key_len`       | 实际使用的索引长度（字节），可用于判断是否使用了联合索引中的全部字段                                          |
   | `ref`           | 哪个列或常量与索引进行了比较，比如 `const`、`func`、`table.column`                                            |
   | `rows`          | MySQL 估算要读取的行数（越少越好）                                                                            |
-  | `filtered`      | 表示符合条件的行数百分比（估算值），配合 `rows` 可以估算最终输出行数                                          |
+  | `filtered`      | 表示符合条件的行数百分比（估算值,要结合rows一起看），配合 `rows` 可以估算最终输出行数                                          |
   | `Extra`         | 附加信息，比如：是否使用文件排序、是否回表、是否使用索引等                                                    |
 2. type
 
@@ -171,9 +171,9 @@ CREATE TABLE `profile_infos` (
 
   | Extra 值                                              | 含义                                       |
   | ----------------------------------------------------- | ------------------------------------------ |
-  | `Using where`                                         | 有 WHERE 过滤条件                          |
+  | `Using where`                                         | 有过滤条件(有using index表示有覆盖索引,索引过滤后回表;或key有索引,回表读后过滤)                          |
   | `Using index`                                         | 使用了覆盖索引（不需回表）                 |
-  | `Using index condition`                               | 用了索引，但部分字段还需回表               |
+  | `Using index condition`                               | 用了索引，但部分字段还需回表(过滤后回表)               |
   | `Using filesort`                                      | 用于排序时未使用索引（⚠️性能差）            |
   | `Using temporary`                                     | 用了临时表（多见于 GROUP BY）              |
   | `Range checked for each record`                       | 没有合适索引，尝试对每行使用 range，性能差 |

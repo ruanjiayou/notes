@@ -94,6 +94,10 @@ app.get('/test/mq', async (req, res) => {
   }
 });
 
+app.post('/test/log', async (req, res) => {
+  console.log(JSON.stringify(req.body), JSON.stringify(req.query))
+  res.status(200).end();
+})
 
 app.get('/test/return/text', async (req, res) => {
   console.log('test get');
@@ -223,6 +227,6 @@ app.get('/ai-poster-article', async (req, res) => {
   res.sendFile(path.join(__dirname, './.tmp/article-poster.html'))
 });
 
-app.listen(7003, function () {
+app.listen(7003, '0.0.0.0', function () {
   console.log('express started at: 7003')
 })
