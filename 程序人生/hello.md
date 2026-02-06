@@ -19,6 +19,17 @@
 ## 千奇百怪的bug
 - nodejs 内置的 http 模块不支持 https 协议
 - request 模块如果没明确支持重定向会报错
+- superagent 的 agent,http 和 https 都要可以是相同的 http://192.168.0.125:8888 不然有些网站访问失败
+- redis 的 lua 脚本会时不时过期,所以要判断执行是否出现 "NOSCRIPT" 错误
+
+## 我写的bug
+- MySQL 时间排序进行分页,某一页时间相同(可能是一次性同步的历史记录)造成循环.MySQL 的 QPS 从 28 升到 1800,redis 的写次数从 125/s 升到 90000/s (有些数据时间都是 1970)
+- 接口签名处理时间对象出现不一致,JSON.strinfigy(date) 先调用date.toJSON() 然后再stringify
+- 创建 favors 出现数据异常造成收藏列表为空.需要验证创建接口的数据
+- req.query/req.params 数字参数没做 parseInt 处理,第1页变为第11页,测试账号有数据,线上异常
+- 第一次出错是注册接口没测试,redis升级callback改为async/await,唯独这个漏掉了;第二次是测试部充分,没传 registion_id,造成变量未定义的错误没发现
+- 缓存重大升级,没考虑回退,造成数据格式不兼容.
+- 升级 redis,线上版本不支持zRange的REV参数
 
 ## 前世今生
 

@@ -1,0 +1,25 @@
+FROM node:24-alpine
+
+# -------------------------------
+# 设置环境变量，方便 Chromium headless 使用
+# -------------------------------
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    CHROME_BIN=/usr/bin/chromium-browser \
+    PATH="/usr/bin:$PATH"
+
+# -------------------------------
+# 安装常用工具 + headless Chromium
+# -------------------------------
+RUN apk add --no-cache \
+    bash \
+    vim \
+    git \
+    curl \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ttf-freefont \
+    udev \
+    chromium-chromedriver \
+    && rm -rf /var/cache/apk/*
