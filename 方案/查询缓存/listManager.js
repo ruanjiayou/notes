@@ -99,7 +99,7 @@ class ListManager {
     const sync_key = this.getFlagByName('sync', key_sub);
     const empty_key = this.getFlagByName('empty', key_sub);
     const idx_key = this.getFlagByName('idx', key);
-    const replies = await this.client.multi().setNX(sync_key, '1').expire(sync_key, 60).del(empty_key).sAdd(idx_key, this.getCombineName(types)).exec();
+    const replies = await this.client.multi().setNX(sync_key, '1').expire(sync_key, 600).del(empty_key).sAdd(idx_key, this.getCombineName(types)).exec();
     if (!replies[0]) {
       logger.debug('防止高并发时的重复scan')
       return;
@@ -108,8 +108,8 @@ class ListManager {
     logger.debug('按规模扫描')
     const count = total > 1000000 ? 2000 : total > 100000 ? 1000 : total > 10000 ? 500 : 200;
     // 全量列表重置过期时间
-    if (ttl < config.redis.expires * 24) {
-      await this.client.expire(key_all, config.redis.expires * 24 * 7);
+    if (ttl < config.redis.expires * 24 * 2) {
+      await this.client.expire(key_all, config.redis.expires * 24 * 14);
     }
     do {
       let result = [];
@@ -121,6 +121,7 @@ class ListManager {
       } catch (e) {
         // lua缓存失效重新加载
         if (e.message.includes('NOSCRIPT')) {
+          logger.info('lua script expired', patterns)
           this.scripts[hash] = await this.client.scriptLoad(this.getScript(patterns));
           result = await this.client.evalSha(sha, {
             keys: [key_all],
@@ -153,7 +154,7 @@ class ListManager {
       logger.debug('空数据删除反向索引并设置空标识')
       await this.client.multi().sRem(idx_key, types).set(empty_key, 1).expire(empty_key, config.redis.expires).exec();
     } else {
-      await this.client.expire(key_sub, config.redis.expires * 6);
+      await this.client.expire(key_sub, config.redis.expires * 24 * 15);
     }
   }
 
@@ -170,28 +171,39 @@ class ListManager {
     const empty_key = this.getFlagByName('empty', key_all)
     const sync_key = this.getFlagByName('sync', key_all)
     const total = await model.count({ where });
-    logger.info(`构建全量zset: ${key_all}`)
+    logger.info(`构建全量zset: ${key_all}`, JSON.stringify(where), fields)
     if (total === 0) {
       logger.debug('没数据设置空标识然后返回')
       await this.client.multi().set(empty_key, 1).expire(empty_key, config.redis.expires).exec();
       return;
     }
     logger.debug('设置开始同步标识')
-    await this.client.multi().set(sync_key, 1).expire(sync_key, 60).exec();
+    await this.client.multi().set(sync_key, 1).expire(sync_key, 600).exec();
 
-    let cursor = null;
-    let batch = [], limit = 200;
+    let cursor = null, lastId = null, times = 0;
+    let batch = [], limit = 200, all = 0;
     do {
       if (cursor) {
-        where[field_score] = { [Op.lt]: cursor };
+        where[Op.or] = [
+          { [field_score]: { [Op.lt]: cursor } },
+        ];
+      }
+      if (lastId) {
+        if (!where[Op.or]) {
+          where[Op.or] = [];
+        }
+        where[Op.or].push({ [field_score]: cursor, id: { [Op.lt]: lastId } })
       }
       const results = await model.findAll({
         where,
         limit,
         raw: true,
-        order: [[field_score, 'DESC']],
+        order: [[field_score, 'DESC'], ['id', 'DESC']],
         attributes: fields.filter(f => !f.startsWith('#')),
       });
+      all += results.length;
+      times++;
+      logger.info(key_all, all);
       results.forEach(v => {
         batch.push({ score: new Date(v[field_score]).getTime(), value: `${field_type.startsWith('#') ? field_type.substring(1) : v[field_type]}_${v[field_id]}` });
       })
@@ -204,8 +216,15 @@ class ListManager {
         batch = [];
       }
       cursor = results.length ? results[results.length - 1][field_score] : null; // 获取下一页的游标
-    } while (cursor)
-    await this.client.multi().del(sync_key).expire(key_all, config.redis.expires * 24 * 7).exec();
+      lastId = results.length ? results[results.length - 1].id : null;
+      if (results.length < limit) {
+        break;
+      }
+    } while (cursor && lastId !== null && times < 100)
+    if (times >= 100) {
+      logger.info(`异常数据: ${key_all}`)
+    }
+    await this.client.multi().del(sync_key).expire(key_all, config.redis.expires * 24 * 15).exec();
   }
   /**
    * 增量数据缓存处理
@@ -215,7 +234,7 @@ class ListManager {
    * @param {number} action 发布动作.大于0上线,小于等于0下线
    */
   async publish(key, value, score, action) {
-    const [, id] = value.split('_');
+    const [type, id] = value.split('_');
     const key_all = `${key}:all`;
     const idx_key = this.getFlagByName('idx', key);
     const exists = await this.client.exists(key_all)
@@ -227,15 +246,19 @@ class ListManager {
     const types = await this.client.sMembers(idx_key)
     logger.debug('维护子类型列表', types)
     for (let i = 0; i < types.length; i++) {
-      const key_sub = `${key}:${types[i]}`;
-      const value_sub = types[i].includes('_') ? value : id;
-      const found = await this.client.exists(key_sub);
-      if (found) {
-        logger.debug('子类型列表未过期则发布')
-        action > 0 ? await this.client.zAdd(key_sub, { score, value: value_sub }) : await this.client.zRem(key_sub, value_sub)
-      } else {
-        logger.debug('子类型列表过期则删除反向索引')
-        await this.client.sRem(idx_key, types[i])
+      const child_types = types[i].split('_');
+      // 发布的资源属于子列表才处理
+      if (child_types.includes(type)) {
+        const key_sub = `${key}:${types[i]}`;
+        const value_sub = child_types.length > 1 ? value : id;
+        const found = await this.client.exists(key_sub);
+        if (found) {
+          logger.debug('子类型列表未过期则发布')
+          action > 0 ? await this.client.zAdd(key_sub, { score, value: value_sub }) : await this.client.zRem(key_sub, value_sub)
+        } else {
+          logger.debug('子类型列表过期则删除反向索引')
+          await this.client.sRem(idx_key, types[i])
+        }
       }
     }
   }
@@ -252,9 +275,14 @@ class ListManager {
     const sub = types === 'all' ? 'all' : types.map(v => v.toString()).sort((a, b) => a.localeCompare(b)).join('_')
     const key_all = `${key}:all`
     const key_sub = `${key}:${sub}`
+    const ttl = await this.client.ttl(key_sub);
     // 要取的zset列表是否存在.
-    if (await this.client.exists(key_sub)) {
+    if (ttl > -2) {
       logger.debug('存在则直接查找')
+      // 自动续长过期时间
+      if (ttl < config.redis.expires * 24 * 2) {
+        await this.client.expire(key_sub, config.redis.expires * 24 * 14);
+      }
     } else if (
       (sub !== 'all' && await this.client.exists(this.getFlagByName('empty', key_sub)))
       || await this.client.exists(this.getFlagByName('empty', key_all))
@@ -271,13 +299,6 @@ class ListManager {
     const pairs = cursor
       ? await this.client.zRangeByScore(key_sub, cursor, '+inf', limit > 0 ? { WITHSCORES: true, LIMIT: { offset: 0, count: limit } } : { WITHSCORES: true })
       : await this.client.sendCommand(['ZREVRANGE', key_sub, ((page - 1) * limit).toString(), (page * limit - 1).toString(), 'WITHSCORES']);
-    if (sub === 'all') {
-      // 处理不按分类查询时,自动续长过期时间
-      const ttl = await this.client.ttl(key_sub);
-      if (ttl < config.redis.expires * 24) {
-        await this.client.expire(key_sub, config.redis.expires * 24 * 7);
-      }
-    }
     const arr = _.chunk(pairs, 2)
     if (types.length === 1) {
       return arr.map(([member, score]) => [types[0], member, score])

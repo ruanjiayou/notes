@@ -1,0 +1,966 @@
+{
+  "type": "drawnix",
+  "version": 1,
+  "source": "web",
+  "elements": [
+    {
+      "id": "aCSaf",
+      "type": "mind",
+      "data": {
+        "topic": {
+          "children": [
+            {
+              "text": "用户服务缓存"
+            }
+          ],
+          "type": "paragraph"
+        }
+      },
+      "children": [
+        {
+          "id": "kKDkJ",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "收藏collect"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "SrGRE",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "user_collect 表"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "tGcFm",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "GzfhR",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "account_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "dciph",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_type"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "tshNS",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "HMjnw",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "status"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "npfDb",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "created_time"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "isCollapsed": false
+            },
+            {
+              "id": "DJeXY",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "接口"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "mMsaz",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/collect",
+                          "color": "#FF4500ff"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#FF4500"
+                },
+                {
+                  "id": "iRZrt",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/favors/list/collect/:page cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#2ECC71"
+                },
+                {
+                  "id": "cEmHi",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/favors/list/:res_type/:page cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#2ECC71"
+                },
+                {
+                  "id": "PdABP",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "post /user/favors/collect"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "isCollapsed": false
+            }
+          ],
+          "isCollapsed": true
+        },
+        {
+          "id": "hmcGz",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "订阅subscribe"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "dPdkJ",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "user_subscribe 表"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "NsXSt",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "HFnYN",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "account_id "
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "DeJtA",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_type: user/program/subscription"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "CcpCE",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "jmbaW",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "status"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "iHWSS",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "created_time"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "isCollapsed": false
+            },
+            {
+              "id": "wemTa",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "接口"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "tMHzi",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "post /user/favors/subscribe"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "HwXsx",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "粉丝列表 /user/users/:user_id/subscribe cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#2ECC71"
+                },
+                {
+                  "id": "DaxQS",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "关注列表 /user/favors/list/subscribe/:page cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#2ECC71"
+                },
+                {
+                  "id": "HiccN",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "关注列表 /user/favors/list/subscribe/:res_type/:page cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#2ECC71"
+                },
+                {
+                  "id": "eHBDs",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "所有已关注订阅号 /user/favors/subscribes/:res_type cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#FF4500"
+                },
+                {
+                  "id": "HswQh",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "关注资源的用户列表 /user/favors/subscribe/:res_type/:res_id/users"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "isCollapsed": false
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "MHRmR",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "点赞mark"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "TkiaN",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "user_mark表"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "fHacZ",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "NEJmz",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "account_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "ZWrjB",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_type"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "NBNhh",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "ePRan",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "status"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "PJQtr",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "created_time"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "isCollapsed": false
+            },
+            {
+              "id": "YTzbi",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "接口"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "pTmpH",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "post /user/marker"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "SRNpx",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/favors/list/marker/:page",
+                          "color": "#FF4500ff"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#FF4500"
+                },
+                {
+                  "id": "XcfDm",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "点赞资源的用户列表 /user/favors/marker/:res_type/:res_id/users"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#FF4500"
+                }
+              ]
+            }
+          ],
+          "isCollapsed": true
+        },
+        {
+          "id": "cAPwn",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "历史history"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "BcFca",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "user_history表"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "YjKAT",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "YwXXR",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "account_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "jzTKH",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_type"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "fmxaA",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "res_id"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "KDaPb",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "created_time"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "btaPs",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "act_ip"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 67.022705078125
+                },
+                {
+                  "id": "jFjXN",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "act_plt"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 73.6298828125
+                }
+              ],
+              "isCollapsed": false
+            },
+            {
+              "id": "FHAdM",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "接口"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "iEReX",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "post /user/favors/history",
+                          "color": "#FF4500ff"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#FF4500"
+                },
+                {
+                  "id": "fMtsZ",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/favors/list/history/:page",
+                          "color": "#FF4500ff"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#FF4500"
+                },
+                {
+                  "id": "pJFHx",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/history/create"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "eWMXk",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/history/_bulk"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "JZeBE",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/history/synchrodata"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "wFPHy",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/history/del/_bulk"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "cemra",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "/user/history/list:page?res_type cursor"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "strokeColor": "#2ECC71"
+                }
+              ]
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "FkcdZ",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "批量计数 POST /user/favors/detail",
+                  "color": "#FF4500ff"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [],
+          "strokeColor": "#FFD700"
+        },
+        {
+          "id": "SSWNy",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "互动资源 /user/favors/:type/:res_type/resources",
+                  "color": "#FF4500ff"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [],
+          "strokeColor": "#FF4500"
+        }
+      ],
+      "layout": "right",
+      "points": [
+        [
+          103.1011962890625,
+          246.55804443359375
+        ]
+      ]
+    }
+  ],
+  "viewport": {
+    "zoom": 1,
+    "origination": [
+      -252.8988037109375,
+      -338.94189453125
+    ]
+  }
+}

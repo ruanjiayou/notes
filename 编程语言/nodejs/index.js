@@ -12,6 +12,42 @@ const _ = require('lodash');
 // const amqplib = require('amqplib');
 const diffsrt = require('./diff-utils.js');
 
+const sharp = require('sharp');
+const QRCODE = require('@zxing/library');
+async function decodeQRCode(filepath) {
+  const { RGBLuminanceSource, BinaryBitmap, MultiFormatReader, DecodeHintType, BarcodeFormat, HybridBinarizer } = QRCODE;
+  const { data, info } = await sharp(filepath)
+    .removeAlpha()
+    // .resize({ width: 600, withoutEnlargement: false })
+    .grayscale()
+    .threshold(128)
+    .normalize()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  const source = new RGBLuminanceSource(
+    data,
+    info.width,
+    info.height
+  )
+
+  const bitmap = new BinaryBitmap(
+    new HybridBinarizer(source)
+  )
+  const reader = new MultiFormatReader()
+  // ⭐ 给 zxing 明确提示：只扫 QRCode
+  reader.setHints(
+    new Map([
+      [
+        DecodeHintType.POSSIBLE_FORMATS,
+        [BarcodeFormat.QR_CODE]
+      ]
+    ])
+  )
+  const result = reader.decode(bitmap)
+  return result.getText()
+}
+
 let channel = null;
 async function initMQ(client) {
   const queue = 'transcode', exchange = 'task';
@@ -226,6 +262,17 @@ app.post('/diff-srt/file', multi, async (req, res) => {
 app.get('/ai-poster-article', async (req, res) => {
   res.sendFile(path.join(__dirname, './.tmp/article-poster.html'))
 });
+
+app.post('/qrcode/parse', uploader.single('image'), async (req, res) => {
+  try {
+    console.log(req.file)
+    const text = await decodeQRCode(req.file.path);
+    res.end(text);
+  } catch (e) {
+    console.log(e)
+    res.end('解析失败')
+  }
+})
 
 app.listen(7003, '0.0.0.0', function () {
   console.log('express started at: 7003')
