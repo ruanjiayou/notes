@@ -1,0 +1,52 @@
+
+services:
+  vector:
+    image: timberio/vector:nightly-alpine
+    container_name: vector
+    volumes:
+      - ./vector.yaml:/etc/vector/vector.yaml:ro
+      - /var/log:/var/log:ro
+      - ./vector-data:/vector-data
+      # - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    ports:
+      - "8080:8080"
+      - "8686:8686"
+    depends_on:
+      - loki
+    networks:
+      - observability
+    network_mode: "bridge"
+    command: ["--config", "/etc/vector/vector.yaml"]
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - ./loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml -config.expand-env=true
+    networks:
+      - observability
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    depends_on:
+      - loki
+    networks:
+      - observability
+
+networks:
+  observability:
+    driver: bridge

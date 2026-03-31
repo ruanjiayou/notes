@@ -1,0 +1,49 @@
+sources:
+  pino_http:
+    type: "http"
+    address: "0.0.0.0:8080"
+    encoding: "json"
+
+transforms:
+  process_pino:
+    type: "remap"
+    inputs:
+      - "pino_http"
+    source: |
+      # 映射 Pino 的数字 level 到文字
+      # if .level == 30 { 
+      #   .level = "info" 
+      # } else if .level == 40 { 
+      #   .level = "warn" 
+      # } else if .level == 50 { 
+      #   .level = "error" 
+      # } else if .level == 20 { 
+      #   .level = "debug" 
+      # }
+      
+      .level = .level
+      # 2. 修正后的时间解析
+      .timestamp = parse_timestamp(.time, format: "%FT%T%.3fZ") ?? now()
+
+      # 提取 app 和 service 字段（如果 pino 已经携带了，这里可以做兜底）
+      .app = .app
+      .service = .service
+      .user_id = .user_id
+      
+      # 移除冗余字段（可选）
+      del(.pid)
+      del(.hostname)
+
+sinks:
+  loki_out:
+    type: "loki"
+    inputs:
+      - "process_pino"
+    endpoint: "http://loki:3100"
+    encoding:
+      codec: "json"
+    labels:
+      app: "{{ app }}"
+      service: "{{ service }}"
+      level: "{{ level }}"
+      user_id: "{{ user_id }}"
