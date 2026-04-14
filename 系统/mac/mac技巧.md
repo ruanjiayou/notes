@@ -34,6 +34,9 @@ source ~/.bash_profile
 alias
 ```
 
+## 查找所有 node_modules 文件夹
+- `find /Users/jiayou/projects -name "node_modules" -type d -prune -print -exec du -sh {} \;`
+
 ## Mac安装mysql
 之前安装了homebrew: 
 1. brew install mysql

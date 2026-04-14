@@ -1,2 +1,4 @@
 /**/node_modules/
 test/
+**/.Ds_Store
+**/.gitignore

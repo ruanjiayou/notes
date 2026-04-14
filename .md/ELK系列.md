@@ -25,6 +25,7 @@
 3. 写启动脚本: 还是alias比较方便。。。
 ```bash
 #!/bin/bash
+export ES_JAVA_HOME=$(/usr/libexec/java_home -v 11)
 ./bin/elasticsearch -d
 echo '已启动ElasticSearch进程'
 ```
