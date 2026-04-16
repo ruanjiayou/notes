@@ -1,3 +1,0 @@
-FROM node:24-alpine
-
-RUN apk add --no-cache curl vim git bash ffmpeg && rm -rf /var/cache/apk/*

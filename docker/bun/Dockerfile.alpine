@@ -1,0 +1,18 @@
+# 使用最新 Alpine 作为基础镜像
+FROM alpine:latest
+
+# 1. 先安装 bash（解决 bash not found）
+# 2. 安装 curl 和其他必要工具
+RUN apk update && apk add --no-cache \
+    bash curl ffmpeg vim unzip \
+    yt-dlp \
+    # chromium
+    chromium ca-certificates nss freetype harfbuzz ttf-freefont udev 
+
+RUN curl -fsSL https://bun.sh/install | bash
+RUN ln -s /root/.bun/bin/bun /usr/local/bin/bun
+
+
+WORKDIR /app
+
+CMD ["/bin/bash"]

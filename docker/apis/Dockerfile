@@ -1,6 +1,6 @@
-FROM ruanjiayou/node:24-chromium
+FROM node:24-base
 
-# 安装了curl/vim/chromium/git/bash
+# 安装了curl/vim/chromium/bash/ffmpeg
 
 WORKDIR /cms
 
