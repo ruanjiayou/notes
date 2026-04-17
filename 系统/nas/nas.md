@@ -76,3 +76,60 @@ exec su ruanjiayou -c "/usr/bin/ttyd -p 8222 /bin/bash"
    ```
 3. 验证: `netstat -tnlp | grep 8222`, 查看日志 `logread | grep ttyd`
 4. 当前用户： `id`
+
+
+## cloudflared设置开机启动
+- 创建服务脚本: `vim /etc/init.d/cloudflared`
+  ```sh
+   #!/bin/sh /etc/rc.common
+
+   # 服务名称
+   NAME="cloudflared"
+
+   # 启动优先级（数字越小越早启动，通常网络服务设99）
+   START=99
+   # 停止优先级
+   STOP=10
+
+   # 使用procd进程管理框架
+   USE_PROCD=1
+
+   start_service() {
+      # 开启一个procd实例
+      procd_open_instance
+
+      # 设置启动命令：cloudflared 的完整路径
+      procd_set_param command /usr/bin/cloudflared --config /etc/cloudflared/config.yml tunnel run production
+
+      # 设置日志输出到系统日志
+      procd_set_param stdout 1
+      procd_set_param stderr 1
+
+      # 设置自动重启（进程意外退出时，服务会尝试重启）
+      procd_set_param respawn
+
+      # 设置运行用户（可选，留空则默认root）
+      # procd_set_param user root
+
+      # 关闭实例
+      procd_close_instance
+   }
+
+   stop_service() {
+      # 停止时直接kill所有cloudflared进程（procd也会自动处理，但可以保留）
+      killall cloudflared 2>/dev/null || true
+   }
+
+   # 重启服务（通常procd已经处理好，但可以保留）
+   restart() {
+      stop
+      sleep 1
+      start
+   }
+  ```
+- 检查shell语法: `bash -n /etc/init.d/cloudflared`
+- 添加执行权限: `chmod +x /etc/init.d/cloudflared`
+- 测试脚本: `/etc/init.d/cloudflared status`
+- 设置开机启动: `/etc/init.d/cloudflared enable`
+- 手动启动服务: `/etc/init.d/cloudflared start`
+- 查看服务状态: `/etc/init.d/cloudflared status`

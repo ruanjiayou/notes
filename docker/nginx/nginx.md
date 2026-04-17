@@ -184,3 +184,4 @@ openssl rsa -noout -modulus -in test.key | openssl md5
 - chrome自签名不能识别(必须重新-install并生成证书) [参考](https://blog.csdn.net/qq_45392321/article/details/119676301) 开始还是显示不安全，过几天发现好了...
   - `mkcert --install`(在客户端安装mkcert的根证书，服务端的证书就会被信任)
   - `mkcert -cert-file ./server.crt -key-file ./server.key 192.168.0.124 192.168.100.19 localhost 127.0.0.1 ::1`
+  - 双击安装？浏览器页面需要关闭后重新打开，刷新不行

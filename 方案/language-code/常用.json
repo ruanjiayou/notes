@@ -1,0 +1,56 @@
+[
+    {
+        "code": "CN",
+        "continent": "亚洲",
+        "phone_code": "86",
+        "name": "中國"
+    },
+    {
+        "code": "JP",
+        "continent": "亚洲",
+        "phone_code": "81",
+        "name": "日本"
+    },
+    {
+        "code": "HK",
+        "continent": "亚洲",
+        "phone_code": "852",
+        "name": "中國香港"
+    },
+    {
+        "code": "TW",
+        "continent": "亚洲",
+        "phone_code": "886",
+        "name": "中國台灣"
+    },
+    {
+        "code": "US",
+        "continent": "北美洲",
+        "phone_code": "1",
+        "name": "美國"
+    },
+    {
+        "code": "GB",
+        "continent": "欧洲",
+        "phone_code": "44",
+        "name": "英國"
+    },
+    {
+        "code": "FR",
+        "continent": "欧洲",
+        "phone_code": "33",
+        "name": "法國"
+    },
+    {
+        "code": "TH",
+        "continent": "亚洲",
+        "phone_code": "66",
+        "name": "泰國"
+    },
+    {
+        "code": "IN",
+        "continent": "亚洲",
+        "phone_code": "91",
+        "name": "印度"
+    },
+]

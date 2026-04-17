@@ -13,8 +13,11 @@
   remote_monitoring_user rm123456
   ```
 - 安装plugins
-  - ./bin/elasticsearch-plugin install file:/home/files/xxxx.zip
+  - ./bin/elasticsearch-plugin install file:///home/files/xxxx.zip
+  - 出错删除插件: ./bin/elasticsearch-plugin remove file:///home
   - 查看安装的插件列表: http://192.168.0.124:9200/_cat/plugins
+- 碰到的问题
+  - 修改docker的内存大小后造成插件失效。需要重装
 ## setting
 
 ## mapping
