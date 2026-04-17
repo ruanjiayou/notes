@@ -45,4 +45,7 @@ key: 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
   arguments: -y @j0hanz/filesystem-mcp@latest --allow-cwd
   ```
 ### @j0hanz/filesystem-mcp
-- 启动: `npx -y @j0hanz/filesystem-mcp@latest --allow-cwd  /Users/jiayou/projects/ --port 3000`
+- 启动: `FILESYSTEM_MCP_API_KEY=123456 FILESYSTEM_MCP_HTTP_HOST=0.0.0.0 npx -y @j0hanz/filesystem-mcp@latest --transport streamable-http --allow-cwd  /Users/jiayou/projects/ --port 8811`
+
+### streamable http
+- `docker run -d --name mcp-server --network lobehub_lobe-network -p 3001:3001 node:24-alpine npx -y @modelcontextprotocol/server-everything streamableHttp`

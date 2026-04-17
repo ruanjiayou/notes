@@ -1,0 +1,14 @@
+FROM node:24-alpine
+
+WORKDIR /projects
+
+# 还是安装比较好,启动更快速
+RUN npm install -g @j0hanz/filesystem-mcp@latest
+
+# 暴露端口（Streamable HTTP 默认端口）
+EXPOSE 8811
+
+# 启动
+CMD ["filesystem-mcp", "--allow-cwd", "/projects", "--port", "8811"]
+
+# docker run -d --name mcp-filesystem -p 8811:8811 -e FILESYSTEM_MCP_API_KEY=123456 -e FILESYSTEM_MCP_HTTP_HOST=0.0.0.0 mcp-filesystem:v2 -v /Users/jiayou/projects/:/projects

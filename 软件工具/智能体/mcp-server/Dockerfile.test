@@ -1,0 +1,10 @@
+FROM node:24-alpine
+
+# 安装 MCP server-everything 包
+RUN npm install -g @modelcontextprotocol/server-everything
+
+# 暴露端口（Streamable HTTP 默认端口）
+EXPOSE 3001
+
+# 启动命令：使用 streamableHttp 模式
+CMD ["npx", "-y", "@modelcontextprotocol/server-everything", "streamableHttp"]
