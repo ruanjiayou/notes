@@ -16,7 +16,7 @@ import sequelize, { Sequelize } from 'sequelize';
     },
   });
   await client.connect();
-  const db = mongoose.createConnection('mongodb://root:fengshows@10.0.15.240:27017/fengshows?authSource=admin=readPreference=primaryPreferred');
+  const db = mongoose.createConnection('mongodb://root:123456@10.0.15.240:27017/db?authSource=admin=readPreference=primaryPreferred');
   const MResource = db.model('video_info', new mongoose.Schema({ _id: String }, { collection: 'video_info', strict: false }));
 
   /**
