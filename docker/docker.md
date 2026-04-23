@@ -1,6 +1,13 @@
 # docker
 
-常用命令
+## 版本
+- debian: 标准版,包含完整工具链(glibc)和大量预装库和文档,臃肿.使用apt/bash
+- debian-slim: 瘦身.保持debian的稳定性又小巧,使用apt/bash/sh
+- alpine: 基于musl(非glibc)和busybox,极小.使用apk/sh
+- distroless: 极致安全,没有shell/包管理器.
+
+
+## 常用命令
 --------
 
 [docker 命令大全](http://www.runoob.com/docker/docker-command-manual.html)

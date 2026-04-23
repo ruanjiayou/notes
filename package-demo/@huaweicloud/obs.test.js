@@ -182,31 +182,6 @@ const part_fail = {
     }
   }
 }
-async function getProjectId(ak, sk, region) {
-  // 初始化IAM客户端，使用默认区域
-  const iamClient = IamClient.newBuilder()
-    .withCredential(new BasicCredentials().withAk(ak).withSk(sk))
-    .withEndpoint(`https://iam.${region}.myhuaweicloud.com`)
-    // .withRegion(region)
-    .build();
-
-  try {
-    const request = new KeystoneListProjectsRequest();
-    const response = await iamClient.keystoneListProjects(request);
-    if (!response.projects || response.projects.length === 0) {
-      throw new Error('未找到任何项目，请检查AK/SK权限');
-    }
-
-    // 3. 通常返回第一个项目，或者根据名称筛选
-    const projects = response.projects;
-    console.log('获取到的项目信息:', projects.filter(p => p.name === 'ap-southeast-3'));
-
-    return;
-  } catch (error) {
-    console.error('获取项目ID失败:', error);
-    throw error;
-  }
-}
 
 async function createTranscodeByTemplateGroup() {
   const client = MpcClient.newBuilder()
@@ -332,11 +307,11 @@ async function queryThumbnailTask() {
     // await createThumbnail()
     // await queryThumbnailTask();
 
-    // const obsClient = new ObsClient({
-    //   access_key_id: ak,
-    //   secret_access_key: sk,
-    //   server: `https://obs.${region}.myhuaweicloud.com`,
-    // });
+    const obsClient = new ObsClient({
+      access_key_id: ak,
+      secret_access_key: sk,
+      server: `https://obs.${region}.myhuaweicloud.com`,
+    });
     // obsClient.deleteObject({
     //   Bucket: bucket, Key: 'mp/temp-test/21c5de80-8704-11f0-b046-bb761fc628be.jpg',
     // }, (result, err) => {

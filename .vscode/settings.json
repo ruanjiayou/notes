@@ -1,4 +1,4 @@
 {
-  "javascript.preferences.importModuleSpecifierEnding": "js",
-  "javascript.updateImportsOnFileMove.enabled": "always"
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "editor.tabSize": 2
 }
