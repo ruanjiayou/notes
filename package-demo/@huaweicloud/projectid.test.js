@@ -1,11 +1,11 @@
 const { IamClient, KeystoneListProjectsRequest } = require('@huaweicloud/huaweicloud-sdk-iam');
 const { BasicCredentials } = require('@huaweicloud/huaweicloud-sdk-core');
 
-const ak = ''
-const sk = ''
-const endpoint = 'obs.ap-southeast-3.myhuaweicloud.com';
-const bucket = '';
-const region = 'ap-southeast-3';
+const ak = process.env.huawei_sg_ak
+const sk = process.env.huawei_sg_sk;
+const project_id = process.env.huawei_sg_project_id;
+const bucket = process.env.huawei_sg_bucket;
+const region = process.env.huawei_sg_region;
 
 async function getProjectId(ak, sk, region) {
   // 初始化IAM客户端，使用默认区域
@@ -32,3 +32,5 @@ async function getProjectId(ak, sk, region) {
     throw error;
   }
 }
+
+console.log(await getProjectId(ak, sk, region));

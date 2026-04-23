@@ -1,17 +1,11 @@
-const { IamClient, KeystoneListProjectsRequest } = require('@huaweicloud/huaweicloud-sdk-iam');
 const { BasicCredentials } = require('@huaweicloud/huaweicloud-sdk-core');
 const { MpcClient, CreateTranscodingTaskRequest, CreateThumbnailsTaskRequest, ListTranscodingTaskRequest, ListThumbnailsTaskRequest } = require('@huaweicloud/huaweicloud-sdk-mpc');
-const ObsClient = require('esdk-obs-nodejs');
-const util = require('util');
-const fs = require('fs');
 
-const ak = ''
-const sk = ''
-const project_id = '';//'0710ad3b8f80260b0f2dc0083dd6d480'
-const endpoint = 'obs.ap-southeast-3.myhuaweicloud.com';
-const bucket = '';
-const region = 'ap-southeast-3';
-
+const ak = process.env.huawei_sg_ak
+const sk = process.env.huawei_sg_sk;
+const project_id = process.env.huawei_sg_project_id;
+const bucket = process.env.huawei_sg_bucket;
+const region = process.env.huawei_sg_region;
 
 const part_fail = {
   "event_type": "TranscodeComplete",
@@ -301,7 +295,6 @@ async function queryThumbnailTask() {
 
 (async () => {
   try {
-    // const resp = await getProjectId(ak, sk, region);
     await createTranscodeByTemplateGroup();
     // await queryTaskDetail(5294)
     // await createThumbnail()

@@ -1,11 +1,11 @@
 const { BasicCredentials, } = require('@huaweicloud/huaweicloud-sdk-core');
 const { MpcClient, CreateTranscodingTaskRequest, CreateTranscodingReq, CreateThumbnailsTaskRequest, WatermarkRequest, ImageWatermark, CreateExtractTaskRequest, CreateExtractTaskReq, ObsObjInfo } = require('@huaweicloud/huaweicloud-sdk-mpc');
 
-const ak = ''
-const sk = ''
-const project_id = '';
-const bucket = 'fengshows-media-prod';
-const region = 'ap-southeast-3';
+const ak = process.env.huawei_sg_ak
+const sk = process.env.huawei_sg_sk;
+const project_id = process.env.huawei_sg_project_id;
+const bucket = process.env.huawei_sg_bucket;
+const region = process.env.huawei_sg_region;
 
 // 配置客户端
 const credential = new BasicCredentials().withAk(ak).withSk(sk).withProjectId(project_id);

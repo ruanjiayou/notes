@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 // 在实例化的时候填入自己的socks地址
 // const agent = new SocksProxyAgent('socks://192.168.0.125:8889')
-const token = '';
+const token = process.env.tg_token;
 
 const bot = new TelegramBot(token, {
   polling: true,

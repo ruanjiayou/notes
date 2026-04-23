@@ -3,12 +3,12 @@ const { BasicCredentials, } = require('@huaweicloud/huaweicloud-sdk-core');
 const { LiveClient, ShowTranscodingsTemplateRequest, ListPublishTemplateRequest, CreateTranscodingsTemplateRequest, StreamTranscodingTemplate, CreateRecordCallbackConfigRequest, RecordCallbackConfigRequest, CreateRecordRuleRequest, RecordRuleRequest, ListRecordCallbackConfigsRequest, ListRecordRulesRequest, RunRecordRequest, RecordControlInfo, UpdateRecordRuleRequest, UpdateStreamForbiddenRequest, StreamForbiddenSetting, UpdateTranscodingsTemplateRequest, DeleteStreamForbiddenRequest, ListStreamForbiddenRequest, ListLiveStreamsOnlineRequest, UpdateRecordCallbackConfigRequest, DefaultRecordConfig, MP4RecordConfig } = require('@huaweicloud/huaweicloud-sdk-live');
 const { MpcClient, CreateTranscodingTaskRequest, CreateTranscodingReq, CreateThumbnailsTaskRequest, WatermarkRequest, ImageWatermark } = require('@huaweicloud/huaweicloud-sdk-mpc');
 
-const ak = ''
-const sk = ''
-const project_id = '';
+const ak = process.env.huawei_sg_ak
+const sk = process.env.huawei_sg_sk;
+const project_id = process.env.huawei_sg_project_id;
 const endpoint = 'https://live.ap-southeast-3.myhuaweicloud.com';
-const bucket = '';
-const region = 'ap-southeast-3';
+const bucket = process.env.huawei_sg_bucket;
+const region = process.env.huawei_sg_region;
 
 // 配置客户端
 const credential = new BasicCredentials().withAk(ak).withSk(sk).withProjectId(project_id);

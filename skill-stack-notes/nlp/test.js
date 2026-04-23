@@ -1,8 +1,8 @@
 const AipSpeechClient = require("baidu-aip-sdk").speech;
 
-const APP_ID = "";
-const API_KEY = "";
-const SECRET_KEY = "";
+const APP_ID = process.env.baidu_speech_appid;
+const API_KEY = process.env.baidu_speech_apikey;
+const SECRET_KEY = process.env.baidu_speech_apisecret;
 
 const client = new AipSpeechClient(APP_ID, API_KEY, SECRET_KEY);
 
