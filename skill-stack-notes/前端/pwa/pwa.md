@@ -144,3 +144,4 @@ service-work才是PWA的精髓
 - 进入先进about: blank,再进pwa白屏
 - ios版本.支持11.3,但会自动刷新.12.0不会
 - ios的50M限制?缓存数量时间可以控制
+- ios的pwaw桌面icon必须通过<link rel="apple-touch-icon">标签添加,所以只能是png格式
