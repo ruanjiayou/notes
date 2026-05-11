@@ -1,3 +1,5 @@
 /**/node_modules/
 test/
 **/.Ds_Store
+.env
+docker/ChatTTS-ui

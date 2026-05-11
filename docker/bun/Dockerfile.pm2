@@ -1,0 +1,13 @@
+# 使用最新 Alpine 作为基础镜像
+FROM oven/bun:canary-slim
+
+ENV DATABASE_DIR=file:/projects/database
+
+WORKDIR /projects
+VOLUME ["/projects"]
+
+RUN bun add -g pm2
+
+COPY ecosystem.config.js test.ts ./
+
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
