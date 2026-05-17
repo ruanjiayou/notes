@@ -3,7 +3,7 @@
 ## svg导入
 - tsconfig的types添加"vite-plugin-svgr/client"
 
-## 引入外部的相同项目
+## 引入外部的相同项目(好像必须是ts项目)
 - `bun add @babel/preset-react @babel/preset-typescript @linaria/babel-preset`
 - wyw插件修改: 
   ```js
@@ -23,10 +23,15 @@
 - 其他配置:
   ```js
   {
-    optimizeDeps: {
+    optimizeDeps: {// 强制预构建包含 Linaria 的依赖
       include: [
         'react',
         'react-dom'
+        'user-info',
+        'react-is',
+        'classnames',
+        '@linaria/core',
+        '@linaria/react',
       ],
       // 关键：让 Vite 扫描项目目录外的源码文件，自动发现它们依赖的库
       entries: [

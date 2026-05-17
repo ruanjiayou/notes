@@ -26,3 +26,17 @@
 ## wrangler
 - npm i -g wrangler
 - npm wrangler deploy [project] 
+
+## cdn
+> api刷新cf的cdn
+- 申请token(Permissions的Zone Cache Purge和Zone Resources)
+- 到域名详情页获取zone_id
+- 调用接口
+  ```sh
+  export $(cat .env | xargs)
+  curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+      -H "Authorization: Bearer ${CF_CDN_TOKEN}" \
+      -H "Content-Type: application/json" \
+      --data '{"files":["https://jiayou.work/drawer-menu.js"]}'
+  ```
+  `--data '{"purge_everything": true}'`是删除全部
