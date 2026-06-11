@@ -1,0 +1,26 @@
+FROM alpine:3.19 AS supervisor-builder
+
+# 安装 supervisor 及其依赖
+RUN apk add --no-cache supervisor python3
+
+# 使用最新 Alpine 作为基础镜像
+FROM oven/bun:canary-slim
+
+COPY --from=supervisor-builder /usr/bin/supervisord /usr/bin/supervisord
+COPY --from=supervisor-builder /usr/bin/supervisorctl /usr/bin/supervisorctl
+COPY --from=supervisor-builder /usr/bin/python3* /usr/bin/
+COPY --from=supervisor-builder /usr/lib/python3* /usr/lib/
+COPY --from=supervisor-builder /lib/ld-musl-* /lib/
+COPY --from=supervisor-builder /usr/lib/libpython3* /usr/lib/
+
+ENV DATABASE_DIR=file:/projects/database
+
+WORKDIR /projects
+VOLUME ["/projects"]
+
+RUN apk add --no-cache supervisor
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY test.ts ./
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -1,16 +1,15 @@
 FROM node:24-base
 
-# 安装了curl/vim/chromium/bash/ffmpeg
-
 WORKDIR /cms
 
-VOLUME ["/cms/static"]
+VOLUME ["/cms/static", "/cms/projects"]
 
 ENV PATH="/usr/local/bin:${PATH}"
+ENV static=/cms/static
 ENV NODE_ENV=production
-ENV redis_url=redis://192.168.0.124:6379
+ENV nasip=192.168.0.124
+ENV redis_url=redis://192.168.0.124:6369
 ENV proxy=http://192.168.0.125:8888
-ENV queue_url=http://guest:guest@192.168.0.124:5672
 ENV mongo_url=mongodb://root:123456@192.168.0.124:27017/*?authSource=admin
 
 COPY . .

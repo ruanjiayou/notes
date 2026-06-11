@@ -88,4 +88,5 @@ done
 - 进入容器: `docker exec -ti gogs-git bash`
 - 切换用户: `su - git`
 - 备份: `/app/gogs/gogs backup --config /data/gogs/conf/app.ini --target /app/gogs/backups`
-- 恢复: `/app/gogs/gogs restore --config /data/gogs/conf/app.ini --from /data/backups/gogs-backup.zip /tempdir=/data`.FATAL了还是恢复成功
+- 恢复: `/app/gogs/gogs restore --config /data/gogs/conf/app.ini --from /data/backups/gogs-backup.zip --tempdir /data/tmp`.FATAL了还是恢复成功
+  - 2026-06-09 11:08:56 MySQL版本备份,恢复为sqlite3.先web安装,最后得手动将仓库的压缩文件解压过去.

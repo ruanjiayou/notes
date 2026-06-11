@@ -369,3 +369,4 @@ services:
     Environment="NO_PROXY=localhost,127.0.0.1"
     ```
   - sudo systemctl daemon-reload && sudo systemctl restart docker
+  - 使用代理: `docker build --build-arg http_proxy=  . -t`

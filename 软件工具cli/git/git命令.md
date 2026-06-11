@@ -170,3 +170,7 @@ git push
 ### 自定义域名
 - 需要github page上设置要解析的域名。不然dns设置的不生效
 - 关于test子域名，TXT类型和CNAME的冲突。改为CNAME的简单可靠。
+
+### npm无法安装git的包
+- git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+- git config --global url."https://github.com/".insteadOf "git@github.com:"

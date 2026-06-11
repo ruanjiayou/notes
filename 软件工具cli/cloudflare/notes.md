@@ -21,7 +21,8 @@
       service: http://localhost:8080
     - service: http_status:404
   ```
-- 运行: cloudflared tunnel run [name]
+- 查询: `cloudflared tunnel list`
+- 运行: `cloudflared tunnel run [name]`
 
 ## wrangler
 - npm i -g wrangler
