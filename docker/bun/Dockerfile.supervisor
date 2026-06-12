@@ -1,26 +1,47 @@
-FROM alpine:3.19 AS supervisor-builder
+# 1. 临时用一下官方的 bun 镜像（只为了拿它的二进制文件）
+FROM oven/bun:debian AS bun-provider
 
-# 安装 supervisor 及其依赖
-RUN apk add --no-cache supervisor python3
+# 2. 主镜像采用官方的 Node.js 精简版（自带完整、纯正、指定版本的 node/npm）
+FROM node:22-slim
 
-# 使用最新 Alpine 作为基础镜像
-FROM oven/bun:canary-slim
+# 设置环境变量
+ENV DEBIAN_FRONTEND=noninteractive
 
-COPY --from=supervisor-builder /usr/bin/supervisord /usr/bin/supervisord
-COPY --from=supervisor-builder /usr/bin/supervisorctl /usr/bin/supervisorctl
-COPY --from=supervisor-builder /usr/bin/python3* /usr/bin/
-COPY --from=supervisor-builder /usr/lib/python3* /usr/lib/
-COPY --from=supervisor-builder /lib/ld-musl-* /lib/
-COPY --from=supervisor-builder /usr/lib/libpython3* /usr/lib/
+# 从第一阶段把 bun 的执行文件直接复制过来
+COPY --from=bun-provider /usr/local/bin/bun /usr/local/bin/bun
 
+# 安装 Vim 和 Supervisor（Node 的 slim 镜像很干净，也没有预装这些）
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    vim \
+    supervisor \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo "alias sc='supervisorctl'" >> /root/.shrc
+
+# 验证环境：此时你拥有了最纯正的 Node v22 和超快的 Bun
+RUN echo "=== 环境检查 ===" && node -v && npm -v && bun -v && supervisord -v
+
+# 设置工作目录，等待你的外部代码挂载到这里
+WORKDIR /app
+# /app/static
+# /app/projects
+# /app/database
+# /app/downloads
+# /app/supervisord.conf
+VOLUME ["/app/projects", "/app/supervisord.conf"]
+
+ENV ENV=/root/.shrc
+
+ENV STATIC_DIR=/static
+ENV DOWNLOAD_DIR=/downloads
 ENV DATABASE_DIR=file:/projects/database
+ENV redis_url=
+ENV mongo_url=
+ENV NODE_ENV=production
+ENV proxy=
 
-WORKDIR /projects
-VOLUME ["/projects"]
-
-RUN apk add --no-cache supervisor
-
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY test.ts ./
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+COPY test.ts ./test.ts
+# 容器启动入口：使用前台模式运行 Supervisord
+# 注意：你需要把主 supervisord.conf 挂载到 /app/supervisord.conf
+CMD ["/usr/bin/supervisord", "-c", "/app/supervisord.conf"]
