@@ -17,10 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo "alias sc='supervisorctl'" >> /root/.shrc
-
-# 验证环境：此时你拥有了最纯正的 Node v22 和超快的 Bun
-RUN echo "=== 环境检查 ===" && node -v && npm -v && bun -v && supervisord -v
+RUN ln -s /usr/bin/supervisorctl /usr/local/bin/sc
 
 # 设置工作目录，等待你的外部代码挂载到这里
 WORKDIR /app
@@ -31,15 +28,13 @@ WORKDIR /app
 # /app/supervisord.conf
 VOLUME ["/app/projects", "/app/supervisord.conf"]
 
-ENV ENV=/root/.shrc
-
-ENV STATIC_DIR=/static
-ENV DOWNLOAD_DIR=/downloads
-ENV DATABASE_DIR=file:/projects/database
-ENV redis_url=
-ENV mongo_url=
 ENV NODE_ENV=production
-ENV proxy=
+ENV static_dir=/static
+ENV download_dir=/downloads
+ENV database_dir="file:/app/database"
+ENV redis_url="redis://redis:6379"
+ENV mongo_url="mongodb://root:123456@mongo:27017/*?authSource=admin"
+ENV proxy="http://192.168.0.125:8888"
 
 COPY test.ts ./test.ts
 # 容器启动入口：使用前台模式运行 Supervisord
