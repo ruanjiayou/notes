@@ -177,7 +177,7 @@ echo '已停止'
 - 
 
 ## plugins
-- 安装繁简插件: `./bin/elasticsearch-plugin -install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
+- 安装繁简插件(新部署的项目必须清空plugins文件夹手动安装): `./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.13.2/elasticsearch-analysis-stconvert-7.13.2.zip`
 - 
 ## 参考
 - IK 分词器: https://segmentfault.com/a/1190000017215854

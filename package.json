@@ -28,6 +28,7 @@
     "diff": "^7.0.0",
     "easywasmplayer": "^1.0.6",
     "esdk-obs-nodejs": "3.25.6",
+    "etcd3": "^1.1.2",
     "eventproxy": "^1.0.0",
     "excel-export": "^0.5.1",
     "exceljs": "^4.4.0",

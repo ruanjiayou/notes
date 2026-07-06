@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: minio
+    ports:
+      - "9000:9000"   # S3 API 端口
+      - "9090:9090"   # Web 控制台端口
+    environment:
+      MINIO_ROOT_USER: 2048
+      MINIO_ROOT_PASSWORD: 12345678
+    volumes:
+      # 关键：将SSD路径映射到容器内
+      - ./minio_data:/data
+    command: server /data --console-address ":9090"
+    restart: unless-stopped
