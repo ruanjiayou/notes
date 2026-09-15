@@ -69,3 +69,11 @@ $ brew install tree
 
 ## 执行文件全局访问(软连接)
 - ln ~/.bun/bin/bun /usr/local/bin/bun
+
+## 切换WiFi后无法访问10.0.15.240
+```sh
+#!/bin/bash
+sudo route delete 10.0.15.240 2>/dev/null
+sudo route add -host 10.0.15.240 10.0.15.254
+ping -c 2 10.0.15.240
+```

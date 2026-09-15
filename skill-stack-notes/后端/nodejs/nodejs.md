@@ -45,3 +45,11 @@ TODO: .env publish.sh dev.sh
   - `which npm`
   - `sudo ln -s pathtonpm`
   - node同上
+- CentOS 7不支持node18的处理办法
+  - 下载到临时目录: `cd /tmp`, `wget https://unofficial-builds.nodejs.org/download/release/v18.18.0/node-v18.18.0-linux-x64-glibc-217.tar.gz`
+  - 解压: `tar -zxvf node-v18.18.0-linux-x64-glibc-217.tar.gz`
+  - 创建版本文件夹: `mkdir -p ~/.nvm/versions/node/v18.18.0-custom`
+  - `mv node-v18.18.0-linux-x64-glibc-217/* ~/.nvm/versions/node/v18.18.0-custom/`
+  - 切换版本: `nvm use v18.18.0-custom`
+  - 验证版本: `node -v`
+  - 设置为默认版本: `nvm alias default v18.18.0-custom`
