@@ -40,4 +40,11 @@
       -H "Content-Type: application/json" \
       --data '{"files":["https://jiayou.work/drawer-menu.js"]}'
   ```
-  `--data '{"purge_everything": true}'`是删除全部
+ - 清空全部
+  ```sh
+  export $(cat .env | xargs)
+  curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+      -H "Authorization: Bearer ${CF_CDN_TOKEN}" \
+      -H "Content-Type: application/json" \
+      --data '{"purge_everything": true}'
+  ```

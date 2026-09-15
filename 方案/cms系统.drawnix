@@ -1,0 +1,1018 @@
+{
+  "type": "drawnix",
+  "version": 1,
+  "source": "web",
+  "elements": [
+    {
+      "id": "GKWis",
+      "type": "mind",
+      "data": {
+        "topic": {
+          "children": [
+            {
+              "text": "管理系统"
+            }
+          ],
+          "type": "paragraph"
+        }
+      },
+      "children": [],
+      "layout": "right",
+      "points": [
+        [
+          -86.23132953955405,
+          -815.9470976569146
+        ]
+      ]
+    },
+    {
+      "id": "EXYCJ",
+      "type": "mind",
+      "data": {
+        "topic": {
+          "children": [
+            {
+              "text": "内容系统"
+            }
+          ],
+          "type": "paragraph"
+        }
+      },
+      "children": [],
+      "layout": "right",
+      "points": [
+        [
+          -86.23132953955405,
+          -698.9952269312583
+        ]
+      ]
+    },
+    {
+      "id": "DxQwa",
+      "type": "mind",
+      "data": {
+        "topic": {
+          "children": [
+            {
+              "text": "用户系统模块1.0"
+            }
+          ],
+          "type": "paragraph"
+        }
+      },
+      "children": [
+        {
+          "id": "DszbF",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "身份认证"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "XwsTa",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "用户注册"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "pXWGz",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "邮箱验证"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "hAiSG",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "手机验证"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "JPBeK",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "密码强度校验"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "wZfcB",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "用户登录"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "WXMHf",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "账号密码登录"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "NAChT",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "手机验证登录"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "eMtdi",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "第三方登录"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "KfkyC",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "单点登录"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "iEcSp",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "安全认证"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "QnNfG",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "jwt管理"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "PhABr",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "会话管理"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "XKGyx",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "权限验证"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "cNKjF",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "退出"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "jYyzy",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "注销"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "QZktY",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "用户管理"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "Fixha",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "个人信息管理"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "CdQaT",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "基本信息管理"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "DAeEX",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "头像上传"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "PREfm",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "账户安全"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "fxtcZ",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "修改密码"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "sirmx",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "忘记密码"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "SKrEw",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "绑定手机/邮箱"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "HkRkA",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "安全设置"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "NjNpK",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "设备管理"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "YSccw",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "偏好设置"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "GwKpJ",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "通知设置"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "xpfFA",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "隐私设置"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "DETyE",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "界面设置"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "wDipa",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "权限管理"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "HWHKB",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "角色管理"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "bYbrX",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "角色定义"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "KzXii",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "权限分配"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "XxpsE",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "角色继承"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "wjkdm",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "权限控制"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "fmKDm",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "功能权限"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "FGJxM",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "数据权限"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "jxdHp",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "接口权限"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "kpRZh",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "用户组管理"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "ymfEM",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "组权限设置"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "YxFFT",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "组成员管理"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "keRPs",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "社交功能"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "eTChZ",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "关注关系"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "hpBKB",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "添加/取消关注"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "yRsMB",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "粉丝列表"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "BpPyA",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "关注列表"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "yPcYA",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "系统消息"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "XSKNb",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "私信消息"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "nxebT",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "系统通知"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "hRaKc",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "消息推送"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "AWbmt",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "用户互动"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "znSPS",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "点赞"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "ybdyh",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "评论"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "SWsCm",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "分享"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "Apxbc",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "收藏"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "EEaiN",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "历史"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "rbfRE",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "系统监控"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "thHzJ",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "性能监控"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "mGMFs",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "安全审计"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "WtGrn",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "异常检测"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            }
+          ],
+          "isCollapsed": false
+        }
+      ],
+      "layout": "right",
+      "points": [
+        [
+          -86.23132953955405,
+          -578.3009335873753
+        ]
+      ]
+    }
+  ],
+  "viewport": {
+    "zoom": 1.068816067653277,
+    "origination": [
+      -351.3465901419054,
+      -184.2462802057321
+    ]
+  }
+}

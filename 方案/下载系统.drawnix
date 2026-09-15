@@ -1,0 +1,816 @@
+{
+  "type": "drawnix",
+  "version": 1,
+  "source": "web",
+  "elements": [
+    {
+      "id": "TnNcG",
+      "type": "mind",
+      "data": {
+        "topic": {
+          "children": [
+            {
+              "text": "download"
+            }
+          ],
+          "type": "paragraph"
+        }
+      },
+      "children": [
+        {
+          "id": "yzQDa",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "✅ 媒体下载"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "xEMbn",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "⬜️ 创建媒体任务并执行\n"
+                    },
+                    {
+                      "text": "自动填充参数 transcode可选 filepath必传(转为fullpath)",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "KZFWb",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ image"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 62.2831905559251
+                },
+                {
+                  "id": "AkkGw",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ video"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 57.49412805592465
+                },
+                {
+                  "id": "JSxfW",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ dlp"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 58.50140281809581
+                },
+                {
+                  "id": "Zzkpr",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ m3u8"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 60.25706436678047
+                },
+                {
+                  "id": "pTiNC",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "🟩gallery"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 62.26409813059581
+                },
+                {
+                  "id": "aBaHK",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "🟩pixiv"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [],
+                  "manualWidth": 59.36907231480791
+                }
+              ],
+              "manualWidth": 205.2060266292924,
+              "isCollapsed": false
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "WXSQA",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "✅ 任务管理"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "Dyhtw",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ create 创建任务\n"
+                    },
+                    {
+                      "text": "auto参数:自动执行",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "mafKS",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ download-file"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "syyjZ",
+                      "type": "mind_child",
+                      "data": {
+                        "topic": {
+                          "children": [
+                            {
+                              "text": "_id可选生成task不能同步到媒体,供手工用\n"
+                            },
+                            {
+                              "text": "无transcode和sync参数",
+                              "color": "#FF4500ff"
+                            }
+                          ],
+                          "type": "paragraph"
+                        }
+                      },
+                      "children": [],
+                      "strokeColor": "#FFD700"
+                    }
+                  ],
+                  "manualWidth": 125.75390625,
+                  "strokeColor": "#FFD700"
+                },
+                {
+                  "id": "PyYQM",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ download-dlp"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "BCGsC",
+                      "type": "mind_child",
+                      "data": {
+                        "topic": {
+                          "children": [
+                            {
+                              "text": "下载youtube和bilibili等"
+                            }
+                          ],
+                          "type": "paragraph"
+                        }
+                      },
+                      "children": [],
+                      "manualWidth": 253.923828125
+                    }
+                  ],
+                  "manualWidth": 126.134765625
+                },
+                {
+                  "id": "KWsKC",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ download-image"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "SJGdE",
+                      "type": "mind_child",
+                      "data": {
+                        "topic": {
+                          "children": [
+                            {
+                              "text": "验证完整性"
+                            }
+                          ],
+                          "type": "paragraph"
+                        }
+                      },
+                      "children": [],
+                      "manualWidth": 251
+                    }
+                  ],
+                  "manualWidth": 130.4290508490135
+                },
+                {
+                  "id": "RXHNM",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ download-video"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "kfrjQ",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ download-m3u8"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "kpAMD",
+                      "type": "mind_child",
+                      "data": {
+                        "topic": {
+                          "children": [
+                            {
+                              "text": "下载并解析m3u8再下载ts\n"
+                            },
+                            {
+                              "text": "download-ts子任务",
+                              "color": "#FF4500ff"
+                            }
+                          ],
+                          "type": "paragraph"
+                        }
+                      },
+                      "children": [],
+                      "manualWidth": 252.0751953125
+                    }
+                  ],
+                  "manualWidth": 127.3447265625
+                },
+                {
+                  "id": "jZMGt",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "🟩 download-gallery"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "wieiQ",
+                      "type": "mind_child",
+                      "data": {
+                        "topic": {
+                          "children": [
+                            {
+                              "text": "漫画章节对应多个图片\n"
+                            },
+                            {
+                              "text": "TODO:不能调用download-image,有sync",
+                              "color": "#FF4500ff"
+                            }
+                          ],
+                          "type": "paragraph"
+                        }
+                      },
+                      "children": [],
+                      "manualWidth": 253.03515625
+                    }
+                  ]
+                },
+                {
+                  "id": "ttNey",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "🟩download-pixiv"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "id": "WZwhA",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "✅ transcode-video"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": [
+                    {
+                      "id": "WCkAk",
+                      "type": "mind_child",
+                      "data": {
+                        "topic": {
+                          "children": [
+                            {
+                              "text": "url/fullpath必要; _id/sync非必要"
+                            }
+                          ],
+                          "type": "paragraph"
+                        }
+                      },
+                      "children": []
+                    }
+                  ],
+                  "manualWidth": 128.296875
+                },
+                {
+                  "id": "Dzwcf",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "❌️ transcode-audio"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "manualWidth": 124.9013671875,
+              "isCollapsed": false
+            },
+            {
+              "id": "FRjfw",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ list 任务列表"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "tCYCx",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "参数: status/queue/search/search_type/page/page_size"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "manualWidth": 124.5234375
+            },
+            {
+              "id": "cdFRz",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ destroy 删除任务"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "rCDCP",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "m3u8类型会先清理缓存"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "NhQHj",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "🟩 start 开始任务"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [
+                {
+                  "id": "zwFFt",
+                  "type": "mind_child",
+                  "data": {
+                    "topic": {
+                      "children": [
+                        {
+                          "text": "状态和队列判断; 重新加入队列修改任务"
+                        }
+                      ],
+                      "type": "paragraph"
+                    }
+                  },
+                  "children": []
+                }
+              ],
+              "manualWidth": 124.4765625
+            },
+            {
+              "id": "ZXTaZ",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ info 任务详情"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 120.9560546875
+            },
+            {
+              "id": "zhWSy",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ update 修改任务"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "BMPnw",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "🟩 其他"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 124.58867482600044
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "Xdfcm",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "✅ ffmpeg"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "siyEQ",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 获取宽高时长"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 162
+            },
+            {
+              "id": "dbHza",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 获取全部stream信息"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 160.0546875
+            },
+            {
+              "id": "cidmY",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 转码\n"
+                    },
+                    {
+                      "text": "无_id/sync加入队列",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 163.0048828125
+            },
+            {
+              "id": "nfxDM",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 合并音视频文件\n"
+                    },
+                    {
+                      "text": "files[]  filepath",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 164
+            },
+            {
+              "id": "PENks",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 移动到资源目录\nfullpath resource_id"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": [],
+              "manualWidth": 165.296875
+            },
+            {
+              "id": "iwEei",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 获取dlp信息\n"
+                    },
+                    {
+                      "text": "获取分辨率和格式用于下载",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            }
+          ],
+          "isCollapsed": false
+        },
+        {
+          "id": "bPNyY",
+          "type": "mind_child",
+          "data": {
+            "topic": {
+              "children": [
+                {
+                  "text": "✅ 文件管理"
+                }
+              ],
+              "type": "paragraph"
+            }
+          },
+          "children": [
+            {
+              "id": "tbEXj",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 指定目录的文件列表"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "kcpSy",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 指定目录创建文件或文件夹"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "FxQbB",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 删除文件或空文件夹\n"
+                    },
+                    {
+                      "text": "文件夹必须是空的",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "yHEKS",
+              "type": "mind_child",
+              "data": {
+                "topic": {
+                  "children": [
+                    {
+                      "text": "✅ 重命名文件或文件夹\n"
+                    },
+                    {
+                      "text": "name: 重命名 text: 修改内容",
+                      "color": "#FF4500ff"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              },
+              "children": []
+            }
+          ],
+          "isCollapsed": false
+        }
+      ],
+      "layout": "right",
+      "points": [
+        [
+          -2.048828125,
+          -429.5
+        ]
+      ]
+    }
+  ],
+  "viewport": {
+    "zoom": 0.46881606765327694,
+    "origination": [
+      -1500.753773032342,
+      -1610.4330063812358
+    ]
+  }
+}
