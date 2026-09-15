@@ -29,12 +29,6 @@ WORKDIR /app
 VOLUME ["/app/projects", "/app/supervisord.conf"]
 
 ENV NODE_ENV=production
-ENV static_dir=/static
-ENV download_dir=/downloads
-ENV database_dir="file:/app/database"
-ENV redis_url="redis://redis:6379"
-ENV mongo_url="mongodb://root:123456@mongo:27017/*?authSource=admin"
-ENV proxy="http://192.168.0.125:8888"
 
 COPY test.ts ./test.ts
 # 容器启动入口：使用前台模式运行 Supervisord

@@ -1,0 +1,34 @@
+FROM oven/bun:1.4.2-slim AS runner
+
+# 强制系统默认使用 bash 和 256 色终端
+ENV TERM=xterm-256color \
+    SHELL=/bin/bash \
+    NODE_ENV=production
+
+WORKDIR /app
+
+RUN 
+
+# 1. 安装 supervisor、vim 和 Playwright Chromium 所需的底层 Debian 依赖
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    supervisor \
+    vim \
+    ca-certificates \
+    curl \
+    ffmpeg \
+    chromium \
+    # 3. 清理缓存
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && mkdir -p /var/log/supervisor /etc/supervisor/conf.d \ 
+    # 别名
+    && ln -s /usr/bin/supervisorctl /usr/local/bin/sc \
+    && ln -sf /bin/bash /bin/sh
+
+COPY test.ts /app/test.ts
+COPY supervisord.conf /app/supervisord.conf
+
+VOLUME ["/app/projects"]
+EXPOSE 3000
+
+CMD ["/usr/bin/supervisord", "-c", "/app/supervisord.conf"]

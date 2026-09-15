@@ -341,9 +341,10 @@ class FilterListCache {
     // 要取的zset列表是否存在.
     if (await this.#client.exists(key_sub)) {
       logger.debug('存在则直接查找')
+      console.log(cursor, 'cursor')
       const ids = cursor
         ? await this.#client.zRangeByScore(key_sub, cursor, '+inf', { LIMIT: { offset: 0, count: limit } })
-        : await this.#client.zRange(key_sub, (page - 1) * limit, page * limit - 1, { REV: true });
+        : await this.#client.zRange(key_sub, 0, Date.now(), 0);
       return ids;
     }
     if (await this.#client.exists(`empty:${key_sub}`) || await this.#client.exists(`syncing:${key_sub}`)) {

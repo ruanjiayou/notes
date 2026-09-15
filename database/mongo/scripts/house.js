@@ -45,7 +45,7 @@ function getList(html) {
         if (i > 1) {
             const tds = $(e).find('td');
             const href = $(tds[0]).find('a').attr('href');
-            const _id = new URL('http://218.200.147.160:83/' + href).searchParams.get('DevProjectId');
+            const _id = new URL('http://111.46.195.26:83/' + href).searchParams.get('DevProjectId');
             results.push({
                 name: $(tds[0]).text().trim(),
                 _id,
@@ -59,7 +59,7 @@ function getList(html) {
     return results;
 }
 async function getDetail(_id) {
-    const resp = await got.get(`http://218.200.147.160:83/Pub_lpxx.aspx?DevProjectId=${_id}`);
+    const resp = await got.get(`http://111.46.195.26:83/Pub_lpxx.aspx?DevProjectId=${_id}`);
     if (resp.statusCode === 200) {
         const $ = cheerio.load(resp.body, { decodeEntities: true });
         const main_table = $('table').eq(4);
@@ -123,7 +123,7 @@ async function getDetail(_id) {
 }
 ; (async () => {
     for (let page = pages; page <= pages; page++) {
-        const resp = await got.get('http://218.200.147.160:83/More_xm.aspx?page=' + page, { encoding: 'utf-8' });
+        const resp = await got.get('http://111.46.195.26:83/More_xm.aspx?page=' + page, { encoding: 'utf-8' });
         const items = getList(resp.body);
         console.log('page: ' + page + ' items: ' + items.length);
         if (items.length) {

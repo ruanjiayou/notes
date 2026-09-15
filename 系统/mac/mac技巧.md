@@ -1,5 +1,5 @@
-
 ## mac命令(有不同于Linux的)
+
 - 查看TCP进程:(linux中用netstat)
   ```bash
   lsof -nP -iTCP -sTCP:LISTEN
@@ -10,8 +10,11 @@
 - 查看环境变量: `echo $PATH`
 
 ## 清除dns缓存
+
 - `sudo killall -HUP mDNSResponder`
+
 ## mac技巧
+
 - vscode+homebrew+node.js+git+docker(mysql+redis)+item2+zsh
 - docker和docker-compose安装: brew install就可以
 - 打开终端执行：/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -27,6 +30,7 @@
 - 剪切: 源 cmd+c 目标: cmd+alt+v
 
 ## 添加系统命令别名
+
 ```sh
 vim ~/.bash_profile
 >> alias [xxx]='[yyy]' (如: `dev="cd ~/projects/notes/proxy && node app.js"`)
@@ -35,42 +39,49 @@ alias
 ```
 
 ## 查找所有 node_modules 文件夹
+
 - `find /Users/jiayou/projects -name "node_modules" -type d -prune -print -exec du -sh {} \;`
 
 ## Mac安装mysql
-之前安装了homebrew: 
+
+之前安装了homebrew:
+
 1. brew install mysql
 2. brew services start mysql
 3. /usr/local/opt/mysql/bin/mysql_secure_installation
-4.
+4. 
 
-问题: 
+问题:
   1.navicat能连,但nodejs报错 1251,Client does not support authentication protocol
 进入数据库mysql表:alter user '用户名'@localhost IDENTIFIED WITH mysql_native_password by '你的密码’;flush privileges;
 
 centos导入.sql文件:
 执行:  mysql -u root -p 数据库名称 < sql文件的路径
 Access denied for user ''@'localhost' to database 'mysql’: 因为有匿名账号
+
 1. 关闭mysql: service mysqld stop
 2. 屏蔽权限守护启动: mysqld_safe —skip-grant-table
 3. 另起终端,删除匿名的user记录,刷新权限
 
 ## tree
+
 ```bash
 $ brew install tree
 ```
 
 ## 解压rar
+
 - brew install unrar
 - unrar x path-to-file
-
 - ## 导出插件
 - Mac: `cd ~/Library/Application Support/Google/Chrome/Default/Extensions`
 
 ## 执行文件全局访问(软连接)
+
 - ln ~/.bun/bin/bun /usr/local/bin/bun
 
 ## 切换WiFi后无法访问10.0.15.240
+
 ```sh
 #!/bin/bash
 sudo route delete 10.0.15.240 2>/dev/null

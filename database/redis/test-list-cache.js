@@ -2,6 +2,7 @@ import Redis from 'redis'
 import mongoose from 'mongoose';
 import FilterListCache from './filter-list-cache.js'
 import sequelize, { Sequelize } from 'sequelize';
+import { v1 } from 'uuid'
 
 /**
  * 第一次执行，查询数据库直接返回并异步建立全量列表
@@ -12,11 +13,12 @@ import sequelize, { Sequelize } from 'sequelize';
   const client = Redis.createClient({
     socket: {
       host: '10.0.15.240',
-      port: 6379
+      port: 6379,
+      timeout: 1,
     },
   });
   await client.connect();
-  const db = mongoose.createConnection('mongodb://root:123456@10.0.15.240:27017/db?authSource=admin=readPreference=primaryPreferred');
+  const db = mongoose.createConnection('mongodb://root:fengshows@10.0.15.240:27017/db?authSource=admin=readPreference=primaryPreferred');
   const MResource = db.model('video_info', new mongoose.Schema({ _id: String }, { collection: 'video_info', strict: false }));
 
   /**
@@ -34,40 +36,49 @@ import sequelize, { Sequelize } from 'sequelize';
   }
 
   async function testBuildMongo() {
-    const total = await MResource.countDocuments();
-    console.log(total)
     console.time('request')
-    const CacheManager = new FilterListCache(client);
-    let ids = await CacheManager.paginate('user:v5:user:admin:history', ['video'], { page: 1, limit: 20 });
-    if (ids === null) {
-      // 冷启动 page=1
-      ids = (await MResource.find({}).sort({ modified_time: -1 }).limit(20).lean(true)).map(v => v._id);
-      CacheManager
-        .buildAllMongo(MResource, 'user:v5:user:admin:history', {}, ['modified_time', 'resource_type', '_id'])
-        .then(() => {
-          console.log('finished')
-        })
-        .catch(e => {
-          console.log(e)
-        });
+    try {
+      const CacheManager = new FilterListCache(client);
+      let ids = await CacheManager.paginate('user:v5:user:admin:history', ['video'], { page: 1, limit: 20 });
+      if (ids === null) {
+        // 冷启动 page=1
+        ids = (await MResource.find({}).sort({ modified_time: -1 }).limit(20).lean(true)).map(v => v._id);
+        CacheManager
+          .buildAllMongo(MResource, 'user:v5:user:admin:history', {}, ['modified_time', 'resource_type', '_id'])
+          .then(() => {
+            console.log('finished')
+          })
+          .catch(e => {
+            console.log(e)
+          });
+      }
+      console.log(ids)
+      const results = await batch(ids.map(v => v.split('_').reverse()), 'video')
+      console.log(results)
+    } catch (err) {
+      console.log(err)
     }
-    console.log(ids)
-    const results = await batch(ids.map(v => v.split('_').reverse()), 'video')
-    console.log(results)
     console.timeEnd('request')
 
   }
   // 测试 冷启动全量缓存并提前返回 --> 重建子zset并提前返回 -> 直接zset分页
   // testBuildMongo();
+  // console.log('start')
+  // for (let i = 0; i < 3000; i++) {
+  //   await client.zAdd('user:v5:user:admin:history', { value: `${['video', 'article', 'awhile', 'ticker'][i % 3]}_${v1()}`, score: i });
+  // }
+  // console.log('end')
 
   // 测试发布
   async function testPublish(action) {
     const CacheManager = new FilterListCache(client);
     await CacheManager.publish('user:v5:user:admin:history', 'video_test', Date.now(), action)
   }
-  await testPublish(0); await testBuildMongo();
+  // await testPublish(0); 
+  await testBuildMongo();
+
   // process.exit(0);
-  
+
 })();
 
 // 本地测试
