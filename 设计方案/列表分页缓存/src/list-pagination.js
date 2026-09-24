@@ -35,11 +35,11 @@
  *   单类型组合里 type 后缀是常量，排序仍由 id 部分决定，不影响同分定序。
  *
  * 游标（方案 5.1 / 5.3）
- *   base64url({ t, m?, o?, e })
+ *   base64url({ t, m?, o?, e? })
  *     t = items[size].score（探察项 —— 下一条待交付记录），数字；
  *     m / o 仅当 probe.score === anchor.score（页边界落在同分 band 内）时携带：
  *        m = items[size] 的 member（探察项），o = 该 band 内已交付成员累计数；
- *     e = 签发时刻 + ttl（毫秒）。
+ *     e = 签发时刻 + ttl（毫秒），**可选**：缺省则不校验过期，带了才校验（1403）。
  *   **编码在类内、解码在类外**：decodeCursor 由中间件先解析，类只接受 { t, m?, o? }。
  *
  * 读路径：只用 score 区间查询（ZRANGEBYSCORE / ZREVRANGEBYSCORE），不用 rank 系列、也不用 ZRANGE 按下标
@@ -52,12 +52,17 @@
  *   窗口读满且过滤后仍不足 size+1 时按 2 倍放大重读（上限 MAX_SCORE_BAND），
  *   所以 o 被低估只会多读，不会漏。
  *
- * 结束判定（INV-1）
- *   next 为空 ⟺「取不足 size+1 条」且「meta.over === true」。
+ * meta：只有 { total } 一个字段（源库总条数，由 model.count() 得到）
+ *   已缓存条数不落 meta —— 它是 list 尺寸的副本，副本会说谎；每次读顺手 ZCARD 即可。
  *
- * 扩展（方案 7.2 / 7.3）
- *   每次先取 meta 判断，再从 ZSET 尾部（续点）固定取 step 条旧数据并原子写回
- *   ZSET + meta（INV-3），两个 key 同一个 TTL；无锁、不返回 1429。
+ * 结束判定（INV-1）
+ *   next 为空 ⟺「取不足 size+1 条」且「zcard(list) >= meta.total」。
+ *   total = -1（meta 不存在）= 尚未建缓存，先扩展一次再看。
+ *
+ * 扩展（方案 §4）
+ *   从 ZSET 尾部（续点）固定取 step 条旧数据，原子写回 ZSET + meta（INV-3），
+ *   两个 key 同一个 TTL；无锁、不返回 1429。
+ *   total **每次扩展都查** model.count()，所以永不漂移；
  *   首次建立某个组合的缓存时，把组合名写进反向索引，供 publish 使用。
  *
  * 写入侧（方案 7.3 旁路增量，静态方法 publish）
@@ -110,8 +115,8 @@ const defaults = {
     BAD_REQUEST: 1400,       // 参数不合法
     DEPTH_LIMIT: 1401,       // 翻页深度超限，请改用游标
     BAD_CURSOR: 1402,        // 游标非法
-    CURSOR_EXPIRED: 1403,    // 游标已过期，客户端重置到首页
-    INTERNAL: 1500,          // 服务内部错误 / 缓存无法覆盖
+    CURSOR_EXPIRED: 1403,    // 游标已过期（仅当游标带了 e），客户端重置到首页
+    INTERNAL: 1500,          // 源库 / Redis 异常（「缓存够不着」按 INV-4 降级返回，不用它）
   },
 };
 
@@ -119,9 +124,34 @@ const ERRORS = defaults.ERRORS;
 
 const LUA = {
   /**
+   * 读一页 + 取状态（一次往返，items 与 count 是同一时刻的快照）
+   * KEYS[1]=list KEYS[2]=meta KEYS[3]=index
+   * ARGV[1]=命令名('ZREVRANGEBYSCORE'|'ZRANGEBYSCORE') ARGV[2]=边界a ARGV[3]=边界b
+   * ARGV[4]=offset ARGV[5]=count ARGV[6]=ttlSec
+   * 返回 { zcard, total, items }；meta 不存在时 total = -1（尚未建缓存）。
+   * 顺带把三键 TTL 续上（方案 §0 决策 9）。
+   */
+  READ: `
+local ttl = tonumber(ARGV[6])
+if ttl and ttl > 0 then
+  redis.call('EXPIRE', KEYS[1], ttl)
+  redis.call('EXPIRE', KEYS[2], ttl)
+  redis.call('EXPIRE', KEYS[3], ttl)
+end
+local items = redis.call(ARGV[1], KEYS[1], ARGV[2], ARGV[3], 'LIMIT', ARGV[4], ARGV[5], 'WITHSCORES')
+local z = redis.call('ZCARD', KEYS[1])
+local raw = redis.call('GET', KEYS[2])
+local total = -1
+if raw then total = cjson.decode(raw).total end
+return { z, total, items }
+`,
+
+  /**
    * 扩展写回
    * KEYS[1]=list KEYS[2]=meta KEYS[3]=index
-   * ARGV[1]=members(JSON [[member,score],...]) ARGV[2]=over('1'|'') ARGV[3]=ttlSec ARGV[4]=组合名
+   * ARGV[1]=members(JSON [[member,score],...]) ARGV[2]=total ARGV[3]=ttlSec ARGV[4]=组合名
+   * total 由 JS 侧的 model.count() 得到（方案 §0 决策 4：每次扩展都查，total 因此永不漂移）。
+   * 返回 { zcard, total }。
    */
   EXTEND: `
 local n = 0
@@ -131,12 +161,8 @@ if ARGV[1] ~= '' then
     n = n + redis.call('ZADD', KEYS[1], members[i][2], members[i][1])
   end
 end
-local raw = redis.call('GET', KEYS[2])
-local meta = raw and cjson.decode(raw) or {}
-meta.count = redis.call('ZCARD', KEYS[1])
-if ARGV[2] == '1' then meta.over = true end
-if meta.over == nil then meta.over = false end
-redis.call('SET', KEYS[2], cjson.encode(meta))
+local total = tonumber(ARGV[2])
+redis.call('SET', KEYS[2], cjson.encode({ total = total }))
 -- 这个组合有缓存了（幂等）：登记进反向索引，供 publish 找到它。
 redis.call('SADD', KEYS[3], ARGV[4])
 local ttl = tonumber(ARGV[3])
@@ -145,7 +171,7 @@ if ttl and ttl > 0 then
   redis.call('EXPIRE', KEYS[2], ttl)
   redis.call('EXPIRE', KEYS[3], ttl)
 end
-return cjson.encode(meta)
+return { redis.call('ZCARD', KEYS[1]), total }
 `,
 /**
  * __PAGINATION_INCREMENTAL__
@@ -153,8 +179,10 @@ return cjson.encode(meta)
  * ARGV[1]='add'|'del' ARGV[2]=member ARGV[3]=score ARGV[4]=ttlSec
  * 旁路增量：meta 不存在则整体不执行、不创建（方案 7.3）。
  * 返回值：-1 = meta 不存在（未受理）；0 = 受理但无变更；1 = 确实发生变更。
- * **删空也不摘索引**：摘掉后 publish 就再也找不到这个组合，而 meta 还活着（count:0 / over:true），
- * 之后的新增既进不了 list、读路径又认为缓存已到底（over）——列表会一直空到 TTL 过期。
+ * INV-6：total 只在 ZSET **真的变了**（ZADD / ZREM 返回 1）时才 ±1 ——
+ *   偏低会让「zcard >= total」提前成立 -> 截断漏读；偏高只是多扩展一次，是安全方向。
+ * **删空也不摘索引**：摘掉后 publish 就再也找不到这个组合，而 meta 还活着（total:0），
+ * 之后的新增既进不了 list、读路径又认为缓存已到底 —— 列表会一直空到 TTL 过期。
  * 空组合留在索引里的代价只是一次空转的 eval，换来的却是「删干净后还能接住新增」。
  */
   CHANGE: `
@@ -164,12 +192,12 @@ local meta = cjson.decode(raw)
 local changed = 0
 if ARGV[1] == 'add' then
   changed = redis.call('ZADD', KEYS[1], ARGV[3], ARGV[2])
-  if changed == 1 then meta.count = (meta.count or 0) + 1 end
+  if changed == 1 then meta.total = (meta.total or 0) + 1 end
 else
   changed = redis.call('ZREM', KEYS[1], ARGV[2])
   if changed == 1 then
-    meta.count = (meta.count or 1) - 1
-    if meta.count < 0 then meta.count = 0 end
+    meta.total = (meta.total or 1) - 1
+    if meta.total < 0 then meta.total = 0 end
   end
 end
 redis.call('SET', KEYS[2], cjson.encode(meta))
@@ -194,6 +222,7 @@ class PaginationError extends Error {
 /**
  * 解析并校验原始游标字符串。
  * 失败一律抛错、绝不降级为首页：格式 / t 不合法 -> 1402，过期 -> 1403。
+ * e 可选：缺省不做过期校验（外部构造 / 长期保存的游标），带了才校验。
  *
  * @param {string} raw 客户端传回的 base64url 串
  * @param {number} [now] 当前时刻（ms），便于测试注入
@@ -214,8 +243,10 @@ function decodeCursor(raw, now = Date.now()) {
   if (typeof p.t !== 'number' || !Number.isFinite(p.t)) {
     throw new PaginationError(ERRORS.BAD_CURSOR, '游标缺少锚点 score（t 必须是数字）');
   }
-  const e = Number(p.e);
-  if (!Number.isFinite(e) || e <= now) throw new PaginationError(ERRORS.CURSOR_EXPIRED, '游标已过期');
+  if (p.e != null) {
+    const e = Number(p.e);
+    if (!Number.isFinite(e) || e <= now) throw new PaginationError(ERRORS.CURSOR_EXPIRED, '游标已过期');
+  }
 
   return {
     t: p.t,
@@ -302,31 +333,60 @@ class ListPagination {
   }
 
   /**
-   * 按 score 区间取数：Z[REV]RANGEBYSCORE key 低 高 LIMIT offset count WITHSCORES。
+   * 读一页 + 取状态：一段 LUA.READ 一次往返拿到「数据 + zcard + total」，顺带续期三键。
+   * 取数用 score 区间（Z[REV]RANGEBYSCORE），不用 rank 系列、也不用 ZRANGE 按下标。
    * 直发命令而不用封装方法：4.6 的 zRangeByScore 不追加 WITHSCORES（拿不到 score）、
-   * 也不认 REV（ZRANGEBYSCORE 命令本身就没有 REV），zRangeByScoreWithScores 同样没有 REV，
-   * 而 zRevRangeByScore 压根没提供；能同时给 score + 倒序的封装只有 ZRANGE BYSCORE REV，
-   * 那要求 Redis >= 6.2，直发这对老命令（1.0.5 起就有）则没有版本要求。
+   * 也不认 REV，zRevRangeByScore 压根没提供；能同时给 score + 倒序的封装只有 ZRANGE BYSCORE REV，
+   * 那要求 Redis >= 6.2，这对老命令（1.0.5 起就有）则没有版本要求。
    * 边界一律按「低 -> 高」给出，倒序时对调（ZREVRANGEBYSCORE 是先大后小）。
-   * 边界写法：'-inf' / '+inf' / 数字 / '(' + 数字（开区间）。
-   * **参数全部 String() 化**：node-redis 的 sendCommand 只收 string / Buffer，数字会直接抛类型错误
-   * （边界常常来自游标的 `t`，是数字，这里必须转）。
+   * **参数全部 String() 化**：Lua 的 ARGV 只收字符串，边界常来自游标的 `t`（数字），这里必须转。
    * 回复是扁平数组 [member, score, ...]，score 是字符串，这里转成数字。
+   *
+   * @param {Cursor} [cur] 游标；为空则是首页全区间
+   * @param {number} size 页大小（恒取 size+1 条，第 size+1 条是探察项）
+   * @param {number} [offset] 页模式的起始下标（游标模式恒 0）
+   * @returns {Promise<{ items: Item[], count: number, total: number }>} total = -1 表示没缓存
    */
-  async _range(low, high, offset, count) {
+  async _read(cur, size, offset = 0) {
     const o = this.opts;
-    const [a, b] = o.rev ? [high, low] : [low, high];
-    const raw = await redis().sendCommand([
-      o.rev ? 'ZREVRANGEBYSCORE' : 'ZRANGEBYSCORE',
-      o.keyList, String(a), String(b), 'LIMIT', String(offset), String(count), 'WITHSCORES',
-    ]);
-    const out = [];
-    for (let i = 0; i < (raw || []).length; i += 2) {
-      const member = String(raw[i]);                     // member 恒为 id_type，按最后一个下划线拆
-      const [id, type] = member.split('_');
-      out.push({ id, type, member, score: Number(raw[i + 1]) });
+    const cmd = o.rev ? 'ZREVRANGEBYSCORE' : 'ZRANGEBYSCORE';
+
+    const take = async (low, high, off, n) => {
+      const [a, b] = o.rev ? [high, low] : [low, high];
+      const [z, total, flat] = await redis().eval(LUA.READ, {
+        keys: [o.keyList, o.keyMeta, o.keyIndex],
+        arguments: [cmd, String(a), String(b), String(off), String(n), String(o.ttl)],
+      });
+      const items = [];
+      for (let i = 0; i < (flat || []).length; i += 2) {
+        const member = String(flat[i]);                   // member 恒为 id_type，按最后一个下划线拆
+        const [id, type] = member.split('_');
+        items.push({ id, type, member, score: Number(flat[i + 1]) });
+      }
+      return { items, count: Number(z), total: Number(total) };
+    };
+
+    // ① 首页：全区间
+    if (!cur) return take('-inf', '+inf', offset, size + 1);
+
+    // ② 无 m（页边界不在 band 内）：闭区间从 t 读起。t 是探察项的 score，而本页已交付成员的 score
+    //    都 > t（否则 probe 会与它们同分，就属于 ③ 了），所以闭区间一条已交付的都带不回来。
+    if (!cur.m) {
+      return o.rev ? take('-inf', cur.t, 0, size + 1) : take(cur.t, '+inf', 0, size + 1);
     }
-    return out;
+
+    // ③ 有 m（页边界落在同分 band 内）：闭区间读回 band 前缀，再按 member 字典序过滤。
+    //    过滤而非按 o 计数跳过：band 内已交付前缀有成员被删时，计数会整体偏移而漏读。
+    const keep = o.rev ? (x) => x.member <= cur.m : (x) => x.member >= cur.m;
+    let span = cur.o + size + 1;                         // o = band 内已交付数，用它收敛窗口
+    for (; ;) {
+      const r = o.rev ? await take('-inf', cur.t, 0, span) : await take(cur.t, '+inf', 0, span);
+      const kept = r.items.filter((x) => x.score !== cur.t || keep(x));
+      if (kept.length > size || r.items.length < span || span >= defaults.MAX_SCORE_BAND) {
+        return { items: kept, count: r.count, total: r.total };
+      }
+      span = Math.min(span * 2, defaults.MAX_SCORE_BAND);   // o 被低估 -> 窗口吃满，放大重读
+    }
   }
 
   /**
@@ -355,40 +415,6 @@ class ListPagination {
     return Buffer.from(JSON.stringify(payload)).toString('base64url');
   }
 
-  /**
-   * 读一页，恒取 n+1 条（第 n+1 条是探察项，只用于判断是否还有下一页）
-   * @param {Cursor} cursor 游标
-   * @param {number} size 分页数量
-   * @returns {Promise<Item[]>}
-   */
-  async _read(cursor, size) {
-    const o = this.opts;
-    const count = size + 1;
-
-    // ① 首页：全区间
-    if (!cursor) return this._range('-inf', '+inf', 0, count);
-
-    // ② 无 m（页边界不在 band 内）：闭区间从 t 读起。t 是探察项的 score，而本页已交付成员的 score
-    //    都 > t（否则 probe 会与它们同分，就属于 ③ 了），所以闭区间一条已交付的都带不回来。
-    if (!cursor.m) {
-      return o.rev
-        ? this._range('-inf', cursor.t, 0, count)
-        : this._range(cursor.t, '+inf', 0, count);
-    }
-
-    // ③ 有 m（页边界落在同分 band 内）：闭区间读回 band 前缀，再按 member 字典序过滤。
-    //    过滤而非按 o 计数跳过：band 内已交付前缀有成员被删时，计数会整体偏移而漏读。
-    const keep = o.rev ? (x) => x.member <= cursor.m : (x) => x.member >= cursor.m;
-    let span = cursor.o + count;                     // o = band 内已交付数，用它收敛窗口
-    for (; ;) {
-      const items = o.rev
-        ? await this._range('-inf', cursor.t, 0, span)
-        : await this._range(cursor.t, '+inf', 0, span);
-      const kept = items.filter((x) => x.score !== cursor.t || keep(x));
-      if (kept.length > size || items.length < span || span >= defaults.MAX_SCORE_BAND) return kept;
-      span = Math.min(span * 2, defaults.MAX_SCORE_BAND);   // o 被低估 -> 窗口吃满，放大重读
-    }
-  }
 
   /**
    * 唯一分页入口：有 cursor 走游标链路，否则走页模式。
@@ -407,35 +433,29 @@ class ListPagination {
   }
 
   /**
-   * 游标链路：先取 meta 判断 -> 读 -> 不足再扩 -> 严格按 INV-1 判结束
-   * @param {Cursor} cur 
-   * @param {number} n 
-   * @returns 
+   * 游标链路：读 -> 不足则扩 -> 重读，直到「取满 size+1」或「zcard >= total」。
+   * 扩展推不动水位线（INV-4）→ 按已有数据返回，绝不谎报到底、也不抛 1500。
+   * @param {Cursor} cur
+   * @param {number} size
+   * @returns {Promise<{ list: Item[], next: string|null, total: number }>}
    */
   async cursor(cur, size = this.opts.size) {
-    let meta = (await this.meta()) || (await this._extend());
-    let items = await this._read(cur, size);
-
-    while (items.length <= size && meta.over !== true) {
-      const before = meta.count;
-      meta = await this._extend();
-      if (meta.count === before) break;                     // 水位线推不动了，避免空转
-      items = await this._read(cur, size);
+    let prev = -1;
+    for (; ;) {
+      const { items, count, total } = await this._read(cur, size);
+      if (items.length > size || (total >= 0 && count >= total)) return this._pack(cur, items, size, total);
+      if (count === prev) return this._pack(cur, items, size, total);   // 推不动（INV-4）
+      prev = count;
+      await this._extend();
     }
-    if (items.length <= size && meta.over !== true) {
-      throw new PaginationError(ERRORS.INTERNAL, '缓存未覆盖到该位置且无法继续扩展');
-    }
-
-    return {
-      list: items.slice(0, size),
-      next: items.length > size ? this._makeCursor(cur, items, size) : null,
-    };
   }
 
   /**
-   * 页模式兼容（方案 6.4）：同样只按 score 取数，不混用 rank 查询
-   * @param {*} param0 
-   * @returns 
+   * 页模式（方案 3.2）：与 cursor 同构，只是取数带 offset，且覆盖目标是 depth。
+   * @param {object} param0
+   * @param {number} [param0.page] 页码，1 起
+   * @param {number} [param0.size] 页大小
+   * @returns {Promise<{ list: Item[], next: string|null, total: number }>}
    */
   async page({ page = 1, size = this.opts.size } = {}) {
     const offset = (page - 1) * size;
@@ -444,18 +464,24 @@ class ListPagination {
     }
     const depth = offset + size + 1;                  // 要读到第 depth 条，缓存至少得覆盖到这里
 
-    // 与 cursor() 同构：先看 meta，覆盖不足则反复 _extend（meta 不存在时 _extend 会从源头建缓存）
-    let meta = await this.meta();
-    while (!meta || (meta.over !== true && Number(meta.count || 0) < depth)) {
-      const before = meta ? Number(meta.count || 0) : -1;
-      meta = await this._extend();
-      if (Number(meta.count || 0) === before) break;      // 水位线推不动，避免空转
+    let prev = -1;
+    for (; ;) {
+      const { items, count, total } = await this._read(null, size, offset);
+      if (items.length > size || (total >= 0 && (count >= depth || count >= total))) {
+        return this._pack(null, items, size, total);
+      }
+      if (count === prev) return this._pack(null, items, size, total);  // 推不动（INV-4）
+      prev = count;
+      await this._extend();
     }
+  }
 
-    const items = await this._range('-inf', '+inf', offset, size + 1);
+  /** 收尾：切掉探察项、按需签游标。取满 size+1 才有 next（INV-1） */
+  _pack(cur, items, size, total) {
     return {
       list: items.slice(0, size),
-      next: items.length > size ? this._makeCursor(null, items, size) : null,
+      next: items.length > size ? this._makeCursor(cur, items, size) : null,
+      total,
     };
   }
 
@@ -463,7 +489,7 @@ class ListPagination {
   // 扩展：从 ZSET 尾部（续点）取固定 step 条旧数据，原子写回 ZSET + meta
   // =========================================================================
   /**
-   * 续点不再存 meta（synced_to 已移除），直接探 ZSET 尾部：
+   * 续点不落 meta（那是 list 状态的副本），直接探 ZSET 尾部：
    * 倒序取 ZRANGE 0 0、升序取 ZREVRANGE 0 0 —— 下标 0 恰是展示序的最后一项
    * （最低 score、同分最小 member），与 keyset 闭区间续取正好衔接。
    * 扩展路径单发一次下标探针，不违反读路径「禁用按下标」的禁令（那管的是跨页 band 一致性）。
@@ -489,18 +515,15 @@ class ListPagination {
     }
 
     const rows = await o.model.findAll({ where, order: o.order, limit: o.step });
+    // total 用**不带续点**的 where：源库里符合该组合的总条数。每次扩展都查，所以永不漂移。
+    const total = await o.model.count({ where: o.where });
     // 源库的 score 字段是时间（MySQL DATETIME -> JS Date），ZSET 的 score 只认数字，所以取毫秒数
     const members = (rows || []).map((r) => [this._member(r), new Date(r[o.fieldScore]).getTime()]);
     const raw = await redis().eval(LUA.EXTEND, {
       keys: [o.keyList, o.keyMeta, o.keyIndex],
-      arguments: [
-        JSON.stringify(members),
-        members.length < o.step ? '1' : '',              // 短页 -> over = true
-        String(o.ttl),
-        o.combo,
-      ],
+      arguments: [JSON.stringify(members), String(total), String(o.ttl), o.combo],
     });
-    return JSON.parse(raw);                              // Lua 恒返回 meta 的 JSON
+    return { count: Number(raw[0]), total: Number(raw[1]) };
   }
 
   // =========================================================================
@@ -522,7 +545,7 @@ class ListPagination {
   static async publish(key, value, score, action = 1, ttl = defaults.TTL_SEC) {
     const prefix = String(key);
     const keyIndex = prefix + ':idx';
-    const [, type] = String(value).split('_');           // 与 _range 同一套拆法：id 不含下划线
+    const [, type] = String(value).split('_');           // 与读路径同一套拆法：id 不含下划线
     const combos = await redis().sMembers(keyIndex);
     const add = action > 0;
     const changed = [];

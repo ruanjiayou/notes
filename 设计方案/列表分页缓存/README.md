@@ -1,6 +1,9 @@
 # 列表分页缓存
 
-按《分页缓存方案.md》实现的列表分页缓存：**游标分页 + Redis ZSET 列表层 + meta 水位线**。
+按《分页缓存方案-v2.md》实现的列表分页缓存：**游标分页 + Redis ZSET 列表层 + meta 只有 `total`**。
+
+到底判定就一条：`zcard(list) >= meta.total`。已缓存条数不落 meta（副本会说谎），每次读顺手 `ZCARD`；
+`total` 由 `model.count()` 得到、每次扩展都刷新，且只准偏高（见 INV-6）。
 
 - Redis 客户端固定 **node-redis v4+**（`npm i redis`），通过 `setConfig({ redis })` 注入一次；
 - 源库 `model` 由 **构造参数** 传入（契约见下，参考实现是 **Sequelize + MySQL**）；测试里用内存版 `MemoryModel` 模拟 `history` 表（无需起数据库）。
@@ -8,14 +11,15 @@
 ```
 列表分页缓存/
 ├── config.js                模块级单例：redis 注入（setConfig / config.redis.instance）
-├── 分页缓存方案.md          设计依据（游标 / 读路径 / meta / 反向索引的规范，与代码同步）
+├── 分页缓存方案-v2.md       设计依据（游标 / 读路径 / meta / 反向索引的规范，与代码同步）
+├── 分页缓存方案.md          v1 文档，已废弃（勿再据此改代码）
 ├── src/
 │   ├── list-pagination.js   核心类 ListPagination + 错误码 + 游标解析（入口 paginate）
 │   └── index.js             导出（ListPagination / decodeCursor / defaults / setConfig）
 └── test/
-    ├── helpers/            sequelize（MemoryModel）/ fake-redis / mock 数据 / 组装工具
+    ├── helpers/            sequelize（MemoryModel）/ test-redis（真机）/ mock 数据 / 组装工具
     ├── key.test.js         key 组成、types→where、member 规则、缺省值、this.opts
-    ├── decode.test.js      decodeCursor：格式 / t / e 的 13 种非法输入
+    ├── decode.test.js      decodeCursor：格式 / t 的非法输入、e 可选（缺省不校验过期）
     ├── cursor.test.js      游标生成：t / m / o 的携带规则、o 累加、REV 方向、滑动续期
     ├── read-path.test.js   翻页、同分、回退分支、INV-1、参数边界
     ├── page-mode.test.js   页模式换算、深度限制、命令清单
@@ -56,7 +60,7 @@ const list = new ListPagination({
 
 // 读：唯一入口 paginate（无 cursor -> 第一页）
 const page = await list.paginate({});
-// -> { list: [{ id, type, member, score }], next: 'xxx' | null }
+// -> { list: [{ id, type, member, score }], next: 'xxx' | null, total: 1234 }
 
 // 下一页：游标由中间件解析后传进来
 const next = await list.paginate({ cursor: decodeCursor(req.query.cursor) });
@@ -86,7 +90,7 @@ const page = await list.paginate({
   cursor: decodeCursor(req.query.cursor),  // 已解析的 { t, m?, o? }
   size: 20,
 });
-// -> { list: [{ id, type, member, score }], next: 'xxx' | null }
+// -> { list: [{ id, type, member, score }], next: 'xxx' | null, total: 1234 }
 
 // 读：页模式（无 cursor 时生效）。page 从 1 开始，offset + size 不能超过 10000
 const p3 = await list.page({ page: 3, size: 20 });
@@ -97,7 +101,7 @@ await ListPagination.publish(key, 'r999_article', score, 1);    // 新增
 await ListPagination.publish(key, 'r999_article', score, -1);   // 删除
 // -> { value, changed: ['all'], stale: [] }
 
-await list.meta();   // -> { count, complete, synced_to } | null
+await list.meta();   // -> { total } | null
 ```
 
 `list` 的元素只返回 `{ id, type, member, score }`，记录详情由调用方按 id 自取。
@@ -130,7 +134,8 @@ app.get('/list', async (req, res) => {
 | 情况                                             | 结果 |
 | ------------------------------------------------ | ---- |
 | 非字符串 / 载荷非 JSON / 非对象 / `t` 不是数字   | 1402 |
-| `e` 缺失、非数字，或 `e <= now`                  | 1403 |
+| 带了 `e` 但非数字，或 `e <= now`                 | 1403 |
+| 不带 `e`                                         | 不校验过期（`e` 是可选字段） |
 
 ## key 与 member
 
@@ -176,7 +181,7 @@ order = [[fieldScore, rev ? 'DESC' : 'ASC'], [fieldId, rev ? 'DESC' : 'ASC']];  
 ## 读路径与结束判定
 
 取数恒为 `n+1` 条：`items[0..n-1]` 交付，`items[n]` 是探察项（只用于判断有无下一页）。
-游标 `base64url({ t, m?, o?, e })`，`t = items[n].score`（探察项 —— 下一条待交付的那条的 score）：
+游标 `base64url({ t, m?, o?, e? })`，`t = items[n].score`（探察项 —— 下一条待交付的那条的 score）：
 
 ```
 首页             -> 全区间                    LIMIT 0 (n+1)
@@ -197,27 +202,42 @@ order = [[fieldScore, rev ? 'DESC' : 'ASC'], [fieldId, rev ? 'DESC' : 'ASC']];  
 - 过滤用 **member 比较**、不用 `o` 计数跳过：band 内已交付前缀有成员被删时计数会整体偏移而漏读；
 - `o` 只用于**收敛窗口**；窗口读满且过滤后仍不足 `n+1` 时按 2 倍放大重读（上限 `MAX_SCORE_BAND = 800`），
   所以 `o` 被低估只会多读，不会漏；
-- **结束判定（INV-1）**：`next` 为空 ⟺「取不足 `n+1` 条」且「`meta.complete === true`」。
-  取不足且未 complete -> 继续扩展；扩展推不动 -> 抛 1500，绝不静默截断；
+- `e` = 签发时刻 + ttl（毫秒），**可选**：缺省不做过期校验，带了才校验（过期 -> 1403）。
+  类签发时照常带 `e`，可选是给外部构造 / 长期保存的游标留的口子；
+- 一次读 = 一段 `LUA.READ`（**一次往返**）：续期三键 + 区间取数 + `ZCARD` + `GET meta`，
+  返回 `{ items, count, total }`，所以「数据」与「已缓存条数」是同一时刻的快照；
+  `total = -1` 表示这个组合还没建缓存；
+- **结束判定（INV-1）**：`next` 为空 ⟺「取不足 `n+1` 条」且「`zcard >= total`」。
+  取不足且 `count < total` -> 继续扩展；
+  **扩展推不动水位线（`zcard` 没变）-> 按已有数据返回，不抛 1500**（INV-4）：
+  那种情况只可能是「源库多了行但没通知缓存」，抛错也拿不回来，只会 500；
 - 页模式同样按 score 取数（`LIMIT offset (size+1)`），换算出的游标可直接接着走游标链路；
-  它和 `cursor()` 一样**先读 `meta`，再在函数里判断**：没有缓存、或 `complete !== true` 且
-  `count < offset+size+1` 就反复 `_extend()`（首次即从源库把缓存建起来），直到覆盖到需要的深度，
-  水位线推不动才停；`offset + size > 10000` 抛 1401。没有独立的 `_ensureDepth()`，逻辑就写在 `page()` 里。
+  它与 `cursor()` 同构，只是覆盖目标是 `depth = offset + size + 1`：`count < depth` 且 `count < total`
+  就反复 `_extend()`（首次即从源库把缓存建起来）；`count >= total` 时即使没到 depth 也停
+  —— 源库就这么多了，不足一页是真实结果；`offset + size > 10000` 抛 1401。
 - `page` 自身**不做**参数校验（按约定归中间件，中间件已保证是 ≥ 1 的整数），类内不再抛 1400；
   若中间件漏了，`page = 0` 会算出负 offset，真 Redis 直接报 `ERR offset is out of range`。
 
 ## 扩展与 meta
 
-每次取数前先读 `meta` 判断：缓存没建立或覆盖不足就扩展 —— 从 `synced_to` 续点固定取 `step` 条，
-一次 Lua 原子写回 ZSET + meta，两个 key 同一个 TTL（4 小时），**无锁、不返回 1429**。
+读出来不够就扩展 —— 从 **ZSET 尾部**续点固定取 `step` 条，一次 Lua 原子写回 ZSET + meta，
+三个 key 同一个 TTL（4 小时），**无锁、不返回 1429**。
 
-`meta = { count, complete, synced_to }`：
+`meta = { total }`（**就一个字段**）：
 
-| 字段        | 说明                                                          |
-| ----------- | ------------------------------------------------------------- |
-| `count`     | 每次扩展由 `ZCARD` 重算（真值）                                |
-| `complete`  | 源库返回短页（不足 `step`）时置 `true`，表示已覆盖到底          |
-| `synced_to` | `{ score, id }`，本批最后一条；`score` 是**毫秒数**，下次从它续取（闭区间，同分按 id 收敛） |
+| 字段    | 说明                                                                  |
+| ------- | --------------------------------------------------------------------- |
+| `total` | 源库里符合该组合的总条数，由 `model.count()` 得到，**每次扩展都刷新** |
+
+两个刻意不落的字段：
+
+- `count`（已缓存条数）—— 它是 list 尺寸的**副本**，副本就会说谎；真值每次读顺手 `ZCARD` 即可（O(1)）；
+- `over`（是否取尽）—— 由 `zcard >= total` 表达。而且 `total` **不住在 list 里**，
+  这正是「list 被淘汰了能被发现」的原因：`over` 那种布尔位在 list 丢失时只会说「已到底」→ 静默返空。
+
+续点不再落 meta：扩展时直接探针 ZSET 尾部
+（倒序 `ZRANGE key 0 0 WITHSCORES`、升序 `ZREVRANGE key 0 0 WITHSCORES`），
+`id` 由 member `split('_')` 拆出 —— 读的就是 ZSET 本身，不存在副本漂移。
 
 扩展的 keyset 续点拼进 `where`（`Op` 来自 `require('sequelize')`）：
 
@@ -229,11 +249,14 @@ const at = new Date(s.score);
              { modified_time: at, res_id: { [Op.lte]: s.id } } ] }
 ```
 
-每次 `_extend()` 都会把组合名幂等地 `SADD` 进反向索引（`keyIndex`），所以 `publish` 删空摘掉过的组合，
-下次被读到时会自动重新登记回来。
+每次 `_extend()` 都会把组合名幂等地 `SADD` 进反向索引（`keyIndex`）；反向索引只在这里登记、
+在 `publish` 遇到「meta 不存在（缓存已过期）」时剔除。
 
 > 续点是**闭区间**（同分用 `Op.lte` / `Op.gte`），所以每批都会重取边界那一条（`ZADD` 幂等，重复无害）。
-> 因此 `step` 必须是 **≥ 2** 的整数：`step = 1` 时水位线永远推不动，会一路走到 1500。默认 200，正常不用改。
+> 因此 `step` 必须是 **≥ 2** 的整数：`step = 1` 时水位线永远推不动，只能按已有数据返回。默认 200，正常不用改。
+
+`total` 用**不带续点**的 `where` 查（`model.count({ where })`），所以它与本批取到多少条无关：
+取满 `step` 时也能定准，不必等取尽。
 
 ## 写入侧：静态 publish
 
@@ -241,16 +264,16 @@ const at = new Date(s.score);
 
 ```js
 // score 传毫秒数（源记录的时间字段用 new Date(v).getTime() 取，与 _extend 同一口径）
-await ListPagination.publish(key, 'r999_article', Date.now(), 1);    // ZADD + count+1
-await ListPagination.publish(key, 'r999_article', Date.now(), -1);   // ZREM + count-1
+await ListPagination.publish(key, 'r999_article', Date.now(), 1);    // ZADD + total+1
+await ListPagination.publish(key, 'r999_article', Date.now(), -1);   // ZREM + total-1
 ```
 
 | 情况                          | 行为                                                     |
 | ----------------------------- | -------------------------------------------------------- |
-| 受理且确实变更                 | 计数 ±1，组合名进 `changed`                              |
-| 受理但无变更（ZADD/ZREM 未命中）| 只刷新 TTL，不进 `changed`                              |
+| 受理且确实变更                 | `total` ±1，组合名进 `changed`                            |
+| 受理但无变更（ZADD/ZREM 未命中）| 只刷新 TTL，不进 `changed`，**也不动 total**（INV-6）      |
 | `meta` 不存在（缓存已过期）     | 不创建缓存，把组合从反向索引剔除，进 `stale`             |
-| 删除后该组合 `count` 归零       | 顺手把组合从反向索引摘掉（`list` 早空了，`meta` 留着自然过期），仍算改到 |
+| 删除后该组合 `total` 归零       | **不摘索引**：组合留在索引里，之后的新增才能 `ZADD` 回来（见下方说明） |
 | 组合不含该记录类型              | 跳过（既不算 `changed`，也不算 `stale`，TTL 也不动）      |
 | 反向索引为空（没有缓存）        | 什么都不做                                                |
 
@@ -258,10 +281,13 @@ await ListPagination.publish(key, 'r999_article', Date.now(), -1);   // ZREM + c
   否则要求组合名（`_` 分隔的类型列表）里含这个类型。比如 `r999_video` 只会落到 `all` 与 `video`，
   不会污染 `article_ticker`；
 
-- `synced_to` / `complete` 不动，只改 `count`；列表与 meta 的 TTL 随写入续期；
-- 同一个 member 重复写是幂等的（`ZADD` 返回值决定是否计数）；
-- 删空摘索引解决了「收藏夹删干净后，每次增删还要白跑一遍这个组合」的空转；摘掉后**不会**丢缓存 ——
-  该组合重新有数据时由下一次 `_extend()` 登记回来（`publish` 遍历索引，所以不能指望它自己恢复）；
+- **INV-6：`total` 只在 ZSET 真的变了时才 ±1**（`ZADD` / `ZREM` 返回 1）。
+  偏低会让 `zcard >= total` 提前成立 → **截断漏读**；偏高只是多扩展一次，是安全方向；
+- 列表与 meta 的 TTL 随写入续期；同一个 member 重复写是幂等的（`ZADD` 返回值决定是否计数）；
+- **删空不摘索引**（踩过的坑）：曾经在 `count` 归零时顺手 `SREM` 掉组合，结果组合从索引里消失 →
+  之后的新增 `publish` 遍历索引找不到它 → 新记录进不了 `list`，而 `meta` 还是 `{count:0, over:true}`，
+  读路径认为缓存已到底、不会扩展 → **列表一直空到 TTL 过期**。空组合留在索引里的代价只是一次空转的
+  eval；删空时 `list` 这个 key 会被 Redis 删掉（空 ZSET 自动消失），下次 `ZADD` 会重新建起来；
 - 新增记录不会「插队」到已翻过的页：它的 `score` 决定位置，按 score 区间翻页天然一致。
 
 ## model 契约
@@ -294,16 +320,17 @@ count({ where })                 { return History.count({ where }); }
 
 | 用途                            | 调用                                                                                      |
 | ------------------------------- | ----------------------------------------------------------------------------------------- |
-| 按 score 区间取数（唯一读命令） | `sendCommand(['ZREVRANGEBYSCORE'\|'ZRANGEBYSCORE', keyList, 高/低, 低/高, 'LIMIT', String(offset), String(count), 'WITHSCORES'])` |
+| 读一页（唯一读路径）  | `eval(LUA.READ, { keys: [list, meta, idx], arguments: ['ZREVRANGEBYSCORE'\|'ZRANGEBYSCORE', 高/低, 低/高, String(offset), String(count), String(ttl)] })` —— 脚本内续期三键、区间取数、`ZCARD`、`GET meta`，一次往返返回 `{ z, total, items }` |
+| 按 score 区间取数（脚本内） | `redis.call('ZREVRANGEBYSCORE'\|'ZRANGEBYSCORE', keyList, 高/低, 低/高, 'LIMIT', offset, count, 'WITHSCORES')` |
 | 扩展 / 增量                     | `eval(script, { keys: [...], arguments: [...] })`（Lua 内 `ZADD` / `ZREM` / `ZCARD` / `GET` / `SET` / `EXPIRE`） |
 | 反向索引                        | `sAdd` / `sRem` / `sMembers` / `expire`                                                    |
 | meta 读取                       | `get`                                                                                      |
 
-> **`sendCommand` 的参数必须全是字符串**：`LIMIT` 的 `offset` / `count` 一定要 `String(...)` 再放进去
-> （分数同理），别把数字直接塞进数组。
+> **`sendCommand` / `eval` 的参数必须全是字符串**：`LIMIT` 的 `offset` / `count`、score、ttl
+> 都要 `String(...)` 再放进去（`eval` 的 `arguments` 也一样），别把数字直接塞进数组。
 >
 > 读路径**只用 score 区间查询**，不使用 `ZRANK` / `ZREVRANK` / `ZRANGE`（按下标）——
-> 混用会让同分 band 在不同页之间的遍历顺序不一致。
+> 混用会让同分 band 在不同页之间的遍历顺序不一致。唯一例外是扩展的**尾部探针**。
 >
 > **为什么直发命令、不用封装方法**（`redis@4.6.7` = `@redis/client@1.5.8`，实测生成的命令）：
 >
@@ -316,7 +343,7 @@ count({ where })                 { return History.count({ where }); }
 > | **`sendCommand(['Z[REV]RANGEBYSCORE', …])`（本实现）** | `ZREVRANGEBYSCORE k b a LIMIT … WITHSCORES` | ✅ 原生 `WITHSCORES` + 原生倒序，**Redis 1.0.5 起即有** |
 >
 > 代价是回复为扁平数组 `['r001_article', '1700000000000', …]` 且 score 是字符串，
-> `_range()` 里自行配对并转数字（每个测试都覆盖这条路径）。
+> `_read()` 里自行配对并转数字（每个测试都覆盖这条路径）。
 
 ## 错误码（`defaults.ERRORS`）
 
@@ -325,8 +352,8 @@ count({ where })                 { return History.count({ where }); }
 | 1400 | 留给**中间件**的参数错误码（本类已不抛：`page` 的合法性校验在类外）        |
 | 1401 | 翻页深度超限（`offset + size > 10000`），请改用游标                       |
 | 1402 | 游标非法（含「把未解析的字符串直接传给 paginate」）                       |
-| 1403 | 游标已过期                                                                |
-| 1500 | 取不足 `n+1` 且 `complete !== true`（水位线停滞），或记录缺少 score 字段  |
+| 1403 | 游标已过期（仅当游标带了 `e`）                                             |
+| 1500 | 源库 / Redis 异常。水位线停滞**不再抛它**，按 INV-4 返回已有数据          |
 
 ## 可调默认值（`defaults`）
 
@@ -341,26 +368,35 @@ count({ where })                 { return History.count({ where }); }
 ## 测试
 
 ```bash
-node --test        # 或 npm test
+npm test           # = node --test test/*.test.js
 ```
 
-> 测试不需要任何数据库：源库用 `test/helpers/sequelize.js` 的内存版 `MemoryModel`（Sequelize 的
-> `where` / `order` / `Op` 语义照跑，只是数据在数组里）、Redis 用 `test/helpers/fake-redis.js`。
+> 单测跑在**测试环境的真实 Redis** 上（`TEST_REDIS_URL` 可改，缺省 `redis://10.0.15.240:6379`）：
+> `test/helpers/test-redis.js` 只是客户端包装 —— 转发命令、记流水（`commands` / `calls` / `probes`）、
+> 并且把所有 key 收在本进程的 `lp:t:<pid>:...` 命名空间下，`after` 钩子统一清掉。
+> 源库仍用 `test/helpers/sequelize.js` 的内存版 `MemoryModel`，所以**不需要数据库**。
+
 > 唯一慢的地方是 `require('sequelize')` 本身要拉 700+ 个模块（本机 ~20s，与用例无关）；
 > 只想要 `Op` 符号的话，`require('sequelize/lib/operators')` 约 90ms 且拿到的是**同一个** `Op` 对象
 > —— 但那是内部路径，业务代码里仍按常规写 `require('sequelize')`。
+> 真 Redis 下每个用例都要走网络，全量 69 项约 5 分钟（并行跑 7 个文件）；单跑一个文件是秒级。
 
-68 项测试跑在**内存源库（`history` 语义）+ 内存 Redis** 上，覆盖：
+69 项测试跑在**内存源库（`history` 语义）+ 真实 Redis** 上，覆盖：
 250 条重度同分 17 页全覆盖与顺序、翻页中改 `size`、极端同分（30 条同 score）、band 长于 `size`、
 升序列表（含升序 + 长 band 的 m 过滤、全程不带 REV）、空列表 / 单条 / `size=1`、
-回退分支（无 m 越区间、`m` 被删、`o` 被低估放大窗口）、水位线停滞 1500、
-游标 13 种非法输入（decodeCursor）与滑动续期、`t` 必须为数字、`m`/`o` 只在同分时携带、`o` 跨页累加与越 band 重算、
-meta（`count` / `complete` / `synced_to`）与 TTL 同值同批次、keyset 续点形状、
+回退分支（无 m 越区间、`m` 被删、`o` 被低估放大窗口）、
+**INV-4 推不动水位线 -> 返回部分不抛 1500**、**list 被淘汰而 meta 在 -> 下次读自动补回**、
+**读一次即续期三键 TTL**、
+游标非法输入（decodeCursor）与滑动续期、`t` 必须为数字、`e` 可选、`m`/`o` 只在同分时携带、
+`o` 跨页累加与越 band 重算、
+meta（只有 `total`）与 TTL 同值同批次、keyset 续点形状、
 **score 字段是时间（`Date`）时的双向转换**（进 ZSET 转毫秒、续点回查转回 `Date`）、
-取满不置 complete、短页才置 complete、
+**每次扩展都调 `model.count()`**、`total` 与本批取到多少条无关、页模式 `count >= total` 时提前停止、
 无锁并发首页幂等、惰性重建、缓存被删后重建继续翻页、反向索引登记、
-静态 `publish`（广播多组合、按类型筛组合、幂等、无变更不算 changed、过期组合剔除、TTL 续期、索引为空时不动）、
+静态 `publish`（广播多组合、按类型筛组合、幂等、无变更不算 changed 也不动 total、过期组合剔除、TTL 续期、
+索引为空时不动）、**删空不摘索引 -> 新增仍能进缓存**、
 key 组成、types→where、member 规则（恒为 `id_type`）、缺省值与 `this.opts` 收敛、页模式换算与 1401、
 取数只发 `ZRANGEBYSCORE` / `ZREVRANGEBYSCORE`（含 `REV` 与 `LIMIT` 参数形状）。
 
-另做过 60 个随机场景压测（随机数据量 / 同分粒度 / `size` / 方向 / types + 翻页中并发删除），零失败。
+接口层另有黑盒 e2e（`pagination.test.js`，打真实服务 + 真实 Redis，需服务在 `127.0.0.1:8990`）：
+`node --test pagination.test.js`。

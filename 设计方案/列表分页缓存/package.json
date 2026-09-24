@@ -9,7 +9,7 @@
     "sequelize": ">=6.0.0"
   },
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "test:e2e": "node pagination.test.js"
   },
   "devDependencies": {
