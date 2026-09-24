@@ -20,7 +20,7 @@
  *   ① 新增接口返回后缓存**约 30ms 才生效**（异步 publish）→ 写入侧断言一律轮询收敛；
  *   ② score 是**秒级**（MySQL DATETIME 取 getTime）：同一次导入的数百条会落在同一分，
  *      实测 400 条一次导入 = 1~2 个 band，账号历史里也有 38 条同分 —— 同分是常态而非特例；
- *      连续两次扩展若都停在同一个 band 内，synced_to.score 不变、靠 id 继续收敛（见 B2）；
+ *      连续两次扩展若都停在同一个 band 内，ZSET 尾部 score 不变、靠 id 继续收敛（见 B2）；
  *   ③ 一次 bulk 请求里每行的 ms 可能不同，但秒级下几乎必然同分；为了**精确控制 band 条数**，
  *      C 组用 ZSET 注入造 band（只动自己前缀的 list 键，不写源库），注入项事后退掉并重建；
  *      注入的成员会被列表接口正常返回（列表完全由缓存驱动，已实测）。
@@ -30,16 +30,17 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * 【A 正常操作链路】
  *   A1 登录 → uid / token / 前缀
- *   A2 冷启动第 0 页：list / meta / idx 三键落地，TTL 同批次，synced_to 指向 ZSET 尾部
+ *   A2 冷启动第 0 页：list / meta / idx 三键落地，TTL 同批次，meta 只有 count / over
+ *      （续点取自 ZSET 尾部，不落 meta）
  *   A3 全量翻页：逐页拼接 == ZSET 全量顺序，不重不漏（核心不变量，后续用例都复用它）
- *   A4 末页 / 越界：末页短、再下一页空、meta.complete == true
+ *   A4 末页 / 越界：末页短、再下一页空、meta.over == true
  *   A5 重建一致：清缓存 → 重新翻到底 → 与缓存版逐项相同
  *
  * 【B 缓存不足 → 扩展】
  *   B1 首扩只取 step 条（不是全量）：造 400 条 → 清缓存 → 首页后 count 明显小于总量、
- *      complete=false
- *   B2 深页触发二次扩展：count 递增、水位线继续前移（同 band 内靠 id 收敛）、页不空
- *   B3 水位线停滞：complete 之后深页不再扩展、不报错，只给空页
+ *      over=false
+ *   B2 深页触发二次扩展：count 递增、ZSET 尾部继续前移（同 band 内靠 id 收敛）、页不空
+ *   B3 水位线停滞：over 之后深页不再扩展、不报错，只给空页
  *   B4 翻到一半清缓存：惰性重建后仍与 ZSET 一致
  *
  * 【C 同分 band（0 / ≤15 / ==15 / >15 / >800）】
@@ -57,7 +58,7 @@
  *   D2 删除：ZSET 最终 -1、count 同步、TTL 续期
  *   D3 幂等：删不存在的 id 无副作用
  *   D4 重复新增同一 res_id：member 相同，ZSET 不长、count 不虚增
- *   D5 删空组合：count 归零 + idx 摘掉组合 + meta 保留（需一个源库为空的组合，否则跳过）
+ *   D5 删空后新增：count 归零但组合仍留在 idx，之后的新增仍能进缓存、第一页看得到（需一个源库为空的组合，否则跳过）
  *
  * 【E 反向索引失效（idx TTL 与 list / meta 不一致）】
  *   E1 idx 被删（list / meta 仍在）：读路径不受影响
@@ -370,7 +371,7 @@ test('A1 登录：返回 uid / token，前缀 = user:v6:history:<uid>', async ()
   assert.equal(S.prefix, `user:v6:history:${S.uid}`);
 });
 
-test('A2 冷启动建缓存：list / meta / idx 三键落地，TTL 同批次，synced_to 指向尾部', async () => {
+test('A2 冷启动建缓存：list / meta / idx 三键落地，TTL 同批次，meta 只有 count / over', async () => {
   await wipeCache();
   assert.equal(await metaOf(), null, '清完 meta 应不存在');
 
@@ -382,16 +383,18 @@ test('A2 冷启动建缓存：list / meta / idx 三键落地，TTL 同批次，s
   assert.equal(await zcard(), zs.length, 'list 键存在且是 ZSET');
   assert.ok(meta, 'meta 应落地');
   assert.equal(meta.count, zs.length, 'meta.count 应等于 ZCARD');
-  assert.equal(typeof meta.complete, 'boolean', 'complete 应是布尔');
-  assert.ok(Number.isFinite(meta.synced_to.score), 'synced_to.score 应是毫秒数');
-  assert.equal(meta.synced_to.score, zs[zs.length - 1].score, 'synced_to 应指向 ZSET 尾部');
+  assert.deepEqual(Object.keys(meta).sort(), ['count', 'over'], 'meta 只有 count / over 两个字段');
+  assert.equal(typeof meta.over, 'boolean', 'over 应是布尔');
+  // 续点不落 meta：扩展时探针 ZSET 尾部（倒序 ZRANGE 0 0），这里对着展示序最后一项校验
+  assert.equal(zs[zs.length - 1].score, Math.min(...zs.map((x) => x.score)),
+    'ZSET 尾部（扩展续点）就是展示序的最后一项');
 
   assert.ok((await redis.sMembers(keyIndex())).includes(COMBO), '组合名应登记进反向索引');
   const ttls = await ttlOf();
   assert.ok(ttls.every((t) => t > 0 && t <= TTL_MAX), `三键都该有 TTL：${ttls}`);
   assert.ok(Math.max(...ttls) - Math.min(...ttls) <= 1, `三键 TTL 应同批次：${ttls}`);
   assert.ok(zs.every((x) => x.id && COMBO.split('_').includes(x.type)), 'ZSET 成员类型不越界');
-  console.log(`建缓存：count=${meta.count} complete=${meta.complete} ttl=${ttls[0]}`);
+  console.log(`建缓存：count=${meta.count} over=${meta.over} ttl=${ttls[0]}`);
 });
 
 test('A3 全量翻页：逐页拼接 == ZSET 全量顺序，不重不漏', async () => {
@@ -401,7 +404,7 @@ test('A3 全量翻页：逐页拼接 == ZSET 全量顺序，不重不漏', async
   console.log(`band 分布：${bandsOf(zs).map((b) => b.n).join(',')}`);
 });
 
-test('A4 末页 / 越界：末页短、再下一页为空、complete = true', async () => {
+test('A4 末页 / 越界：末页短、再下一页为空、over = true', async () => {
   let last = [];
   for (let page = 0; page < 500; page++) {
     const rows = await api.list(page);
@@ -410,10 +413,10 @@ test('A4 末页 / 越界：末页短、再下一页为空、complete = true', as
   }
   const meta = await metaOf();
   const { zs } = await assertWalkMatchesZset(COMBO, 'A4');
-  assert.equal(meta.complete, true, '源库取完之后 complete 应为 true');
+  assert.equal(meta.over, true, '源库取完之后 over 应为 true');
   assert.equal(meta.count, zs.length, 'count 与 ZCARD 一致');
   if (zs.length % SIZE !== 0) assert.ok(last.length < SIZE, '总量非页大小整数倍时末页应是短页');
-  console.log(`末页 ${last.length} 条，complete=${meta.complete}`);
+  console.log(`末页 ${last.length} 条，over=${meta.over}`);
 });
 
 test('A5 重建一致：清缓存 → 重新翻到底 → 与缓存版逐项相同', async () => {
@@ -429,47 +432,49 @@ test('A5 重建一致：清缓存 → 重新翻到底 → 与缓存版逐项相�
 // B 缓存不足 → 扩展
 // ============================================================================
 
-test('B1 首扩只取 step 条（不是全量）：count 明显小于总量、complete=false', async () => {
+test('B1 首扩只取 step 条（不是全量）：count 明显小于总量、over=false', async () => {
   await wipeCache();
   await api.createBulk(rowsFor(400));          // idx 已被清掉，新增不会进缓存，正好留给扩展
   await api.list(0);
   const m = await metaOf();
   assert.ok(m.count > SIZE * 3, `一次扩展应取回远多于首页的量：${m.count}`);
   assert.equal(m.count, await zcard(), 'count == ZCARD');
-  assert.equal(m.complete, false, '源库还有更多数据，complete 应为 false');
-  console.log(`首扩取回 ${m.count} 条（step），complete=${m.complete}`);
+  assert.equal(m.over, false, '源库还有更多数据，over 应为 false');
+  console.log(`首扩取回 ${m.count} 条（step），over=${m.over}`);
 });
 
-test('B2 深页触发二次扩展：count 递增、水位线继续前移、页不空', async () => {
+test('B2 深页触发二次扩展：count 递增、ZSET 尾部继续前移、页不空', async () => {
   const m1 = await metaOf();
+  const z1 = await zsetOf();                               // 扩展前的 ZSET 尾部 = 当时的续点
   const deep = Math.floor(m1.count / SIZE) + 2;            // 越过当前水位线
   const rows = await api.list(deep);
   const m2 = await metaOf();
+  const z2 = await zsetOf();                               // 扩展后的尾部
   assert.ok(rows.length > 0, '深页应仍能取到数据');
   assert.ok(m2.count > m1.count, `深页应继续扩展：${m1.count} -> ${m2.count}`);
 
-  // 秒级 score 下两次扩展可能停在同一个 band：这时 score 不变，靠 id 继续收敛
-  const s1 = m1.synced_to;
-  const s2 = m2.synced_to;
-  assert.ok(s2.score <= s1.score, `水位线不应后退：${s1.score} -> ${s2.score}`);
-  assert.ok(s2.score < s1.score || s2.id !== s1.id,
-    `续点必须继续前移：${JSON.stringify(s1)} -> ${JSON.stringify(s2)}`);
+  // 秒级 score 下两次扩展可能停在同一个 band：这时尾部的 score 不变，靠 id / member 继续收敛
+  const t1 = z1[z1.length - 1];
+  const t2 = z2[z2.length - 1];
+  assert.ok(t2.score <= t1.score, `尾部不应后退：${t1.score} -> ${t2.score}`);
+  assert.ok(t2.score < t1.score || t2.member !== t1.member,
+    `续点必须继续前移：${t1.member}@${t1.score} -> ${t2.member}@${t2.score}`);
   console.log(`深页 page=${deep}：count ${m1.count} -> ${m2.count}，`
-    + `synced_to ${s1.score}/${String(s1.id).slice(0, 8)} -> ${s2.score}/${String(s2.id).slice(0, 8)}`
-    + `${s2.score === s1.score ? '（同 band，靠 id 收敛）' : ''}`);
+    + `尾部 ${t1.member.slice(0, 8)}@${t1.score} -> ${t2.member.slice(0, 8)}@${t2.score}`
+    + `${t2.score === t1.score ? '（同 band，靠 id 收敛）' : ''}`);
 });
 
-test('B3 水位线停滞：complete 之后深页不再扩展、不报错，只给空页', async () => {
-  await walkAll();                                         // 翻到底，确保 complete
+test('B3 水位线停滞：over 之后深页不再扩展、不报错，只给空页', async () => {
+  await walkAll();                                         // 翻到底，确保 over
   const m1 = await metaOf();
-  assert.equal(m1.complete, true, '前置：全量翻完后 complete 应为 true');
+  assert.equal(m1.over, true, '前置：全量翻完后 over 应为 true');
   const far = Math.floor(m1.count / SIZE) + 5;
   const rows = await api.list(far);
   const m2 = await metaOf();
   assert.equal(rows.length, 0, '越过末尾应为空页');
-  assert.equal(m2.count, m1.count, 'complete 之后不应再扩展');
-  assert.equal(m2.synced_to.score, m1.synced_to.score, 'synced_to 不应变化');
-  console.log(`complete 之后请求 page=${far}：空页，count 保持 ${m1.count}`);
+  assert.equal(m2.count, m1.count, 'over 之后不应再扩展');
+  assert.deepEqual((await zsetOf()).slice(-1), (await zsetOf()).slice(-1), '尾部不应变化');
+  console.log(`over 之后请求 page=${far}：空页，count 保持 ${m1.count}`);
 });
 
 test('B4 翻到一半清缓存：惰性重建后仍与 ZSET 一致', async () => {
@@ -653,7 +658,7 @@ test('D4 重复新增同一 res_id：member 相同，ZSET 不长、count 不虚�
   console.log(`重复新增同一 res_id：${dupAccepted ? '业务接受，缓存幂等' : '业务拒绝'}，成员数 ${b}`);
 });
 
-test('D5 删空组合：count 归零 + idx 摘掉组合 + meta 保留', async (t) => {
+test('D5 删空后新增：count 归零但组合留在 idx，之后的新增仍能进缓存', async (t) => {
   // 需要一个「源库本来就没有数据」的组合，才能把 count 删到 0（不能删别人的数据）
   const combo = EXTRA_TYPE;
   await wipeCache();
@@ -670,11 +675,17 @@ test('D5 删空组合：count 归零 + idx 摘掉组合 + meta 保留', async (t
   await delOwn([id]);
   await waitFor(async () => (await zcard(combo)) === 0);
   assert.equal(await zcard(combo), 0, 'list 应被清空');
-  const meta = await metaOf(combo);
-  assert.ok(meta, 'meta 应保留（靠 TTL 自然过期）');
-  assert.ok(!(await redis.sMembers(keyIndex())).includes(combo), '组合应从 idx 摘掉');
-  assert.equal((await api.list(0, combo)).length, 0, '再请求该组合应返回空');
-  console.log(`删空组合 ${combo}：count=0，idx 已摘除，meta 保留`);
+  assert.deepEqual(await metaOf(combo), { count: 0, over: true });
+  assert.ok((await redis.sMembers(keyIndex())).includes(combo), '删空不摘索引（摘了之后新增就再也进不来）');
+  assert.equal((await api.list(0, combo)).length, 0, '此时该组合确实为空');
+
+  const [id2] = await api.createBulk([{ res_type: combo, res_id: randomUUID() }]);
+  await waitFor(async () => (await zcard(combo)) === 1);
+  assert.equal(await zcard(combo), 1, '删空后的新增应进缓存（摘索引时这里恒为 0）');
+  assert.equal((await metaOf(combo)).count, 1);
+  assert.ok((await api.list(0, combo)).some((x) => x.res_id === id2), '第一页能看到这条新增');
+  await delOwn([id2]);
+  console.log(`删空组合 ${combo}：count 归零、组合仍留在 idx，之后的新增仍进缓存`);
 });
 
 // ============================================================================
@@ -707,7 +718,7 @@ test('E3 再 _extend 一次：组合重新登记；全量重建后一致性恢�
   const deep = Math.floor(Number(meta.count || 0) / SIZE) + 2;
   await api.list(deep);                                     // 深页 -> _extend -> Lua 内幂等 SADD
   const idx = await redis.sMembers(keyIndex());
-  if (!idx.includes(COMBO)) return t.skip('complete=true 时深页不触发 _extend，idx 待下次重建登记');
+  if (!idx.includes(COMBO)) return t.skip('over=true 时深页不触发 _extend，idx 待下次重建登记');
   assert.ok(idx.includes(COMBO), '组合应重新登记进 idx');
 
   await wipeCache();

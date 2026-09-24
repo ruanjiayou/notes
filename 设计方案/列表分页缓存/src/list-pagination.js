@@ -15,7 +15,7 @@
  *   fields = [scoreField, idField, typeField]，缺省 ['modified_time', 'res_id', 'res_type']
  *     scoreField 时间（MySQL DATETIME，Sequelize 取出来是 Date）：既是排序键，也是 ZSET 的 score。
  *                两个方向的转换都在 _extend 里做：源库 Date -> ZSET 的毫秒数（new Date(v).getTime()），
- *                synced_to 存毫秒数，回查源库时再转回 Date；
+ *                续点的毫秒数回查源库时再转回 Date；
  *     idField    记录 id；typeField 资源类型。
  *
  * 排序
@@ -53,10 +53,10 @@
  *   所以 o 被低估只会多读，不会漏。
  *
  * 结束判定（INV-1）
- *   next 为空 ⟺「取不足 size+1 条」且「meta.complete === true」。
+ *   next 为空 ⟺「取不足 size+1 条」且「meta.over === true」。
  *
  * 扩展（方案 7.2 / 7.3）
- *   每次先取 meta 判断，再从 synced_to 续点固定取 step 条旧数据并原子写回
+ *   每次先取 meta 判断，再从 ZSET 尾部（续点）固定取 step 条旧数据并原子写回
  *   ZSET + meta（INV-3），两个 key 同一个 TTL；无锁、不返回 1429。
  *   首次建立某个组合的缓存时，把组合名写进反向索引，供 publish 使用。
  *
@@ -119,9 +119,9 @@ const ERRORS = defaults.ERRORS;
 
 const LUA = {
   /**
-   * __PAGINATION_EXTEND__
+   * 扩展写回
    * KEYS[1]=list KEYS[2]=meta KEYS[3]=index
-   * ARGV[1]=members(JSON [[member,score],...]) ARGV[2]=synced_to(JSON|'') ARGV[3]=complete('1'|'0'|'') ARGV[4]=ttlSec ARGV[5]=组合名
+   * ARGV[1]=members(JSON [[member,score],...]) ARGV[2]=over('1'|'') ARGV[3]=ttlSec ARGV[4]=组合名
    */
   EXTEND: `
 local n = 0
@@ -134,15 +134,12 @@ end
 local raw = redis.call('GET', KEYS[2])
 local meta = raw and cjson.decode(raw) or {}
 meta.count = redis.call('ZCARD', KEYS[1])
-if ARGV[2] ~= '' then meta.synced_to = cjson.decode(ARGV[2]) end
-if ARGV[3] == '1' then meta.complete = true end
-if ARGV[3] == '0' then meta.complete = false end
-if meta.complete == nil then meta.complete = false end
+if ARGV[2] == '1' then meta.over = true end
+if meta.over == nil then meta.over = false end
 redis.call('SET', KEYS[2], cjson.encode(meta))
 -- 这个组合有缓存了（幂等）：登记进反向索引，供 publish 找到它。
--- 被 publish 删空摘掉过的组合，靠这里重新登记回来。
-redis.call('SADD', KEYS[3], ARGV[5])
-local ttl = tonumber(ARGV[4])
+redis.call('SADD', KEYS[3], ARGV[4])
+local ttl = tonumber(ARGV[3])
 if ttl and ttl > 0 then
   redis.call('EXPIRE', KEYS[1], ttl)
   redis.call('EXPIRE', KEYS[2], ttl)
@@ -153,11 +150,12 @@ return cjson.encode(meta)
 /**
  * __PAGINATION_INCREMENTAL__
  * KEYS[1]=list KEYS[2]=meta KEYS[3]=index
- * ARGV[1]='add'|'del' ARGV[2]=member ARGV[3]=score ARGV[4]=ttlSec ARGV[5]=组合名
+ * ARGV[1]='add'|'del' ARGV[2]=member ARGV[3]=score ARGV[4]=ttlSec
  * 旁路增量：meta 不存在则整体不执行、不创建（方案 7.3）。
- * 返回值：-1 = meta 不存在（未受理）；0 = 受理但无变更；1 = 确实发生变更；
- *         2 = 变更且该组合已空（list 已无成员，顺手从反向索引摘掉；meta 留着自然过期）。
- * 摘掉的组合不会再被 publish 命中（索引里已经没有它），要等下次 _extend 重新登记（见 EXTEND）。
+ * 返回值：-1 = meta 不存在（未受理）；0 = 受理但无变更；1 = 确实发生变更。
+ * **删空也不摘索引**：摘掉后 publish 就再也找不到这个组合，而 meta 还活着（count:0 / over:true），
+ * 之后的新增既进不了 list、读路径又认为缓存已到底（over）——列表会一直空到 TTL 过期。
+ * 空组合留在索引里的代价只是一次空转的 eval，换来的却是「删干净后还能接住新增」。
  */
   CHANGE: `
 local raw = redis.call('GET', KEYS[2])
@@ -166,19 +164,12 @@ local meta = cjson.decode(raw)
 local changed = 0
 if ARGV[1] == 'add' then
   changed = redis.call('ZADD', KEYS[1], ARGV[3], ARGV[2])
-  if changed == 1 then
-    meta.count = (meta.count or 0) + 1
-    if meta.total ~= nil then meta.total = meta.total + 1 end
-  end
+  if changed == 1 then meta.count = (meta.count or 0) + 1 end
 else
   changed = redis.call('ZREM', KEYS[1], ARGV[2])
   if changed == 1 then
     meta.count = (meta.count or 1) - 1
     if meta.count < 0 then meta.count = 0 end
-    if meta.total ~= nil then
-      meta.total = meta.total - 1
-      if meta.total < 0 then meta.total = 0 end
-    end
   end
 end
 redis.call('SET', KEYS[2], cjson.encode(meta))
@@ -187,10 +178,6 @@ if ttl and ttl > 0 then
   redis.call('EXPIRE', KEYS[1], ttl)
   redis.call('EXPIRE', KEYS[2], ttl)
   redis.call('EXPIRE', KEYS[3], ttl)
-end
-if changed == 1 and ARGV[1] == 'del' and meta.count == 0 then
-  redis.call('SREM', KEYS[3], ARGV[5])
-  return 2
 end
 return changed
 `,
@@ -429,13 +416,13 @@ class ListPagination {
     let meta = (await this.meta()) || (await this._extend());
     let items = await this._read(cur, size);
 
-    while (items.length <= size && meta.complete !== true) {
+    while (items.length <= size && meta.over !== true) {
       const before = meta.count;
       meta = await this._extend();
       if (meta.count === before) break;                     // 水位线推不动了，避免空转
       items = await this._read(cur, size);
     }
-    if (items.length <= size && meta.complete !== true) {
+    if (items.length <= size && meta.over !== true) {
       throw new PaginationError(ERRORS.INTERNAL, '缓存未覆盖到该位置且无法继续扩展');
     }
 
@@ -459,7 +446,7 @@ class ListPagination {
 
     // 与 cursor() 同构：先看 meta，覆盖不足则反复 _extend（meta 不存在时 _extend 会从源头建缓存）
     let meta = await this.meta();
-    while (!meta || (meta.complete !== true && Number(meta.count || 0) < depth)) {
+    while (!meta || (meta.over !== true && Number(meta.count || 0) < depth)) {
       const before = meta ? Number(meta.count || 0) : -1;
       meta = await this._extend();
       if (Number(meta.count || 0) === before) break;      // 水位线推不动，避免空转
@@ -473,37 +460,42 @@ class ListPagination {
   }
 
   // =========================================================================
-  // 扩展：从 synced_to 续点取固定 step 条旧数据，原子写回 ZSET + meta
+  // 扩展：从 ZSET 尾部（续点）取固定 step 条旧数据，原子写回 ZSET + meta
   // =========================================================================
-  /** 扩展：登记 / 续期反向索引也在这一步（Lua 内幂等 SADD），不需要单独维护 */
+  /**
+   * 续点不再存 meta（synced_to 已移除），直接探 ZSET 尾部：
+   * 倒序取 ZRANGE 0 0、升序取 ZREVRANGE 0 0 —— 下标 0 恰是展示序的最后一项
+   * （最低 score、同分最小 member），与 keyset 闭区间续取正好衔接。
+   * 扩展路径单发一次下标探针，不违反读路径「禁用按下标」的禁令（那管的是跨页 band 一致性）。
+   * 登记 / 续期反向索引也在这一步（Lua 内幂等 SADD），不需要单独维护。
+   */
   async _extend() {
     const o = this.opts;
-    const meta = await this.meta();
-    const s = meta && meta.synced_to;             // { score, id }
+    const tailRaw = await redis().sendCommand([
+      o.rev ? 'ZRANGE' : 'ZREVRANGE', o.keyList, '0', '0', 'WITHSCORES',
+    ]);
     const where = Object.assign({}, o.where);
 
     // keyset 续点（闭区间：同分再按 id 收敛，幂等且不跳数据）
-    if (s) {
-      const at = new Date(s.score);                  // meta 里存的是毫秒数，源库字段是时间，回查时转回去
+    if (tailRaw && tailRaw.length) {
+      const [id] = String(tailRaw[0]).split('_');        // member 恒为 id_type
+      const at = new Date(Number(tailRaw[1]));           // ZSET 的 score 是毫秒数，源库字段是时间，回查时转回去
       const dir = o.rev ? Op.lt : Op.gt;
       const same = o.rev ? Op.lte : Op.gte;
       where[Op.or] = [
         { [o.fieldScore]: { [dir]: at } },
-        { [o.fieldScore]: at, [o.fieldId]: { [same]: s.id } },
+        { [o.fieldScore]: at, [o.fieldId]: { [same]: id } },
       ];
     }
 
     const rows = await o.model.findAll({ where, order: o.order, limit: o.step });
     // 源库的 score 字段是时间（MySQL DATETIME -> JS Date），ZSET 的 score 只认数字，所以取毫秒数
     const members = (rows || []).map((r) => [this._member(r), new Date(r[o.fieldScore]).getTime()]);
-    const tail = members[members.length - 1];
-    const last = rows && rows[rows.length - 1];
     const raw = await redis().eval(LUA.EXTEND, {
       keys: [o.keyList, o.keyMeta, o.keyIndex],
       arguments: [
         JSON.stringify(members),
-        tail ? JSON.stringify({ score: tail[1], id: last[o.fieldId] }) : '',
-        members.length < o.step ? '1' : '',              // 短页 -> complete = true
+        members.length < o.step ? '1' : '',              // 短页 -> over = true
         String(o.ttl),
         o.combo,
       ],
@@ -517,8 +509,8 @@ class ListPagination {
   /**
    * 新增 / 删除一条记录，广播到该前缀下所有已建立缓存的类型组合。
    * 只在 meta 存在、且组合包含该记录类型时受理；返回 -1 说明该组合的缓存已过期，把它从索引里剔除。
-   * 删除把某个组合删空（count 归零）时，Lua 顺手把该组合从反向索引摘掉（list 早空了，meta 留着自然过期）；
-   * 摘掉后 publish 不会再命中它，**重新登记由该组合下一次 `_extend()` 的幂等 SADD 完成**（见 LUA.EXTEND）。
+   * **删空不摘索引**：空组合继续留在索引里，之后的新增才能 ZADD 回来（list 空了 Redis 会删 key，
+   * ZADD 会重新建）。索引只靠两处收敛：_extend 的幂等 SADD，以及这里遇 -1（缓存没了）时的 SREM。
    *
    * @param {string} key    key 前缀（与构造时的 key 一致）
    * @param {string} value  ZSET member，固定 id + '_' + type；type 也用于筛掉不含该类型的组合
@@ -541,10 +533,10 @@ class ListPagination {
       const listKey = prefix + ':' + combo + ':list';
       const n = Number(await redis().eval(LUA.CHANGE, {
         keys: [listKey, prefix + ':' + combo + ':meta', keyIndex],
-        arguments: [add ? 'add' : 'del', value, String(score), String(ttl), combo],
+        arguments: [add ? 'add' : 'del', value, String(score), String(ttl)],
       }));
-      if (n === 1 || n === 2) {
-        changed.push(combo);                             // 2 = 变更且已摘除索引，仍算改到了
+      if (n === 1) {
+        changed.push(combo);
       } else if (n < 0) {
         await redis().sRem(keyIndex, combo);             // 缓存没了，索引也清掉
         stale.push(combo);
