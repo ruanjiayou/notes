@@ -13,6 +13,8 @@
 - nginx.conf/default.conf 要区分！default.conf 放server。
 
 #### cloudflared
+> 绿联云报错dns有问题就换为1.1.1.1
+> 绿联云里怎么用的/etc/cloudflared/config.yml的配置...
 - 下载并安装
 ```sh
 sudo -i # 切换为 root 权限
@@ -27,10 +29,11 @@ dpkg -i cloudflared-linux-amd64.deb
 - 登录并创建路由和配置
 ```sh
 cloudflared tunnel login
-cloudflared tunnel create nas
+cloudflared tunnel create ugos-pro
+# 创建dns到tunnel: cloudflared tunnel route dns ugos-pro mongo.jiayou.work
 # (复制上面的uuid)
 vim /root/.cloudflared/config.yml
-tunnel: nas
+tunnel: ugos-pro
 credentials-file: /root/.cloudflared/xx-x-xxx-xxx.json
 
 ingress:
@@ -41,6 +44,9 @@ ingress:
   - service: http_status:404
 ```
 - 重启服务： `systemctl restart cloudflared`
+##### tcp隧道
+- config.yml中加两行就行(hostname和service)
+
 
 ### 网络修改造成能搜到设备但连接失败
 - 笔记本设置ip为192.168.1.100 子网掩码为 255.255.255.0 网关为 192.168.1.1
