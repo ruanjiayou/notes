@@ -2,18 +2,13 @@
   "name": "list-pagination-cache",
   "version": "1.0.0",
   "private": true,
-  "description": "列表分页缓存：按《分页缓存方案.md》实现的游标分页 + Redis ZSET 缓存 + meta 水位线（node-redis v4 / Sequelize + MySQL）",
-  "main": "src/index.js",
-  "peerDependencies": {
-    "redis": ">=4.0.0",
-    "sequelize": ">=6.0.0"
-  },
+  "description": "列表分页缓存：Redis ZSET 排序 + MongoDB keyset 扩展（设计见 分页缓存方案-v3.md）",
+  "main": "src/user-paginator-cache.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "node --test test/*.test.js",
-    "test:e2e": "node pagination.test.js"
+    "test": "node --test test/*.test.js"
   },
-  "devDependencies": {
-    "sequelize": "^6.37.8",
-    "superagent": "^10.4.0"
+  "dependencies": {
+    "ioredis": "^5.4.1"
   }
 }
